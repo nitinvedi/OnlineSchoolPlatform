@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,30 +7,25 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased bg-slate-50 text-slate-900 selection:bg-sky-200 selection:text-sky-900">
-        <div class="min-h-screen relative">
+    <body class="font-sans antialiased selection:bg-brand-500/30 selection:text-brand-200">
+        <div class="min-h-screen">
             @include('layouts.navigation')
 
-            <!-- Add padding-top to push content down because of fixed floating navbar -->
-            <div class="pt-28">
+            <div class="pt-24 pb-12">
                 <!-- Page Heading -->
                 @isset($header)
-                    <header class="bg-white/60 backdrop-blur-sm border-b border-slate-200 mb-8 max-w-7xl mx-auto rounded-3xl shadow-sm overflow-hidden">
-                        <div class="py-6 px-4 sm:px-6 lg:px-8">
+                    <header class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+                        <div class="glass-effect rounded-[2rem] py-8 px-10">
                             {{ $header }}
                         </div>
                     </header>
                 @endisset
 
                 <!-- Page Content -->
-                <main>
+                <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     {{ $slot }}
                 </main>
             </div>
