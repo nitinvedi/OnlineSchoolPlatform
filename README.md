@@ -1,52 +1,169 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Online School Platform
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A comprehensive learning management system built with Laravel 12, featuring courses, quizzes, live sessions, certificates, and payment integration.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- 🎓 **Course Management**: Create and manage courses with lessons and quizzes
+- 👥 **User Roles**: Student, Instructor, and Admin roles with proper permissions
+- 💳 **Payment Integration**: Stripe-powered course purchases
+- 📹 **Live Sessions**: Real-time video sessions using Jitsi Meet
+- 📜 **Certificates**: Auto-generated PDF certificates upon course completion
+- 📊 **Dashboard**: Role-based dashboards for all user types
+- 📧 **Email Notifications**: Automated emails for enrollments and certificates
+- 🎨 **Modern UI**: Tailwind CSS with Alpine.js for interactive components
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Tech Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Backend**: Laravel 12 (PHP 8.2+)
+- **Frontend**: Blade templates, Tailwind CSS, Alpine.js
+- **Database**: MySQL
+- **Payments**: Stripe
+- **Video**: Jitsi Meet
+- **PDF**: DomPDF
+- **Build**: Vite
 
-## Learning Laravel
+## Local Development
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### Prerequisites
+- PHP 8.2+
+- Composer
+- Node.js & npm
+- MySQL
+- Git
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Setup
+1. Clone the repository
+2. Install PHP dependencies:
+   ```bash
+   composer install
+   ```
+3. Install Node dependencies:
+   ```bash
+   npm install
+   ```
+4. Copy environment file:
+   ```bash
+   cp .env.example .env
+   ```
+5. Generate app key:
+   ```bash
+   php artisan key:generate
+   ```
+6. Set up database in `.env`:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=online_school
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
+7. Run migrations:
+   ```bash
+   php artisan migrate --seed
+   ```
+8. Build assets:
+   ```bash
+   npm run build
+   ```
+9. Start the server:
+   ```bash
+   php artisan serve
+   ```
 
-## Laravel Sponsors
+Visit `http://127.0.0.1:8000` to access the application.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Deployment
 
-### Premium Partners
+### Render (Recommended)
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+1. **Push to GitHub**: Ensure your code is in a GitHub repository
+
+2. **Create Render Account**: Sign up at [render.com](https://render.com)
+
+3. **Connect Repository**:
+   - New → Web Service
+   - Select your GitHub repo
+   - Branch: `main`
+
+4. **Service Configuration**:
+   - **Language**: PHP
+   - **Build Command**:
+     ```bash
+     composer install --no-dev --optimize-autoloader && npm install && npm run build
+     ```
+   - **Start Command**:
+     ```bash
+     php artisan serve --host 0.0.0.0 --port $PORT
+     ```
+   - **Publish Directory**: `public`
+
+5. **Create MySQL Database**:
+   - New → Database → MySQL
+   - Copy the connection details
+
+6. **Environment Variables**:
+   ```env
+   APP_ENV=production
+   APP_DEBUG=false
+   APP_URL=https://your-service.onrender.com
+
+   DB_CONNECTION=mysql
+   DB_HOST=<render-mysql-host>
+   DB_PORT=<render-mysql-port>
+   DB_DATABASE=<render-mysql-database>
+   DB_USERNAME=<render-mysql-user>
+   DB_PASSWORD=<render-mysql-password>
+
+   FILESYSTEM_DISK=public
+   MAIL_MAILER=log
+
+   # Add these for payments
+   STRIPE_PUBLIC_KEY=pk_live_...
+   STRIPE_SECRET_KEY=sk_live_...
+   STRIPE_WEBHOOK_SECRET=whsec_...
+   ```
+
+7. **Post-Deployment Setup**:
+   - Open Render shell and run:
+     ```bash
+     php artisan migrate --force
+     php artisan db:seed --force
+     php artisan storage:link
+     php artisan config:cache
+     php artisan route:cache
+     php artisan view:cache
+     ```
+
+### Alternative: Infrastructure as Code
+
+Use the included `render.yaml` file for automated deployment:
+
+1. Push `render.yaml` to your repo
+2. In Render: New → Blueprint
+3. Select your repo
+4. Render will create services automatically
+
+## Default Users
+
+After seeding, you can log in with:
+
+- **Admin**: `admin@example.com` / `password`
+- **Instructor**: `instructor@example.com` / `password`
+- **Students**: Generated users with role `student`
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests: `php artisan test`
+5. Submit a pull request
 
-## Code of Conduct
+## License
+
+This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
 In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 

@@ -1,0 +1,40 @@
+# Node modules (if any)
+node_modules/
+
+# Development files
+.env
+.env.local
+.env.*.local
+
+# Laravel specific
+storage/app/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*
+bootstrap/cache/*
+
+# Tests
+tests/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+README.md
+DEPLOYMENT.md
+
+# Development tools
+phpunit.xml
+vite.config.js
+tailwind.config.js
+postcss.config.js
