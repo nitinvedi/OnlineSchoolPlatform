@@ -1,81 +1,195 @@
 <x-guest-layout>
-    <div x-data="{ submitting: false }" class="w-full">
-        
-        <div class="mb-12">
-            <h2 class="text-4xl font-display font-black text-white mb-4 tracking-tighter leading-tight">Welcome back</h2>
-            <p class="text-slate-500 font-medium text-lg">Enter your credentials to access your workspace.</p>
+    <x-slot name="pageTitle">Sign In</x-slot>
+
+    <div x-data="{
+        showPassword: false,
+        email: '',
+        password: '',
+        loading: false,
+        hasError: {{ session('errors') ? 'true' : 'false' }},
+    }">
+
+        {{-- ── Page title ─────────────────────────────── --}}
+        <div class="mb-10">
+            <h2 class="font-display text-[#F0EDE6] leading-none"
+                style="font-size: clamp(2.8rem, 6vw, 4.5rem);">
+                WELCOME<br>BACK.
+            </h2>
+            <p class="font-mono text-[11px] uppercase tracking-[0.25em] text-[#555] mt-4">
+                Sign in to continue your learning journey
+            </p>
         </div>
 
-        <x-auth-session-status class="mb-6" :status="session('status')" />
+        {{-- ── Session status ──────────────────────────── --}}
+        @if (session('status'))
+            <div class="mb-6 border border-[#1DB954] bg-[#1DB954]/10 px-4 py-3">
+                <p class="font-mono text-[11px] uppercase tracking-[0.2em] text-[#1DB954]">
+                    {{ session('status') }}
+                </p>
+            </div>
+        @endif
 
-        <form method="POST" action="{{ route('login') }}" @submit="submitting = true" class="space-y-6">
+        {{-- ── Global error ────────────────────────────── --}}
+        @if ($errors->any())
+            <div class="mb-6 border border-[#FF3B30] bg-[#FF3B30]/8 px-4 py-3 flex items-center gap-3"
+                 x-data x-init="
+                     $el.style.animation = 'none';
+                     requestAnimationFrame(() => {
+                         $el.style.animation = 'shake .4s cubic-bezier(.36,.07,.19,.97) both';
+                     });
+                 ">
+                <span class="font-mono text-[#FF3B30] text-lg">✕</span>
+                <p class="font-mono text-[11px] uppercase tracking-[0.2em] text-[#FF3B30]">
+                    These credentials don't match our records.
+                </p>
+            </div>
+        @endif
+
+        {{-- ── Google OAuth ────────────────────────────── --}}
+        <a href="#"
+           class="ls-btn-ghost mb-5 flex items-center justify-center gap-3 no-underline"
+           style="text-decoration:none;">
+            {{-- Google G SVG --}}
+            <svg class="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            <span>Continue with Google</span>
+        </a>
+
+        {{-- ── Divider ─────────────────────────────────── --}}
+        <div class="or-divider my-6">or sign in with email</div>
+
+        {{-- ── Login form ──────────────────────────────── --}}
+        <form method="POST" action="{{ route('login') }}"
+              @submit="loading = true"
+              class="space-y-5">
             @csrf
 
-            <!-- Email Address -->
-            <div class="space-y-2">
-                <label for="email" class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Email address</label>
-                <div class="relative group">
-                    <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus 
-                           class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white placeholder-slate-600 focus:outline-none focus:border-brand-500/50 focus:ring-4 focus:ring-brand-500/10 transition-all duration-300"
-                           placeholder="name@company.com">
-                    @if($errors->has('email'))
-                        <p class="mt-2 text-xs font-bold text-rose-500 ml-1">{{ $errors->first('email') }}</p>
-                    @endif
-                </div>
+            {{-- Email --}}
+            <div>
+                <label for="email" class="ls-label">Email Address</label>
+                <input
+                    id="email"
+                    type="email"
+                    name="email"
+                    value="{{ old('email') }}"
+                    required
+                    autofocus
+                    autocomplete="username"
+                    x-model="email"
+                    class="ls-input {{ $errors->get('email') ? 'error' : '' }}"
+                    placeholder="you@example.com"
+                />
+                @error('email')
+                    <span class="ls-error">{{ $message }}</span>
+                @enderror
             </div>
 
-            <!-- Password -->
-            <div class="space-y-2">
-                <div class="flex items-center justify-between px-1">
-                    <label for="password" class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Password</label>
+            {{-- Password --}}
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <label for="password" class="ls-label" style="margin-bottom:0;">Password</label>
                     @if (Route::has('password.request'))
-                        <a class="text-[10px] font-black text-brand-500 uppercase tracking-widest hover:text-brand-400 transition-colors" href="{{ route('password.request') }}">
+                        <a href="{{ route('password.request') }}"
+                           class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#555] hover:text-[#2255FF] transition-colors duration-150">
                             Forgot?
                         </a>
                     @endif
                 </div>
-                <div class="relative group">
-                    <input id="password" type="password" name="password" required 
-                           class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white placeholder-slate-600 focus:outline-none focus:border-brand-500/50 focus:ring-4 focus:ring-brand-500/10 transition-all duration-300"
-                           placeholder="••••••••">
-                    @if($errors->has('password'))
-                        <p class="mt-2 text-xs font-bold text-rose-500 ml-1">{{ $errors->first('password') }}</p>
-                    @endif
+                <div class="relative">
+                    <input
+                        id="password"
+                        :type="showPassword ? 'text' : 'password'"
+                        name="password"
+                        required
+                        autocomplete="current-password"
+                        x-model="password"
+                        class="ls-input pr-12 {{ $errors->get('password') ? 'error' : '' }}"
+                        placeholder="••••••••"
+                    />
+                    {{-- Eye toggle --}}
+                    <button type="button"
+                            class="eye-btn"
+                            @click="showPassword = !showPassword"
+                            :aria-label="showPassword ? 'Hide password' : 'Show password'">
+                        {{-- Eye open --}}
+                        <svg x-show="!showPassword" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        {{-- Eye closed --}}
+                        <svg x-show="showPassword" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/>
+                        </svg>
+                    </button>
                 </div>
+                @error('password')
+                    <span class="ls-error">{{ $message }}</span>
+                @enderror
             </div>
 
-            <!-- Remember Me -->
-            <div class="flex items-center px-1">
-                <label for="remember_me" class="inline-flex items-center cursor-pointer group">
-                    <div class="relative flex items-center justify-center w-5 h-5 rounded-lg border-2 border-white/10 bg-white/5 group-hover:border-brand-500/50 transition-colors mr-3">
-                        <input id="remember_me" type="checkbox" class="peer opacity-0 absolute inset-0 cursor-pointer w-full h-full" name="remember">
-                        <svg class="w-3.5 h-3.5 text-brand-500 opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
-                    </div>
-                    <span class="text-xs font-bold text-slate-500 group-hover:text-slate-300 transition-colors">Keep me signed in</span>
+            {{-- Remember me --}}
+            <div class="flex items-center gap-3 pt-1">
+                <input id="remember_me"
+                       type="checkbox"
+                       name="remember"
+                       class="ls-checkbox" />
+                <label for="remember_me"
+                       class="font-mono text-[11px] uppercase tracking-[0.15em] text-[#555] cursor-pointer select-none">
+                    Remember me
                 </label>
             </div>
 
-            <!-- Submit Button -->
-            <button type="submit" class="btn-primary w-full py-4 text-sm relative group overflow-hidden">
-                <span x-show="!submitting" class="relative z-10 flex items-center justify-center gap-2">
-                    Sign In to Workspace
-                    <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                </span>
-                <span x-show="submitting" style="display: none;" class="relative z-10 flex items-center justify-center">
-                    <svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Authenticating...
-                </span>
-            </button>
+            {{-- Submit --}}
+            <div class="pt-2">
+                <button type="submit"
+                        class="ls-btn-primary"
+                        data-submit-btn
+                        :disabled="loading"
+                        :class="loading ? 'opacity-50 cursor-not-allowed' : ''">
+                    <span x-show="!loading">Sign In →</span>
+                    <span x-show="loading" class="flex items-center gap-2">
+                        <svg class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                        </svg>
+                        Signing in...
+                    </span>
+                </button>
+            </div>
         </form>
 
-        <div class="mt-12 pt-12 border-t border-white/5 text-center">
-            <p class="text-sm font-bold text-slate-500">
-                New to the platform? 
-                <a href="{{ route('register') }}" class="text-brand-500 hover:text-brand-400 transition-colors ml-2">Create an account</a>
+        {{-- ── Register link ───────────────────────────── --}}
+        <div class="mt-8 pt-6 border-t border-[#1E1E1E]">
+            <p class="font-mono text-[11px] uppercase tracking-[0.15em] text-[#555] text-center">
+                Don't have an account?
+                <a href="{{ route('register') }}"
+                   class="text-[#2255FF] hover:text-[#F0EDE6] transition-colors duration-150 ml-2">
+                    Create one →
+                </a>
             </p>
         </div>
+
+        {{-- ── Trust signals ───────────────────────────── --}}
+        <div class="mt-8 flex items-center justify-center gap-6">
+            @foreach(['🔒 SSL Secured', '30-Day Guarantee', 'No Spam'] as $signal)
+                <span class="font-mono text-[10px] uppercase tracking-[0.15em] text-[#1E1E1E]">{{ $signal }}</span>
+            @endforeach
+        </div>
     </div>
+
+    {{-- ── Page-specific shake animation ──────────────── --}}
+    @push('styles')
+    <style>
+        @keyframes shake {
+            10%, 90% { transform: translateX(-2px); }
+            20%, 80% { transform: translateX(3px); }
+            30%, 50%, 70% { transform: translateX(-4px); }
+            40%, 60% { transform: translateX(4px); }
+        }
+    </style>
+    @endpush
 </x-guest-layout>

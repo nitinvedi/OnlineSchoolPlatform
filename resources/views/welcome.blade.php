@@ -3,269 +3,952 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'LiveSchool') }} — Editorial Learning</title>
+    <title>{{ config('app.name', 'LiveSchool') }} — Premium learning for builders</title>
+    <meta name="description" content="Premium curriculum designed for ambitious learners who want skills, credibility, and real work outcomes.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;600;700&family=Neue+Haas+Grotesk+Display+Pro:wght@400;500;600&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <style>
+        /* ── Custom cursor ─────────────────────────────── */
+        *, *::before, *::after { box-sizing: border-box; }
+        body { cursor: none; }
+        #cursor-dot {
+            position: fixed; top: 0; left: 0; z-index: 9999;
+            width: 8px; height: 8px;
+            background: #F0EDE6; border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            transition: transform 0.08s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease, border-radius 0.2s ease;
+            mix-blend-mode: difference;
+        }
+        #cursor-ring {
+            position: fixed; top: 0; left: 0; z-index: 9998;
+            width: 40px; height: 40px;
+            border: 1.5px solid rgba(240,237,230,0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            transition: transform 0.18s ease, width 0.25s ease, height 0.25s ease, opacity 0.2s ease;
+            mix-blend-mode: difference;
+        }
+        body.cursor-hover #cursor-dot { width: 12px; height: 12px; }
+        body.cursor-hover #cursor-ring { width: 56px; height: 56px; opacity: 0.6; }
+
+        /* ── Fonts fallback ────────────────────────────── */
+        .font-display { font-family: 'Bebas Neue', 'Impact', sans-serif; }
+        .font-mono    { font-family: 'JetBrains Mono', monospace; }
+
+        /* ── Noise grain overlay ───────────────────────── */
+        body::before {
+            content: '';
+            position: fixed; inset: 0; z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            opacity: 0.025;
+            pointer-events: none;
+        }
+
+        /* ── Marquee ───────────────────────────────────── */
+        .marquee-wrapper { overflow: hidden; }
+        .marquee-track {
+            display: flex; white-space: nowrap;
+            animation: marquee 22s linear infinite;
+        }
+        .marquee-track.paused { animation-play-state: paused; }
+        @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        /* ── Scroll reveal ─────────────────────────────── */
+        .reveal-hidden { opacity: 0; transform: translateY(44px); }
+        .reveal { opacity: 1; transform: translateY(0); transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+
+        /* ── Hero bounce arrow ─────────────────────────── */
+        @keyframes bounce-down { 0%,100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+        .hero-arrow { display: inline-block; animation: bounce-down 1.8s ease-in-out infinite; }
+
+        /* ── Stat bar ──────────────────────────────────── */
+        .stat-bar-fill { transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
+
+        /* ── Scrollbar hide ────────────────────────────── */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* ── Card snap ─────────────────────────────────── */
+        .snap-x { scroll-snap-type: x mandatory; }
+        .snap-start { scroll-snap-align: start; }
+
+        /* ── Pulse dot ─────────────────────────────────── */
+        @keyframes pulse-dot { 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:0.5; transform:scale(1.5); } }
+        .pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
+
+        /* ── Testimonial transition ─────────────────────── */
+        .testimonial-card { transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16,1,0.3,1); }
+        .testimonial-card.hidden { display: none; }
+
+        /* ── Progress bar on card ──────────────────────── */
+        .course-progress { height: 2px; background: #1E1E1E; position: relative; overflow: hidden; }
+        .course-progress-fill { height: 100%; background: #2255FF; }
+
+        /* ── Mobile touch targets ──────────────────────── */
+        @media (max-width: 768px) {
+            body { cursor: auto; }
+            #cursor-dot, #cursor-ring { display: none; }
+        }
+
+        /* ── Skeleton shimmer (for future use) ─────────── */
+        @keyframes shimmer { from { background-position: -200% 0; } to { background-position: 200% 0; } }
+        .shimmer {
+            background: linear-gradient(90deg, #111 25%, #1a1a1a 50%, #111 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.6s infinite;
+        }
+
+        /* ── Hover underline draw-in ─────────────────────── */
+        .underline-draw { position: relative; text-decoration: none; }
+        .underline-draw::after {
+            content: ''; position: absolute; bottom: -2px; left: 0;
+            width: 0; height: 1px; background: #2255FF;
+            transition: width 0.25s cubic-bezier(0.16,1,0.3,1);
+        }
+        .underline-draw:hover::after { width: 100%; }
+
+        /* ── Nav link strikethrough on hover ────────────── */
+        .nav-strike { position: relative; }
+        .nav-strike::after {
+            content: ''; position: absolute; top: 50%; left: 0;
+            width: 0; height: 1px; background: currentColor;
+            transition: width 0.2s ease;
+        }
+        .nav-strike:hover::after { width: 100%; }
+
+        /* ── Bento grid responsive ───────────────────────── */
+        @media (max-width: 1024px) {
+            .bento-grid { grid-template-columns: 1fr !important; grid-template-rows: auto !important; }
+        }
+    </style>
 </head>
-<body class="bg-[#0A0A0A] text-[#F0EDE6] font-sans antialiased selection:bg-brand-500/20 selection:text-[#F0EDE6]">
+<body class="bg-[#0A0A0A] text-[#F0EDE6] antialiased selection:bg-[#2255FF]/20 selection:text-[#F0EDE6] overflow-x-hidden">
+
+    {{-- Custom cursor --}}
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
 
     @php
-        $stats = [
-            'students' => \App\Models\User::where('role', 'student')->count() + 1500,
-            'courses' => \App\Models\Course::where('status', 'published')->count() + 45,
-            'instructors' => \App\Models\User::where('role', 'instructor')->count() + 20,
+        $topCourses = \App\Models\Course::where('status', 'published')
+            ->with('instructor', 'category')
+            ->orderByDesc('student_count')
+            ->take(6)
+            ->get();
+
+        $trustedLogos = ['Google', 'Meta', 'Amazon', 'Apple', 'Netflix', 'Stripe', 'Figma'];
+
+        $testimonials = [
+            [
+                'quote'   => 'LiveSchool helped me ship my first SaaS product while learning design, strategy, and mentorship in one program.',
+                'name'    => 'Maya Patel',
+                'role'    => 'Product Designer',
+                'company' => 'Spark Labs',
+                'rating'  => 5,
+                'initial' => 'M',
+            ],
+            [
+                'quote'   => 'The live sessions and project review loop made every lesson feel immediately useful and applicable.',
+                'name'    => 'Damien Li',
+                'role'    => 'Growth Lead',
+                'company' => 'Nova Growth',
+                'rating'  => 4.8,
+                'initial' => 'D',
+            ],
+            [
+                'quote'   => 'A premium learning experience with the right balance of direction and creative freedom for every level.',
+                'name'    => 'Arielle Moore',
+                'role'    => 'Creative Strategist',
+                'company' => 'Pulse Studio',
+                'rating'  => 4.9,
+                'initial' => 'A',
+            ],
         ];
-        $topCourses = \App\Models\Course::where('status', 'published')->with('instructor', 'category')->orderByDesc('student_count')->take(4)->get();
+
+        $instructors = [
+            ['name' => 'Nina Brooks',   'expertise' => 'Product Design',  'courses' => 8, 'followers' => '45k', 'rating' => 4.9, 'initial' => 'N'],
+            ['name' => 'Ethan Kim',     'expertise' => 'Growth Strategy', 'courses' => 6, 'followers' => '32k', 'rating' => 4.8, 'initial' => 'E'],
+            ['name' => 'Leila Santos',  'expertise' => 'AI Curriculum',   'courses' => 5, 'followers' => '28k', 'rating' => 4.9, 'initial' => 'L'],
+        ];
+
+        $faqItems = [
+            ['q' => 'Is there a free trial?',          'a' => 'Yes — every course has free preview lessons. No credit card required to explore.'],
+            ['q' => 'What if I want a refund?',        'a' => 'We offer a 30-day no-questions-asked money-back guarantee on all paid enrollments.'],
+            ['q' => 'Do I get a certificate?',         'a' => 'Yes. Every completed course earns a verifiable certificate you can share on LinkedIn.'],
+            ['q' => 'Can I learn at my own pace?',     'a' => 'Absolutely. All lessons are on-demand. Live sessions are recorded for async access.'],
+            ['q' => 'Are live sessions mandatory?',    'a' => 'No — live sessions are optional but highly recommended for feedback and community.'],
+        ];
     @endphp
 
-    <nav x-data="{ scrolled: false }" @scroll.window="scrolled = window.pageYOffset > 60"
-         :class="{ 'bg-[#0A0A0A]/95 backdrop-blur-xl border-b border-white/10': scrolled, 'bg-transparent': !scrolled }"
+    {{-- ─────────────────────────────────────────────────────────────
+         NAVBAR
+    ───────────────────────────────────────────────────────────────── --}}
+    <nav x-data="{ scrolled: false, open: false, active: 'catalog' }"
+         @scroll.window="scrolled = window.pageYOffset > 40"
+         x-on:section-change.window="active = $event.detail"
+         :class="scrolled ? 'bg-[#0A0A0A]/92 backdrop-blur-xl border-b border-[#1E1E1E]' : 'bg-transparent'"
          class="fixed inset-x-0 top-0 z-50 transition-all duration-500">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
-                <div class="flex items-center gap-6">
-                    <span class="font-display text-[14px] uppercase tracking-[0.35em] text-white">LiveSchool</span>
+
+                {{-- Logo --}}
+                <a href="#hero" class="flex items-center gap-3 group">
+                    <div class="w-9 h-9 bg-[#2255FF] flex items-center justify-center text-white font-display text-lg font-black transition-transform duration-200 group-hover:scale-105">L</div>
+                    <span class="font-mono text-xs uppercase tracking-[0.35em] text-[#F0EDE6]">LiveSchool</span>
+                </a>
+
+                {{-- Desktop nav --}}
+                <div class="hidden lg:flex items-center gap-10">
+                    @foreach([['href'=>'#programs','key'=>'catalog','label'=>'Catalog'],['href'=>'#features','key'=>'features','label'=>'Features'],['href'=>'#enterprise','key'=>'enterprise','label'=>'Enterprise']] as $link)
+                    <a href="{{ $link['href'] }}"
+                       @click="active='{{ $link['key'] }}'"
+                       :class="active === '{{ $link['key'] }}' ? 'text-[#F0EDE6]' : 'text-[#555] hover:text-[#F0EDE6]'"
+                       class="relative nav-strike font-mono text-[11px] uppercase tracking-[0.2em] transition-colors duration-150">
+                        {{ $link['label'] }}
+                        <span class="absolute inset-x-0 -bottom-1.5 h-px bg-[#2255FF] transition-opacity duration-150"
+                              :class="active === '{{ $link['key'] }}' ? 'opacity-100' : 'opacity-0'"></span>
+                    </a>
+                    @endforeach
                 </div>
-                <div class="hidden xl:flex items-center gap-10 text-[11px] uppercase tracking-[0.2em] font-black">
-                    <a href="#" class="relative text-slate-500 hover:text-[#F0EDE6] transition-colors after:absolute after:-top-2 after:left-0 after:h-px after:w-0 after:bg-[#2255FF] after:transition-all after:duration-300 hover:after:w-full">Platform</a>
-                    <a href="#features" class="relative text-slate-500 hover:text-[#F0EDE6] transition-colors after:absolute after:-top-2 after:left-0 after:h-px after:w-0 after:bg-[#2255FF] after:transition-all after:duration-300 hover:after:w-full">Features</a>
-                    <a href="#" class="relative text-slate-500 hover:text-[#F0EDE6] transition-colors after:absolute after:-top-2 after:left-0 after:h-px after:w-0 after:bg-[#2255FF] after:transition-all after:duration-300 hover:after:w-full">Studio</a>
+
+                {{-- Desktop CTA --}}
+                <div class="hidden lg:flex items-center gap-5">
+                    <a href="{{ route('login') }}" class="font-mono text-[11px] uppercase tracking-[0.25em] text-[#555] hover:text-[#F0EDE6] transition-colors duration-150">Login</a>
+                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center border border-[#2255FF] bg-[#2255FF] px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.25em] text-white hover:bg-[#F0EDE6] hover:text-[#0A0A0A] hover:border-[#F0EDE6] transition-none">Join Free</a>
                 </div>
-                <div class="flex items-center gap-4">
-                    @auth
-                        <a href="{{ route('dashboard') }}" class="border border-[#F0EDE6] px-6 py-3 uppercase text-[11px] tracking-[0.25em] font-black hover:bg-[#F0EDE6] hover:text-[#0A0A0A] transition-none">Dashboard</a>
-                    @else
-                        <a href="{{ route('login') }}" class="text-[11px] uppercase tracking-[0.25em] font-black text-slate-500 hover:text-[#F0EDE6] transition-colors">Login</a>
-                        <a href="{{ route('register') }}" class="border border-[#F0EDE6] px-6 py-3 uppercase text-[11px] tracking-[0.25em] font-black hover:bg-[#F0EDE6] hover:text-[#0A0A0A] transition-none">Join Free</a>
-                    @endauth
+
+                {{-- Mobile hamburger --}}
+                <button @click="open = !open" class="lg:hidden inline-flex items-center justify-center w-10 h-10 border border-[#1E1E1E] text-[#F0EDE6] hover:border-[#2255FF] transition-colors duration-200">
+                    <svg x-show="!open" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    <svg x-show="open"  class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+
+        {{-- Mobile drawer --}}
+        <div x-show="open"
+             x-transition:enter="transition ease-out duration-250"
+             x-transition:enter-start="opacity-0 -translate-y-2"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-180"
+             x-transition:leave-start="opacity-100 translate-y-0"
+             x-transition:leave-end="opacity-0 -translate-y-2"
+             @click.outside="open = false"
+             class="lg:hidden border-t border-[#1E1E1E] bg-[#0A0A0A]/98 backdrop-blur-xl">
+            <div class="px-6 pb-8 pt-5 space-y-5 font-mono text-[11px] uppercase tracking-[0.2em]">
+                <a href="#programs"   @click="open=false;active='catalog'"    class="block text-[#555] hover:text-[#F0EDE6] py-2 transition-colors">Catalog</a>
+                <a href="#features"   @click="open=false;active='features'"   class="block text-[#555] hover:text-[#F0EDE6] py-2 transition-colors">Features</a>
+                <a href="#enterprise" @click="open=false;active='enterprise'" class="block text-[#555] hover:text-[#F0EDE6] py-2 transition-colors">Enterprise</a>
+                <div class="border-t border-[#1E1E1E] pt-5 flex flex-col gap-3">
+                    <a href="{{ route('login') }}"    class="block text-[#555] hover:text-[#F0EDE6] py-2 transition-colors">Login</a>
+                    <a href="{{ route('register') }}" class="block bg-[#2255FF] px-5 py-3 text-center text-white hover:bg-[#F0EDE6] hover:text-[#0A0A0A] transition-none">Join Free</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <main class="relative overflow-hidden">
-        <section class="relative min-h-screen pt-28 pb-24">
-            <div class="absolute inset-0 pointer-events-none">
-                <div class="absolute top-0 left-0 h-[280px] w-[280px] rounded-full bg-[#2255FF]/10 blur-[100px]"></div>
-                <div class="absolute right-0 bottom-0 h-[320px] w-[320px] rounded-full bg-[#2255FF]/8 blur-[120px]"></div>
+    <main class="relative overflow-x-hidden">
+
+        {{-- ─────────────────────────────────────────────────────────────
+             HERO
+        ───────────────────────────────────────────────────────────────── --}}
+        <section id="hero" class="relative min-h-screen flex flex-col justify-center pt-24 pb-20">
+
+            {{-- Ambient blobs --}}
+            <div class="absolute inset-0 pointer-events-none overflow-hidden">
+                <div class="absolute -left-32 top-20 h-96 w-96 rounded-full bg-[#2255FF]/10 blur-[120px]"></div>
+                <div class="absolute right-0 bottom-20 h-80 w-80 rounded-full bg-[#2255FF]/8 blur-[100px]"></div>
+                <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full bg-[#2255FF]/4 blur-[160px]"></div>
             </div>
 
-            <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
-                <div class="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_260px] gap-14 items-start">
+            {{-- Vertical decorative text --}}
+            <div class="absolute right-6 top-1/2 -translate-y-1/2 hidden xl:block">
+                <span class="writing-mode-vertical font-mono text-[9px] uppercase tracking-[0.4em] text-[#1A1A1A] select-none"
+                      style="writing-mode:vertical-rl; letter-spacing:0.4em;">
+                    MASTERY THROUGH IMMERSION
+                </span>
+            </div>
+
+            <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 w-full">
+
+                {{-- Top label --}}
+                <div class="flex items-center gap-4 mb-10" data-reveal>
+                    <div class="w-px h-5 bg-[#2255FF]"></div>
+                    <span class="font-mono text-[10px] uppercase tracking-[0.4em] text-[#555]">Est. 2024 · Next-Gen Education Platform</span>
+                    <div class="w-2 h-2 bg-[#2255FF] pulse-dot"></div>
+                </div>
+
+                <div class="grid gap-16 lg:grid-cols-[1.25fr_0.75fr] items-center">
                     <div>
-                        <div class="flex items-center gap-4 text-[11px] uppercase tracking-[0.3em] font-black text-slate-500">
-                            <span class="h-5 w-px bg-[#F0EDE6] block"></span>
-                            EST. 2024 · NEXT-GEN EDUCATION
+                        {{-- Main headline --}}
+                        <h1 class="font-display font-black leading-none text-[#F0EDE6]"
+                            style="font-size: clamp(3.5rem, 10vw, 9rem); tracking: -0.05em;" data-reveal>
+                            UNLEASH<br>
+                            YOUR <span class="text-[#2255FF]">TRUE</span><br>
+                            POTENTIAL
+                        </h1>
+
+                        <p class="mt-8 max-w-lg text-[15px] leading-8 text-[#555]" data-reveal style="transition-delay:80ms">
+                            Premium curriculum designed for ambitious learners who want skills, credibility, and real work outcomes — not just another certificate.
+                        </p>
+
+                        {{-- CTAs --}}
+                        <div class="mt-10 flex flex-col sm:flex-row sm:items-center gap-4" data-reveal style="transition-delay:160ms">
+                            <a href="{{ route('register') }}"
+                               class="inline-flex items-center justify-center gap-3 bg-[#2255FF] px-8 py-4 font-mono text-[11px] uppercase tracking-[0.25em] text-white hover:bg-[#F0EDE6] hover:text-[#0A0A0A] transition-none group">
+                                Start Learning Now
+                                <span class="inline-block translate-x-0 group-hover:translate-x-1 transition-transform duration-150">→</span>
+                            </a>
+                            <a href="#programs"
+                               class="inline-flex items-center justify-center gap-3 border border-[#1E1E1E] px-8 py-4 font-mono text-[11px] uppercase tracking-[0.25em] text-[#555] hover:border-[#F0EDE6] hover:text-[#F0EDE6] transition-colors duration-150 group">
+                                See Programs
+                                <span class="inline-block opacity-0 group-hover:opacity-100 transition-opacity duration-150">↓</span>
+                            </a>
                         </div>
-                        <div class="mt-10 max-w-3xl">
-                            <div class="text-[12vw] leading-[0.9] font-display uppercase tracking-[-0.03em] text-white">UNLEASH YOUR</div>
-                            <div class="mt-3 flex flex-wrap text-[12vw] leading-[0.9] font-display uppercase tracking-[-0.03em] text-[#2255FF]" style="max-width: 14ch;">
-                                @foreach(str_split('TRUE POTENTIAL') as $letter)
-                                    <span class="inline-block {{ $loop->index % 2 === 0 ? '-rotate-2' : 'rotate-2' }} {{ $loop->index % 3 === 0 ? 'translate-y-2' : '' }} {{ $loop->index % 4 === 0 ? '-translate-y-1' : '' }}">{{ $letter }}</span>
+
+                        {{-- Social proof --}}
+                        <div class="mt-12 flex flex-col sm:flex-row sm:items-center gap-8" data-reveal style="transition-delay:240ms">
+                            <div class="flex items-center gap-4">
+                                <div class="relative flex -space-x-3">
+                                    @foreach([1,2,3,4] as $avatar)
+                                        <img src="https://i.pravatar.cc/128?img={{ 10 + $avatar }}"
+                                             alt="Learner"
+                                             class="w-10 h-10 border-2 border-[#0A0A0A] bg-[#111] object-cover" />
+                                    @endforeach
+                                </div>
+                                <div>
+                                    <p class="font-mono text-[11px] uppercase tracking-[0.35em] text-[#F0EDE6]">12,500+</p>
+                                    <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#333]">enrolled globally</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 border-l border-[#1E1E1E] pl-8">
+                                <div class="text-[#FFD166] text-sm">★★★★★</div>
+                                <span class="font-mono text-[11px] text-[#555]">4.9 avg rating</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Right hero card --}}
+                    <div class="relative hidden lg:block" data-reveal style="transition-delay:120ms">
+                        <div class="border border-[#1E1E1E] bg-[#111] p-8 relative overflow-hidden">
+                            {{-- Accent corner --}}
+                            <div class="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-[#2255FF]"></div>
+                            <div class="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-[#2255FF]"></div>
+
+                            <p class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#2255FF] mb-6">Live cohort experience</p>
+                            <h2 class="font-display text-3xl text-[#F0EDE6] leading-tight mb-4">Weekly live studio sessions with top mentors.</h2>
+                            <p class="text-[13px] leading-7 text-[#555] mb-8">Practice with peers, get live feedback, and keep every lesson instantly actionable.</p>
+
+                            <div class="border-t border-[#1E1E1E] pt-6 space-y-3">
+                                @foreach(['Build a high-impact portfolio', 'Earn elite recognition badges', 'Land roles with product teams'] as $outcome)
+                                <div class="flex items-center gap-3">
+                                    <span class="font-mono text-[#2255FF] text-sm">→</span>
+                                    <span class="font-mono text-[11px] uppercase tracking-[0.15em] text-[#555]">{{ $outcome }}</span>
+                                </div>
                                 @endforeach
                             </div>
-                        </div>
-                        <p class="mt-10 max-w-[55ch] text-[16px] leading-7 text-slate-400 font-medium">Build a practice-led education system that feels handcrafted, fiercely focused, and built for people who want to leave a mark.</p>
-                        <div class="mt-12 flex flex-col sm:flex-row sm:items-center gap-8">
-                            <a href="{{ route('register') }}" class="group inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] font-black text-[#F0EDE6] border-b border-transparent hover:border-[#F0EDE6] transition-all duration-300">
-                                <span>Join the cohort</span>
-                                <span class="transform transition-transform duration-300 group-hover:translate-x-2">→</span>
-                            </a>
-                            <div class="flex items-center gap-3 text-[12px] uppercase tracking-[0.25em] font-black text-[#F0EDE6]">
-                                <span class="inline-flex items-center gap-2">
-                                    <span class="h-2 w-2 rounded-full bg-[#2255FF] animate-pulse"></span>
-                                    12,500 enrolled
-                                </span>
+
+                            {{-- Live indicator --}}
+                            <div class="mt-8 flex items-center gap-3 bg-[#0A0A0A] px-4 py-3 border border-[#1E1E1E]">
+                                <div class="w-2 h-2 bg-[#1DB954] pulse-dot"></div>
+                                <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-[#555]">3 live sessions this week</span>
                             </div>
                         </div>
                     </div>
-                    <div class="hidden xl:flex justify-end">
-                        <div class="text-[11px] uppercase tracking-[0.3em] text-slate-600 font-black rotate-90 origin-top-right">MASTERY THROUGH IMMERSION</div>
+                </div>
+
+                {{-- Trusted logos marquee --}}
+                <div class="mt-20 border-t border-b border-[#1E1E1E] py-5 marquee-wrapper" data-reveal style="transition-delay:300ms">
+                    <div class="marquee-track font-mono text-[10px] uppercase tracking-[0.4em] text-[#333]"
+                         @mouseover="$el.classList.add('paused')"
+                         @mouseleave="$el.classList.remove('paused')">
+                        @foreach(array_merge($trustedLogos, $trustedLogos, $trustedLogos) as $logo)
+                            <span class="pr-16 inline-block">{{ $logo }}</span>
+                        @endforeach
                     </div>
                 </div>
-            </div>
+                <p class="mt-3 font-mono text-[10px] uppercase tracking-[0.35em] text-[#333] text-center">Trusted by alumni from global leaders</p>
 
-            <div class="absolute inset-x-0 bottom-0 pointer-events-none py-6">
-                <div class="mx-auto max-w-7xl overflow-hidden border-t border-white/5">
-                    <div class="marquee-track text-[11px] uppercase tracking-[0.3em] text-[#333] font-black opacity-90">
-                        GOOGLE · META · AMAZON · APPLE · NETFLIX · GOOGLE · META · AMAZON · APPLE · NETFLIX ·
+                {{-- Scroll indicator --}}
+                <div class="mt-16 flex justify-center">
+                    <a href="#programs" class="inline-flex flex-col items-center gap-2 group">
+                        <span class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#333] group-hover:text-[#555] transition-colors">Scroll to programs</span>
+                        <span class="hero-arrow font-mono text-[#2255FF] text-lg">↓</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        {{-- ─────────────────────────────────────────────────────────────
+             SIGNATURE PROGRAMS
+        ───────────────────────────────────────────────────────────────── --}}
+        <section id="programs" class="py-28 border-t border-[#1E1E1E]">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
+
+                <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between mb-14" data-reveal>
+                    <div class="max-w-2xl">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#2255FF]">▸ Elite Curriculum</span>
+                        </div>
+                        <h2 class="font-display text-[#F0EDE6] leading-none" style="font-size: clamp(2.5rem, 6vw, 5.5rem);">
+                            SIGNATURE<br>PROGRAMS
+                        </h2>
+                        <p class="mt-5 max-w-xl text-[14px] leading-8 text-[#555]">
+                            Rigorous learning paths engineered by experts to transform your professional trajectory.
+                        </p>
+                    </div>
+                    <a href="{{ route('courses.index') }}"
+                       class="self-start inline-flex items-center gap-3 border border-[#1E1E1E] px-6 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-[#555] hover:border-[#F0EDE6] hover:text-[#F0EDE6] transition-colors duration-150 group">
+                        [ View All Courses
+                        <span class="group-hover:translate-x-1 transition-transform duration-150">→</span>
+                        ]
+                    </a>
+                </div>
+
+                {{-- Course cards horizontal scroll --}}
+                <div class="overflow-x-auto no-scrollbar py-3">
+                    <div class="flex snap-x gap-5 pb-4" style="width: max-content;">
+                        @forelse($topCourses as $index => $course)
+                            @php
+                                $instructorAvatar = $course->instructor->avatar_url
+                                    ? asset('storage/'.$course->instructor->avatar_url)
+                                    : 'https://i.pravatar.cc/120?u='.urlencode($course->instructor->name ?? 'instructor');
+                                $priceLabel  = $course->price > 0 ? '$'.number_format($course->price, 0) : 'Free';
+                                $isFree      = $course->price == 0;
+                                $rating      = number_format($course->rating ?: 4.8, 1);
+                                $students    = number_format($course->student_count ?: rand(500,2000));
+                            @endphp
+                            <article class="snap-start flex-shrink-0 w-[300px] sm:w-[320px] border border-[#1E1E1E] bg-[#111] p-6
+                                            transition-all duration-300 hover:border-[#2255FF] hover:-translate-y-1 group cursor-pointer"
+                                     onclick="window.location='{{ route('courses.show', $course) }}'">
+
+                                {{-- Category + badges --}}
+                                <div class="flex items-center justify-between mb-5">
+                                    <span class="font-mono text-[9px] uppercase tracking-[0.35em] text-[#555] border border-[#1E1E1E] px-3 py-1.5">
+                                        {{ $course->category->name ?? 'General' }}
+                                    </span>
+                                    @if($isFree)
+                                        <span class="font-mono text-[9px] uppercase tracking-[0.25em] text-[#1DB954]">Free</span>
+                                    @elseif($index === 0)
+                                        <span class="font-mono text-[9px] uppercase tracking-[0.25em] bg-[#F5A623] text-[#0A0A0A] px-2 py-1">Bestseller</span>
+                                    @endif
+                                </div>
+
+                                {{-- Visual --}}
+                                <div class="flex h-40 items-center justify-center bg-[#0A0A0A] border border-[#1E1E1E] mb-5 overflow-hidden group-hover:border-[#2255FF] transition-colors duration-300">
+                                    <span class="font-display text-[6rem] leading-none text-[#2255FF] group-hover:scale-105 transition-transform duration-300">
+                                        {{ strtoupper(substr($course->title, 0, 1)) }}
+                                    </span>
+                                </div>
+
+                                {{-- Title --}}
+                                <h3 class="font-display text-[#F0EDE6] leading-tight mb-4 line-clamp-2"
+                                    style="font-size: clamp(1.4rem, 2.5vw, 1.75rem);">
+                                    {{ $course->title }}
+                                </h3>
+
+                                {{-- Instructor --}}
+                                <div class="flex items-center gap-3 mb-5">
+                                    <img src="{{ $instructorAvatar }}"
+                                         alt="{{ $course->instructor->name ?? 'Instructor' }}"
+                                         class="w-9 h-9 object-cover border border-[#1E1E1E]" />
+                                    <div>
+                                        <p class="font-mono text-[11px] text-[#F0EDE6]">{{ $course->instructor->name ?? 'Instructor' }}</p>
+                                        <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#333]">Instructor</p>
+                                    </div>
+                                </div>
+
+                                {{-- Meta --}}
+                                <div class="border-t border-[#1E1E1E] pt-4 flex items-center justify-between">
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-[#FFD166] text-xs">★</span>
+                                        <span class="font-mono text-[11px] text-[#F0EDE6]">{{ $rating }}</span>
+                                        <span class="font-mono text-[10px] text-[#333]">({{ $students }})</span>
+                                    </div>
+                                    <span class="font-display text-lg text-[#F0EDE6]">{{ $priceLabel }}</span>
+                                </div>
+                            </article>
+                        @empty
+                            {{-- Empty state --}}
+                            <div class="flex flex-col items-center justify-center w-full py-24 text-center">
+                                <span class="font-display text-6xl text-[#1E1E1E]">∅</span>
+                                <p class="font-display text-2xl text-[#333] mt-4">NO COURSES YET</p>
+                                <p class="font-mono text-[11px] text-[#333] mt-2">Check back soon — curriculum is being crafted.</p>
+                            </div>
+                        @endforelse
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="py-24">
+        {{-- ─────────────────────────────────────────────────────────────
+             STATS BAR
+        ───────────────────────────────────────────────────────────────── --}}
+        <section id="stats" class="border-t border-[#1E1E1E] bg-[#0A0A0A]">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
-                <div class="flex flex-col lg:flex-row justify-between gap-10 items-start mb-10">
-                    <div>
-                        <p class="text-[10px] uppercase tracking-[0.35em] text-[#2255FF] font-black mb-6">▸ Elite Curriculum</p>
-                        <h2 class="text-[8vw] leading-[0.85] font-display uppercase tracking-[-0.03em] text-white max-w-2xl">Signature Programs</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3">
+                    @foreach([
+                        ['count'=>'12500', 'suffix'=>'+', 'label'=>'Enrolled Globally', 'sublabel'=>'students worldwide'],
+                        ['count'=>'98',    'suffix'=>'%', 'label'=>'Completion Rate',   'sublabel'=>'industry avg is 42%'],
+                        ['count'=>'49',    'suffix'=>'/5','label'=>'Average Rating',     'sublabel'=>'across all courses'],
+                    ] as $i => $stat)
+                    <div class="flex flex-col items-center justify-center py-16 px-8
+                                {{ $i < 2 ? 'border-b md:border-b-0 md:border-r border-[#1E1E1E]' : '' }}"
+                         data-reveal>
+                        <div class="flex items-end gap-1">
+                            <span class="font-display text-[#2255FF] leading-none"
+                                  style="font-size: clamp(3rem, 7vw, 5.5rem);"
+                                  data-count="{{ $stat['count'] }}">0</span>
+                            <span class="font-display text-[#2255FF] text-3xl mb-2">{{ $stat['suffix'] }}</span>
+                        </div>
+                        <p class="font-mono text-[11px] uppercase tracking-[0.35em] text-[#F0EDE6] mt-3">{{ $stat['label'] }}</p>
+                        <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#333] mt-1">{{ $stat['sublabel'] }}</p>
                     </div>
-                    <a href="{{ route('courses.index') }}" class="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.3em] font-black text-[#F0EDE6] border border-[#F0EDE6] px-5 py-3 hover:bg-[#F0EDE6] hover:text-[#0A0A0A] transition-none">[ View All → ]</a>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+
+        {{-- ─────────────────────────────────────────────────────────────
+             FEATURES / BENTO
+        ───────────────────────────────────────────────────────────────── --}}
+        <section id="features" class="py-28 border-t border-[#1E1E1E]">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
+
+                <div class="mb-14" data-reveal>
+                    <span class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#2255FF]">▸ Experience</span>
+                    <h2 class="font-display text-[#F0EDE6] mt-3 leading-none" style="font-size: clamp(2.5rem, 6vw, 5rem);">
+                        WHY<br>LIVESCHOOL
+                    </h2>
                 </div>
 
-                <div class="overflow-x-auto no-scrollbar py-6">
-                    <div class="flex gap-6 pb-4 min-w-[1440px]">
-                        @foreach($topCourses as $course)
-                            <article class="flex-shrink-0 w-[400px] h-[520px] bg-[#0A0A0A] border border-[#111] p-8 flex flex-col justify-between">
-                                <span class="text-[10px] uppercase tracking-[0.25em] text-slate-500 font-black">{{ strtoupper($course->category->name) }}</span>
-                                <div class="mt-8 text-[8rem] leading-none font-display text-[#111]" style="transform: rotate(5deg);">{{ strtoupper(substr($course->title, 0, 1)) }}</div>
+                {{-- Bento grid --}}
+                <div class="grid gap-4 lg:grid-cols-[1.4fr_0.9fr] lg:grid-rows-[280px_280px] bento-grid">
+
+                    {{-- Cell 1: Masterclasses (large, cobalt) --}}
+                    <div class="relative overflow-hidden bg-[#2255FF] p-10 flex flex-col justify-between min-h-[280px]" data-reveal>
+                        <div class="absolute inset-0 opacity-5"
+                             style="background-image: url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")"></div>
+                        <div>
+                            <span class="font-mono text-[10px] uppercase tracking-[0.35em] text-white/70">Masterclasses</span>
+                            <h3 class="font-display text-white leading-none mt-5" style="font-size:clamp(2rem,4vw,3rem);">
+                                IMMERSIVE<br>MASTERCLASSES
+                            </h3>
+                        </div>
+                        <p class="text-[14px] leading-7 text-white/85 max-w-sm">
+                            Step into high-fidelity live environments with real-time project collaboration and direct line to industry architects.
+                        </p>
+                    </div>
+
+                    {{-- Cell 2: Elite Recognition (dark) --}}
+                    <div class="border border-[#1E1E1E] bg-[#111] p-10 flex flex-col justify-between min-h-[280px] hover:border-[#2255FF] transition-colors duration-300 group" data-reveal style="transition-delay:80ms">
+                        <div class="w-14 h-14 border border-[#1E1E1E] bg-[#0A0A0A] flex items-center justify-center group-hover:border-[#2255FF] transition-colors duration-300">
+                            <svg class="w-6 h-6 text-[#2255FF]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.745 3.745 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.745 3.745 0 013.296-1.043A3.745 3.745 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.745 3.745 0 013.296 1.043 3.745 3.745 0 011.043 3.296A3.745 3.745 0 0121 12z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="font-display text-[#F0EDE6] text-2xl mb-3">ELITE RECOGNITION</h4>
+                            <p class="text-[13px] leading-7 text-[#555]">Earn blockchain-verifiable credentials that open doors at the world's most innovative companies.</p>
+                        </div>
+                    </div>
+
+                    {{-- Cell 3: Portfolio Architecture --}}
+                    <div class="border border-[#1E1E1E] bg-[#111] p-10 flex flex-col justify-between min-h-[280px] hover:border-[#2255FF] transition-colors duration-300 group" data-reveal style="transition-delay:160ms">
+                        <div class="w-14 h-14 border border-[#1E1E1E] bg-[#0A0A0A] flex items-center justify-center group-hover:border-[#2255FF] transition-colors duration-300">
+                            <svg class="w-6 h-6 text-[#2255FF]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="font-display text-[#F0EDE6] text-2xl mb-3">PORTFOLIO ARCHITECTURE</h4>
+                            <p class="text-[13px] leading-7 text-[#555]">Build production-grade projects that demonstrate mastery and solve real-world complexities.</p>
+                        </div>
+                    </div>
+
+                    {{-- Cell 4: Community (white inverted) --}}
+                    <div class="bg-[#F0EDE6] p-10 flex flex-col justify-between min-h-[280px]" data-reveal style="transition-delay:240ms">
+                        <span class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#333]">Ecosystem</span>
+                        <div>
+                            <h4 class="font-display text-[#0A0A0A] leading-none mb-4" style="font-size:clamp(2rem,4vw,3rem);">
+                                VIBRANT<br>COMMUNITY
+                            </h4>
+                            <p class="text-[13px] leading-7 text-[#555]">
+                                Join 15k+ elite builders in a collaborative space designed for high-performance networking and growth.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {{-- ─────────────────────────────────────────────────────────────
+             TESTIMONIALS
+        ───────────────────────────────────────────────────────────────── --}}
+        <section id="testimonials" class="py-28 border-t border-[#1E1E1E]">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
+
+                <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between mb-12" data-reveal>
+                    <div>
+                        <span class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#2255FF]">▸ What Learners Say</span>
+                        <h2 class="font-display text-[#F0EDE6] mt-4 leading-none" style="font-size: clamp(2rem, 5vw, 4.5rem);">
+                            REAL FEEDBACK<br>FROM ALUMNI
+                        </h2>
+                    </div>
+                    {{-- Dots --}}
+                    <div class="flex items-center gap-3">
+                        @foreach($testimonials as $index => $testimonial)
+                            <button type="button"
+                                    data-testimonial-dot="{{ $index }}"
+                                    class="w-8 h-1 bg-[#1E1E1E] transition-all duration-200 hover:bg-[#555]"></button>
+                        @endforeach
+                    </div>
+                </div>
+
+                <div data-testimonials class="border border-[#1E1E1E] bg-[#111] p-8 md:p-10" @mouseenter="clearInterval(window._testimonialTimer)" @mouseleave="startTestimonialTimer()">
+                    @foreach($testimonials as $index => $testimonial)
+                        <article class="testimonial-card {{ $index !== 0 ? 'hidden' : '' }}">
+                            <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-14 h-14 bg-[#0A0A0A] border border-[#1E1E1E] flex items-center justify-center font-display text-2xl text-[#2255FF]">
+                                        {{ $testimonial['initial'] }}
+                                    </div>
+                                    <div>
+                                        <p class="font-mono text-[13px] text-[#F0EDE6]">{{ $testimonial['name'] }}</p>
+                                        <p class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#333]">{{ $testimonial['role'] }} · {{ $testimonial['company'] }}</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="text-[#FFD166] text-sm">★★★★★</div>
+                                    <span class="font-mono text-[11px] text-[#555]">{{ $testimonial['rating'] }}</span>
+                                </div>
+                            </div>
+                            <p class="mt-8 text-lg leading-8 text-[#555] max-w-3xl border-l-2 border-[#2255FF] pl-6">
+                                "{{ $testimonial['quote'] }}"
+                            </p>
+                        </article>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+
+        {{-- ─────────────────────────────────────────────────────────────
+             INSTRUCTOR SPOTLIGHT
+        ───────────────────────────────────────────────────────────────── --}}
+        <section id="instructors" class="py-28 border-t border-[#1E1E1E]">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
+
+                <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between mb-12" data-reveal>
+                    <div>
+                        <span class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#2255FF]">▸ Instructor Spotlight</span>
+                        <h2 class="font-display text-[#F0EDE6] mt-4 leading-none" style="font-size: clamp(2rem, 5vw, 4.5rem);">
+                            MEET THE<br>INSTRUCTORS
+                        </h2>
+                    </div>
+                    <a href="#" class="self-start inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-[#555] hover:text-[#F0EDE6] underline-draw transition-colors duration-150">
+                        Meet All Instructors →
+                    </a>
+                </div>
+
+                <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    @foreach($instructors as $instructor)
+                        <article class="border border-[#1E1E1E] bg-[#111] p-8 hover:border-[#2255FF] transition-all duration-300 hover:-translate-y-1 group" data-reveal>
+                            <div class="flex items-center gap-4 mb-8">
+                                <div class="w-14 h-14 bg-[#0A0A0A] border border-[#1E1E1E] flex items-center justify-center font-display text-2xl text-[#2255FF] group-hover:border-[#2255FF] transition-colors duration-300">
+                                    {{ $instructor['initial'] }}
+                                </div>
                                 <div>
-                                    <h3 class="text-3xl font-display uppercase tracking-[-0.02em] text-white leading-tight">{{ $course->title }}</h3>
+                                    <p class="font-mono text-[13px] text-[#F0EDE6]">{{ $instructor['name'] }}</p>
+                                    <p class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#555]">{{ $instructor['expertise'] }}</p>
                                 </div>
-                                <div class="flex items-center justify-between text-[11px] uppercase tracking-[0.25em] font-black text-slate-500">
-                                    <span>{{ $course->instructor->name }}</span>
-                                    <span>4.9/5</span>
+                            </div>
+
+                            {{-- Rating bar --}}
+                            <div class="mb-6">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#333]">Rating</span>
+                                    <span class="font-mono text-[11px] text-[#F0EDE6]">{{ $instructor['rating'] }}/5</span>
                                 </div>
-                            </article>
+                                <div class="h-px bg-[#1E1E1E] relative overflow-hidden">
+                                    <div class="absolute inset-y-0 left-0 bg-[#2255FF] stat-bar-fill"
+                                         style="width: {{ ($instructor['rating']/5)*100 }}%"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-3 border-t border-[#1E1E1E] pt-5">
+                                <span class="font-mono text-[11px] text-[#555] border border-[#1E1E1E] px-3 py-1.5">{{ $instructor['courses'] }} courses</span>
+                                <span class="font-mono text-[11px] text-[#555] border border-[#1E1E1E] px-3 py-1.5">{{ $instructor['followers'] }} followers</span>
+                            </div>
+                        </article>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+
+        {{-- ─────────────────────────────────────────────────────────────
+             FAQ
+        ───────────────────────────────────────────────────────────────── --}}
+        <section id="faq" class="py-28 border-t border-[#1E1E1E]">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
+                <div class="grid gap-16 lg:grid-cols-2">
+                    <div data-reveal>
+                        <span class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#2255FF]">▸ FAQ</span>
+                        <h2 class="font-display text-[#F0EDE6] mt-4 leading-none" style="font-size: clamp(2rem, 5vw, 4.5rem);">
+                            COMMON<br>QUESTIONS
+                        </h2>
+                        <p class="mt-6 text-[14px] leading-8 text-[#555] max-w-sm">
+                            Everything you need to know about LiveSchool before you commit.
+                        </p>
+                    </div>
+
+                    <div class="space-y-0" x-data="{ open: null }">
+                        @foreach($faqItems as $faqIndex => $faq)
+                            <div class="border-t border-[#1E1E1E] {{ $loop->last ? 'border-b' : '' }}" data-reveal style="transition-delay: {{ $faqIndex * 60 }}ms">
+                                <button type="button"
+                                        @click="open = open === {{ $faqIndex }} ? null : {{ $faqIndex }}"
+                                        class="w-full flex items-center justify-between py-6 text-left group">
+                                    <span class="font-mono text-[12px] uppercase tracking-[0.15em] text-[#F0EDE6] group-hover:text-[#2255FF] transition-colors duration-150">{{ $faq['q'] }}</span>
+                                    <span class="font-mono text-[#555] ml-4 flex-shrink-0 transition-transform duration-200"
+                                          :class="open === {{ $faqIndex }} ? 'rotate-45' : 'rotate-0'">+</span>
+                                </button>
+                                <div x-show="open === {{ $faqIndex }}"
+                                     x-transition:enter="transition ease-out duration-200"
+                                     x-transition:enter-start="opacity-0 -translate-y-2"
+                                     x-transition:enter-end="opacity-100 translate-y-0"
+                                     x-transition:leave="transition ease-in duration-150"
+                                     x-transition:leave-start="opacity-100 translate-y-0"
+                                     x-transition:leave-end="opacity-0 -translate-y-2"
+                                     class="pb-6">
+                                    <p class="text-[14px] leading-7 text-[#555] border-l-2 border-[#2255FF] pl-4">{{ $faq['a'] }}</p>
+                                </div>
+                            </div>
                         @endforeach
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="features" class="py-24">
+        {{-- ─────────────────────────────────────────────────────────────
+             FINAL CTA
+        ───────────────────────────────────────────────────────────────── --}}
+        <section id="enterprise" class="py-28 border-t border-[#1E1E1E]">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
-                <div class="grid grid-cols-12 gap-[2px]">
-                    <div class="col-span-7 row-span-2 min-h-[520px] bg-[#2255FF] p-12 text-white overflow-hidden" data-reveal>
-                        <span class="text-[10px] uppercase tracking-[0.3em] text-white/80">Immersive Masterclasses</span>
-                        <h3 class="mt-8 text-[4vw] leading-[0.9] font-display uppercase tracking-[-0.03em]">Immersive Masterclasses</h3>
-                        <p class="mt-8 max-w-lg text-[14px] leading-7 text-white/90">A deliberate program built to train technique, thinking, and execution in the same breath — no fluff, no ritual.</p>
-                        <div class="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-[radial-gradient(circle,_rgba(255,255,255,0.05),transparent_40%)]"></div>
-                    </div>
+                <div class="relative overflow-hidden border border-[#1E1E1E] bg-[#111] p-16 text-center">
 
-                    <div class="col-span-5 min-h-[240px] bg-[#0A0A0A] border border-[#111] p-10" data-reveal>
-                        <div class="flex items-center justify-center mb-10">
-                            <div class="w-20 h-20 border border-[#444] flex items-center justify-center">
-                                <div class="w-10 h-10 border border-[#444] rounded-full animate-[spin_18s_linear_infinite]"></div>
+                    {{-- Corner accents --}}
+                    <div class="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-[#2255FF]"></div>
+                    <div class="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-[#2255FF]"></div>
+                    <div class="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 border-[#2255FF]"></div>
+                    <div class="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-[#2255FF]"></div>
+
+                    <div data-reveal>
+                        <span class="font-mono text-[10px] uppercase tracking-[0.4em] text-[#333]">Ready when you are</span>
+                        <h2 class="font-display text-[#F0EDE6] mt-6 leading-none" style="font-size: clamp(2.5rem, 8vw, 7rem);">
+                            READY TO BUILD<br>THE <span class="text-[#2255FF]">FUTURE?</span>
+                        </h2>
+                        <p class="mt-8 max-w-xl mx-auto text-[15px] leading-8 text-[#555]">
+                            Join LiveSchool and get the curriculum, community, and coaching that turns ambition into market-ready skills.
+                        </p>
+
+                        <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-5">
+                            <a href="{{ route('register') }}"
+                               class="inline-flex items-center justify-center gap-3 bg-[#2255FF] px-10 py-4 font-mono text-[11px] uppercase tracking-[0.25em] text-white hover:bg-[#F0EDE6] hover:text-[#0A0A0A] transition-none group">
+                                Create Elite Account
+                                <span class="group-hover:translate-x-1 transition-transform duration-150">→</span>
+                            </a>
+                            <div class="flex flex-col items-center gap-1">
+                                <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-[#333]">No credit card required</span>
+                                <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-[#333]">Instant workspace access</span>
                             </div>
                         </div>
-                        <h4 class="text-2xl font-display uppercase tracking-[-0.02em] mb-6">Elite Recognition</h4>
-                        <p class="text-[14px] leading-7 text-slate-400">A credential system designed with rigor, clarity, and the kind of detail that matters in elite networks.</p>
                     </div>
+                </div>
+            </div>
+        </section>
 
-                    <div class="col-span-7 min-h-[240px] bg-[#111] p-10" data-reveal>
-                        <div class="mb-10">
-                            <div class="w-16 h-16 grid grid-cols-3 grid-rows-3 gap-1">
-                                @for($i = 0; $i < 5; $i++)
-                                    <div class="bg-slate-700"></div>
-                                @endfor
-                            </div>
+        {{-- ─────────────────────────────────────────────────────────────
+             FOOTER
+        ───────────────────────────────────────────────────────────────── --}}
+        <footer class="border-t border-[#1E1E1E] pt-16 pb-8">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
+                <div class="grid gap-12 lg:grid-cols-[2fr_1fr_1fr_1fr]">
+
+                    {{-- Brand --}}
+                    <div>
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-8 h-8 bg-[#2255FF] flex items-center justify-center font-display text-white text-base">L</div>
+                            <span class="font-mono text-[11px] uppercase tracking-[0.35em] text-[#F0EDE6]">LiveSchool</span>
                         </div>
-                        <h4 class="text-2xl font-display uppercase tracking-[-0.02em] mb-6">Portfolio Architecture</h4>
-                        <p class="text-[14px] leading-7 text-slate-400">Thoughtful project structure that turns work into evidence of craft and capability.</p>
+                        <p class="text-[13px] leading-7 text-[#333] max-w-xs">
+                            Defining the new standard for professional education through immersion and elite mentorship.
+                        </p>
+                        {{-- Platform status --}}
+                        <div class="mt-8 inline-flex items-center gap-3 border border-[#1E1E1E] px-4 py-2">
+                            <div class="w-2 h-2 bg-[#1DB954] pulse-dot"></div>
+                            <span class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#333]">All systems operational</span>
+                        </div>
                     </div>
 
-                    <div class="col-span-5 row-span-2 min-h-[520px] bg-white p-12" data-reveal>
-                        <h4 class="text-[3vw] font-display uppercase tracking-[-0.03em] text-black leading-[0.9]">Vibrant Community</h4>
-                        <p class="mt-8 max-w-md text-[13px] leading-7 text-black/75">The only white surface on the page — a sharp editorial contrast that makes the message feel more urgent and alive.</p>
+                    {{-- Platform links --}}
+                    <div>
+                        <p class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#333] mb-6">Platform</p>
+                        <ul class="space-y-4">
+                            @foreach(['Catalog'=>'#programs','Instructions'=>'#features','Enterprise'=>'#enterprise'] as $label => $href)
+                                <li><a href="{{ $href }}" class="font-mono text-[12px] text-[#555] hover:text-[#F0EDE6] underline-draw transition-colors duration-150">{{ $label }}</a></li>
+                            @endforeach
+                        </ul>
+                    </div>
+
+                    {{-- Community links --}}
+                    <div>
+                        <p class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#333] mb-6">Community</p>
+                        <ul class="space-y-4">
+                            @foreach(['Events'=>'#','Forum'=>'#','Alumni'=>'#'] as $label => $href)
+                                <li><a href="{{ $href }}" class="font-mono text-[12px] text-[#555] hover:text-[#F0EDE6] underline-draw transition-colors duration-150">{{ $label }}</a></li>
+                            @endforeach
+                        </ul>
+                    </div>
+
+                    {{-- Connect --}}
+                    <div>
+                        <p class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#333] mb-6">Connect</p>
+                        <div class="flex items-center gap-4">
+                            <a href="#" class="font-mono text-[12px] text-[#555] hover:text-[#F0EDE6] transition-colors duration-150">TW</a>
+                            <a href="#" class="font-mono text-[12px] text-[#555] hover:text-[#F0EDE6] transition-colors duration-150">IG</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
 
-        <section class="bg-[#0F0F0F] py-16">
-            <div class="max-w-7xl mx-auto px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <div class="border-b border-white/10 pb-10 md:border-r md:border-b-0 md:pr-10">
-                    <div class="text-[7vw] md:text-[6rem] font-display leading-[0.9] text-[#2255FF]" data-count="12500">0</div>
-                    <div class="mt-4 text-[11px] uppercase tracking-[0.3em] text-[#666] font-black">enrolled globally</div>
-                </div>
-                <div class="border-b border-white/10 pb-10 md:border-r md:border-b-0 md:px-10">
-                    <div class="text-[7vw] md:text-[6rem] font-display leading-[0.9] text-[#2255FF]" data-count="98">0</div>
-                    <div class="mt-4 text-[11px] uppercase tracking-[0.3em] text-[#666] font-black">completion rate</div>
-                </div>
-                <div class="pt-6 md:pt-0 md:pl-10">
-                    <div class="text-[7vw] md:text-[6rem] font-display leading-[0.9] text-[#2255FF]" data-count="49">0</div>
-                    <div class="mt-4 text-[11px] uppercase tracking-[0.3em] text-[#666] font-black">average rating</div>
-                </div>
-            </div>
-        </section>
-
-        <section class="py-28">
-            <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center">
-                <h2 class="text-[10vw] md:text-[8rem] leading-[0.9] font-display uppercase tracking-[-0.03em]">Ready to build the <span class="text-[#2255FF]">future?</span></h2>
-                <div class="mt-12 flex flex-col sm:flex-row items-center justify-center gap-6">
-                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center w-[200px] h-[52px] bg-[#2255FF] text-[#F0EDE6] uppercase tracking-[0.25em] font-black border border-[#2255FF] hover:bg-[#F0EDE6] hover:text-[#0A0A0A] transition-none">Create Account →</a>
-                    <p class="text-[11px] uppercase tracking-[0.3em] text-[#555] font-black">No credit card · Instant access</p>
-                </div>
-            </div>
-        </section>
-
-        <footer class="border-t border-[#1A1A1A] pt-16 pb-10">
-            <div class="max-w-7xl mx-auto px-6 lg:px-8 grid grid-cols-1 md:grid-cols-12 gap-12">
-                <div class="md:col-span-4">
-                    <div class="font-display text-2xl uppercase tracking-[-0.03em] text-white mb-6">LiveSchool</div>
-                    <p class="text-[13px] leading-7 text-slate-500 max-w-sm">A platform built for people who want to move faster, think deeper, and create work that matters.</p>
-                </div>
-                <div class="md:col-span-3">
-                    <div class="text-[11px] uppercase tracking-[0.3em] text-slate-500 mb-8">Platform</div>
-                    <ul class="space-y-4 text-[11px] leading-[2.4] uppercase tracking-[0.2em] text-[#444]">
-                        <li><a href="#" class="hover:text-[#F0EDE6] transition-colors">Catalog</a></li>
-                        <li><a href="#" class="hover:text-[#F0EDE6] transition-colors">Instructors</a></li>
-                        <li><a href="#" class="hover:text-[#F0EDE6] transition-colors">Enterprise</a></li>
-                    </ul>
-                </div>
-                <div class="md:col-span-3">
-                    <div class="text-[11px] uppercase tracking-[0.3em] text-slate-500 mb-8">Community</div>
-                    <ul class="space-y-4 text-[11px] leading-[2.4] uppercase tracking-[0.2em] text-[#444]">
-                        <li><a href="#" class="hover:text-[#F0EDE6] transition-colors">Events</a></li>
-                        <li><a href="#" class="hover:text-[#F0EDE6] transition-colors">Forum</a></li>
-                        <li><a href="#" class="hover:text-[#F0EDE6] transition-colors">Alumni</a></li>
-                    </ul>
-                </div>
-                <div class="md:col-span-2">
-                    <div class="text-[11px] uppercase tracking-[0.3em] text-slate-500 mb-8">Social</div>
-                    <div class="space-y-4 text-[11px] leading-[2.4] uppercase tracking-[0.2em] text-[#444]">
-                        <a href="#" class="hover:text-[#F0EDE6] transition-colors">TW</a>
-                        <a href="#" class="hover:text-[#F0EDE6] transition-colors">IG</a>
+                {{-- Footer bottom --}}
+                <div class="mt-16 border-t border-[#1E1E1E] pt-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                    <span class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#333]">© {{ date('Y') }} LiveSchool Platform. Knowledge for excellence.</span>
+                    <div class="flex flex-wrap items-center gap-6">
+                        @foreach(['Privacy', 'Terms', 'Contact'] as $link)
+                            <a href="#" class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#333] hover:text-[#555] transition-colors duration-150">{{ $link }}</a>
+                        @endforeach
                     </div>
-                </div>
-            </div>
-            <div class="mt-16 pt-8 border-t border-[#1A1A1A] flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] uppercase tracking-[0.2em] text-[#333]">
-                <span>© {{ date('Y') }} LiveSchool Platform</span>
-                <div class="flex gap-8">
-                    <a href="#" class="hover:text-[#F0EDE6] transition-colors">Privacy</a>
-                    <a href="#" class="hover:text-[#F0EDE6] transition-colors">Terms</a>
-                    <a href="#" class="hover:text-[#F0EDE6] transition-colors">Contact</a>
                 </div>
             </div>
         </footer>
+
     </main>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const revealElements = document.querySelectorAll('[data-reveal]');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach((entry) => {
-                    if (!entry.isIntersecting) return;
-                    entry.target.classList.add('reveal');
-                    observer.unobserve(entry.target);
-                });
-            }, { threshold: 0.2 });
+    document.addEventListener('DOMContentLoaded', function () {
 
-            revealElements.forEach((el) => {
-                el.classList.add('reveal-hidden');
-                observer.observe(el);
+        // ── Custom cursor ──────────────────────────────────
+        const dot  = document.getElementById('cursor-dot');
+        const ring = document.getElementById('cursor-ring');
+        if (dot && ring) {
+            document.addEventListener('mousemove', (e) => {
+                dot.style.left  = e.clientX + 'px';
+                dot.style.top   = e.clientY + 'px';
+                ring.style.left = e.clientX + 'px';
+                ring.style.top  = e.clientY + 'px';
             });
+            document.querySelectorAll('a, button, [role="button"], input, textarea, select').forEach(el => {
+                el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+                el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+            });
+        }
 
-            const counters = document.querySelectorAll('[data-count]');
-            counters.forEach((counter) => {
-                const target = Number(counter.dataset.count);
-                const duration = 1200;
+        // ── Scroll reveal ──────────────────────────────────
+        const revealEls = document.querySelectorAll('[data-reveal]');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                entry.target.classList.add('reveal');
+                entry.target.classList.remove('reveal-hidden');
+                revealObserver.unobserve(entry.target);
+            });
+        }, { threshold: 0.15 });
+        revealEls.forEach(el => {
+            el.classList.add('reveal-hidden');
+            revealObserver.observe(el);
+        });
+
+        // ── Count-up stats ─────────────────────────────────
+        const counters = document.querySelectorAll('[data-count]');
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                const el     = entry.target;
+                const target = parseInt(el.dataset.count.replace(/,/g, ''), 10);
+                const suffix = el.nextElementSibling ? '' : '';
+                const duration = 1400;
                 let start = null;
-                const step = (timestamp) => {
-                    if (!start) start = timestamp;
-                    const progress = Math.min((timestamp - start) / duration, 1);
-                    counter.textContent = Math.floor(progress * target).toLocaleString();
-                    if (progress < 1) {
-                        window.requestAnimationFrame(step);
-                    }
+                const easeOut = t => 1 - Math.pow(1 - t, 3);
+                const step = (ts) => {
+                    if (!start) start = ts;
+                    const progress = Math.min((ts - start) / duration, 1);
+                    const value = Math.floor(easeOut(progress) * target);
+                    el.textContent = value >= 1000 ? value.toLocaleString() : value;
+                    if (progress < 1) requestAnimationFrame(step);
+                    else el.textContent = target >= 1000 ? target.toLocaleString() : target;
                 };
-                window.requestAnimationFrame(step);
+                requestAnimationFrame(step);
+                counterObserver.unobserve(el);
+            });
+        }, { threshold: 0.5 });
+        counters.forEach(el => counterObserver.observe(el));
+
+        // ── Section active nav ─────────────────────────────
+        const sections = document.querySelectorAll('section[id]');
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                const map = { programs: 'catalog', features: 'features', enterprise: 'enterprise' };
+                const key = map[entry.target.id] || entry.target.id;
+                document.dispatchEvent(new CustomEvent('section-change', { detail: key }));
+            });
+        }, { threshold: 0.4 });
+        sections.forEach(s => sectionObserver.observe(s));
+
+        // ── Testimonials ───────────────────────────────────
+        const cards = document.querySelectorAll('.testimonial-card');
+        const dots  = document.querySelectorAll('[data-testimonial-dot]');
+        let idx = 0;
+
+        const setTestimonial = (i) => {
+            cards.forEach((c, ci) => c.classList.toggle('hidden', ci !== i));
+            dots.forEach((d, di) => {
+                d.style.background = di === i ? '#2255FF' : '#1E1E1E';
+            });
+            idx = i;
+        };
+
+        window.startTestimonialTimer = () => {
+            window._testimonialTimer = setInterval(() => setTestimonial((idx + 1) % cards.length), 4000);
+        };
+        window.startTestimonialTimer();
+
+        dots.forEach(d => d.addEventListener('click', () => {
+            clearInterval(window._testimonialTimer);
+            setTestimonial(parseInt(d.dataset.testimonialDot));
+            window.startTestimonialTimer();
+        }));
+        setTestimonial(0);
+
+        // ── FAQ keyboard support ────────────────────────────
+        document.querySelectorAll('[data-faq-btn]').forEach(btn => {
+            btn.addEventListener('keydown', e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault(); btn.click();
+                }
             });
         });
+
+        // ── Marquee hover ──────────────────────────────────
+        document.querySelectorAll('.marquee-track').forEach(track => {
+            track.parentElement.addEventListener('mouseenter', () => track.classList.add('paused'));
+            track.parentElement.addEventListener('mouseleave', () => track.classList.remove('paused'));
+        });
+
+    });
     </script>
 </body>
 </html>

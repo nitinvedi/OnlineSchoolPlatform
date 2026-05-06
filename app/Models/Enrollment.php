@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Notifications\CertificateEarned;
 
 class Enrollment extends Model
 {
@@ -66,11 +67,14 @@ class Enrollment extends Model
             }
 
             if (!$this->certificate()->exists()) {
-                $this->certificate()->create([
+                $certificate = $this->certificate()->create([
                     'user_id' => $this->user_id,
                     'course_id' => $this->course_id,
                     'issued_at' => now(),
                 ]);
+
+                // Send certificate notification
+                $this->user->notify(new CertificateEarned($certificate));
             }
         }
     }

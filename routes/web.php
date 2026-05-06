@@ -16,6 +16,13 @@ Route::get('/courses', [CourseController::class, 'index'])->name('courses.index'
 Route::get('/courses/{course}', [CourseController::class, 'show'])->name('courses.show');
 Route::post('/courses/{course}/enroll', [CourseController::class, 'enroll'])->middleware('auth')->name('courses.enroll');
 
+// Payment routes
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('/courses/{course}/checkout', [\App\Http\Controllers\PaymentController::class, 'createCheckoutSession'])->name('payments.checkout');
+    Route::get('/payments/success', [\App\Http\Controllers\PaymentController::class, 'success'])->name('payments.success');
+});
+Route::post('/payments/webhook', [\App\Http\Controllers\PaymentController::class, 'webhook'])->name('payments.webhook');
+
 // Lesson routes (authenticated users only)
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/courses/{course}/lessons/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
@@ -77,4 +84,46 @@ Route::middleware(['auth', 'verified'])
     });
 
 require __DIR__.'/auth.php';
+
+// Admin routes
+Route::middleware(['auth', 'verified', 'admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+
+        Route::resource('users', App\Http\Controllers\Admin\UserController::class)->except(['create', 'store', 'edit']);
+        Route::post('users/{user}/update-role', [App\Http\Controllers\Admin\UserController::class, 'updateRole'])->name('users.update-role');
+        Route::post('users/{user}/suspend', [App\Http\Controllers\Admin\UserController::class, 'suspend'])->name('users.suspend');
+        Route::post('users/{user}/unsuspend', [App\Http\Controllers\Admin\UserController::class, 'unsuspend'])->name('users.unsuspend');
+        Route::post('users/bulk-action', [App\Http\Controllers\Admin\UserController::class, 'bulkAction'])->name('users.bulk-action');
+        Route::get('users-export', [App\Http\Controllers\Admin\UserController::class, 'export'])->name('users.export');
+
+        Route::resource('courses', App\Http\Controllers\Admin\CourseController::class)->except(['create', 'store', 'edit']);
+        Route::post('courses/{course}/approve', [App\Http\Controllers\Admin\CourseController::class, 'approve'])->name('courses.approve');
+        Route::post('courses/{course}/reject', [App\Http\Controllers\Admin\CourseController::class, 'reject'])->name('courses.reject');
+        Route::post('courses/{course}/unpublish', [App\Http\Controllers\Admin\CourseController::class, 'unpublish'])->name('courses.unpublish');
+        Route::post('courses/{course}/feature', [App\Http\Controllers\Admin\CourseController::class, 'feature'])->name('courses.feature');
+
+        Route::get('revenue', [App\Http\Controllers\Admin\RevenueController::class, 'index'])->name('revenue.index');
+        Route::post('revenue/payouts/{payout}/approve', [App\Http\Controllers\Admin\RevenueController::class, 'approvePayout'])->name('revenue.approve-payout');
+        Route::post('revenue/payouts/{payout}/reject', [App\Http\Controllers\Admin\RevenueController::class, 'rejectPayout'])->name('revenue.reject-payout');
+
+        Route::resource('reviews', App\Http\Controllers\Admin\ReviewController::class)->only(['index']);
+        Route::post('reviews/{review}/approve', [App\Http\Controllers\Admin\ReviewController::class, 'approve'])->name('reviews.approve');
+        Route::delete('reviews/{review}/remove', [App\Http\Controllers\Admin\ReviewController::class, 'remove'])->name('reviews.remove');
+        Route::post('reviews/{review}/warn-user', [App\Http\Controllers\Admin\ReviewController::class, 'warnUser'])->name('reviews.warn-user');
+
+        Route::resource('reports', App\Http\Controllers\Admin\ReportController::class)->only(['index']);
+        Route::post('reports/{report}/dismiss', [App\Http\Controllers\Admin\ReportController::class, 'dismiss'])->name('reports.dismiss');
+        Route::post('reports/{report}/remove-content', [App\Http\Controllers\Admin\ReportController::class, 'removeContent'])->name('reports.remove-content');
+        Route::post('reports/{report}/warn-user', [App\Http\Controllers\Admin\ReportController::class, 'warnUser'])->name('reports.warn-user');
+        Route::post('reports/{report}/ban-user', [App\Http\Controllers\Admin\ReportController::class, 'banUser'])->name('reports.ban-user');
+
+        Route::get('settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
+        Route::post('settings', [App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
+        Route::post('settings/toggle-maintenance', [App\Http\Controllers\Admin\SettingController::class, 'toggleMaintenance'])->name('settings.toggle-maintenance');
+        Route::post('settings/coupons', [App\Http\Controllers\Admin\SettingController::class, 'createCoupon'])->name('settings.create-coupon');
+        Route::delete('settings/coupons/{coupon}', [App\Http\Controllers\Admin\SettingController::class, 'expireCoupon'])->name('settings.expire-coupon');
+    });
 

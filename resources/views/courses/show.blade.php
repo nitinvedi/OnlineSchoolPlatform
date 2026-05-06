@@ -98,20 +98,33 @@
                                     </div>
                                 @else
                                     <div class="text-center">
-                                        <div class="flex items-center justify-center gap-3 mb-8">
-                                            <span class="text-4xl font-display font-black text-white">${{ number_format($course->price, 0) }}</span>
-                                            <span class="text-xl text-slate-500 line-through font-bold">${{ number_format($course->price * 2, 0) }}</span>
-                                        </div>
-                                        <form action="{{ route('courses.enroll', $course) }}" method="POST">
-                                            @csrf
-                                            <button type="submit" class="btn-primary w-full py-5 text-xl">
-                                                Enroll Now
-                                            </button>
-                                        </form>
-                                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-6 flex justify-center items-center gap-2">
-                                            <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                            30-Day Money-Back Guarantee
-                                        </p>
+                                        @if($course->price && $course->price > 0)
+                                            <div class="flex items-center justify-center gap-3 mb-8">
+                                                <span class="text-4xl font-display font-black text-white">${{ number_format($course->price, 0) }}</span>
+                                                <span class="text-xl text-slate-500 line-through font-bold">${{ number_format($course->price * 2, 0) }}</span>
+                                            </div>
+                                            <form action="{{ route('payments.checkout', $course) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="btn-primary w-full py-5 text-xl">
+                                                    Buy Now
+                                                </button>
+                                            </form>
+                                            <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-6 flex justify-center items-center gap-2">
+                                                <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                30-Day Money-Back Guarantee
+                                            </p>
+                                        @else
+                                            <form action="{{ route('courses.enroll', $course) }}" method="POST" class="mb-8">
+                                                @csrf
+                                                <button type="submit" class="btn-primary w-full py-5 text-xl">
+                                                    Enroll Free
+                                                </button>
+                                            </form>
+                                            <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest flex justify-center items-center gap-2">
+                                                <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                                Free Course
+                                            </p>
+                                        @endif
                                     </div>
                                 @endif
                             </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\Category;
 use App\Models\Enrollment;
+use App\Notifications\CourseEnrolled;
 use Illuminate\Http\Request;
 
 class CourseController extends Controller
@@ -72,12 +73,20 @@ class CourseController extends Controller
             return redirect()->back()->with('warning', 'You are already enrolled in this course.');
         }
 
+        // If course has a price, redirect to payment
+        if ($course->price && $course->price > 0) {
+            return redirect()->route('payments.checkout', $course);
+        }
+
         Enrollment::create([
             'user_id'   => auth()->id(),
             'course_id' => $course->id,
         ]);
 
         $course->increment('student_count');
+
+        // Send enrollment notification
+        auth()->user()->notify(new CourseEnrolled($course));
 
         return redirect()->back()->with('success', 'Successfully enrolled in course!');
     }
