@@ -35,7 +35,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
 
                 {{-- Revenue Card --}}
-                <div class="lg:col-span-8 bg-[#111827]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-6">
+                <div class="lg:col-span-8 bg-transparent border border-white/10 rounded-3xl p-6">
 
                     <div class="flex items-center justify-between mb-8">
 
@@ -102,7 +102,7 @@
                 <div class="lg:col-span-4 space-y-6">
 
                     {{-- Tasks --}}
-                    <div class="bg-[#111827]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-6">
+                    <div class="bg-transparent border border-white/10 rounded-3xl p-6">
 
                         <div class="flex items-center justify-between mb-6">
 
@@ -174,7 +174,7 @@
 
                     {{-- Top Course --}}
                     @if($topCourse)
-                        <div class="bg-[#111827]/80 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden">
+                        <div class="bg-transparent border border-white/10 rounded-3xl overflow-hidden">
 
                             <img
                                 src="{{ $topCourse->thumbnail_src ?? 'https://ui-avatars.com/api/?name='.urlencode($topCourse->title).'&background=111827&color=fff&size=800' }}"
@@ -213,7 +213,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
 
                 {{-- Live Sessions --}}
-                <div class="bg-[#111827]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-6">
+                <div class="bg-transparent border border-white/10 rounded-3xl p-6">
 
                     <div class="flex items-center justify-between mb-8">
 
@@ -288,7 +288,7 @@
                 </div>
 
                 {{-- Reviews --}}
-                <div class="bg-[#111827]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-6">
+                <div class="bg-transparent border border-white/10 rounded-3xl p-6">
 
                     <div class="flex items-center justify-between mb-8">
 
@@ -347,7 +347,7 @@
                 </div>
 
                 {{-- Engagement --}}
-                <div class="bg-[#111827]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-6">
+                <div class="bg-transparent border border-white/10 rounded-3xl p-6">
 
                     <div class="mb-8">
 
@@ -414,7 +414,7 @@
             </div>
 
             {{-- Courses Table --}}
-            <div class="bg-[#111827]/80 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden">
+            <div class="bg-transparent border border-white/10 rounded-3xl overflow-hidden">
 
                 {{-- Table Header --}}
                 <div class="flex items-center justify-between px-6 py-5 border-b border-white/5">
