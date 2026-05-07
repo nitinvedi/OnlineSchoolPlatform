@@ -34,7 +34,7 @@ class LessonController extends Controller
 
         // Get all lessons for navigation
         $lessons = $course->lessons()->orderBy('order')->get();
-        $currentLessonIndex = $lessons->search(function ($l) {
+        $currentLessonIndex = $lessons->search(function ($l) use ($lesson) {
             return $l->id === $lesson->id;
         });
 
