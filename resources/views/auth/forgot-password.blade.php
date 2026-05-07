@@ -1,11 +1,11 @@
 <x-guest-layout>
     {{-- ── Page title ─────────────────────────────── --}}
     <div class="mb-10">
-        <h2 class="font-display text-[#F0EDE6] leading-none"
+        <h2 class="font-display text-gray-900 leading-none"
             style="font-size: clamp(2.8rem, 4vw, 4rem);">
             RESET YOUR<br>PASSWORD.
         </h2>
-        <p class="font-mono text-[13px] text-[#555] mt-4">
+        <p class="font-mono text-[13px] text-gray-600 mt-4">
             We'll send you a link to reset your password.
         </p>
     </div>

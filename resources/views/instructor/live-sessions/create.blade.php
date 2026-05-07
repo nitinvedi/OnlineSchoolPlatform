@@ -1,8 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-center gap-3">
-            <a href="{{ route('dashboard') }}" class="text-slate-400 hover:text-slate-300 transition">← Back to Dashboard</a>
-            <h2 class="font-semibold text-xl text-slate-100 leading-tight">Schedule Live Class</h2>
+            <a href="{{ route('dashboard') }}" class="text-gray-600 hover:text-gray-900 transition">← Back to Dashboard</a>
+            <h2 class="font-semibold text-xl text-gray-900 leading-tight">Schedule Live Class</h2>
         </div>
     </x-slot>
 
@@ -24,24 +24,24 @@
                 <div class="bg-transparent rounded-xl shadow-sm p-8 space-y-6">
                     {{-- Title --}}
                     <div>
-                        <label for="title" class="block text-sm font-semibold text-slate-300 mb-1.5">
-                            Session Title <span class="text-red-400">*</span>
+                        <label for="title" class="block text-sm font-semibold text-gray-900 mb-1.5">
+                            Session Title <span class="text-red-600">*</span>
                         </label>
                         <input type="text" id="title" name="title" value="{{ old('title') }}"
                                placeholder="e.g. Q&A Session — Week 3"
-                               class="w-full px-4 py-2.5 border border-slate-700 bg-slate-800 text-slate-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 @error('title') border-red-400 @enderror"
+                               class="w-full px-4 py-2.5 border border-gray-300 bg-white text-gray-900 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-600 focus:border-violet-600 @error('title') border-red-500 @enderror"
                                required>
-                        @error('title') <p class="text-red-400 text-xs mt-1">{{ $message }}</p> @enderror
+                        @error('title') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     {{-- Course Selection — with enrolled student count --}}
                     <div>
-                        <label for="course_id" class="block text-sm font-semibold text-slate-300 mb-1.5">
-                            Course <span class="text-red-400">*</span>
-                            <span class="font-normal text-slate-400 text-xs">(only students enrolled in this course will see the session)</span>
+                        <label for="course_id" class="block text-sm font-semibold text-gray-900 mb-1.5">
+                            Course <span class="text-red-600">*</span>
+                            <span class="font-normal text-gray-600 text-xs">(only students enrolled in this course will see the session)</span>
                         </label>
                         <select id="course_id" name="course_id"
-                                class="w-full px-4 py-2.5 border border-slate-700 bg-slate-800 text-slate-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 @error('course_id') border-red-400 @enderror"
+                                class="w-full px-4 py-2.5 border border-gray-300 bg-white text-gray-900 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-600 focus:border-violet-600 @error('course_id') border-red-500 @enderror"
                                 onchange="showEnrolledStudents(this)"
                                 required>
                             <option value="">— Select a course —</option>
@@ -54,48 +54,48 @@
                                 </option>
                             @endforeach
                         </select>
-                        @error('course_id') <p class="text-red-400 text-xs mt-1">{{ $message }}</p> @enderror
+                        @error('course_id') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
 
                         {{-- Enrolled Students Panel (populated via JS) --}}
-                        <div id="enrolled-students-panel" class="hidden mt-3 p-4 bg-violet-500/10 border border-violet-500/20 rounded-lg">
-                            <p class="text-xs font-semibold text-violet-300 mb-2">👤 Students who will receive this session:</p>
+                        <div id="enrolled-students-panel" class="hidden mt-3 p-4 bg-violet-100 border border-violet-300 rounded-lg">
+                            <p class="text-xs font-semibold text-violet-900 mb-2">Students who will receive this session:</p>
                             <div id="students-list" class="flex flex-wrap gap-2"></div>
                         </div>
 
-                        <div id="no-students-panel" class="hidden mt-3 p-4 bg-amber-500/10 border border-amber-500/20 rounded-lg">
-                            <p class="text-sm text-amber-300">⚠️ No students are enrolled in this course yet. The session will still be created, but no one will see it until students enroll.</p>
+                        <div id="no-students-panel" class="hidden mt-3 p-4 bg-amber-50 border border-amber-300 rounded-lg">
+                            <p class="text-sm text-amber-900">No students are enrolled in this course yet. The session will still be created, but no one will see it until students enroll.</p>
                         </div>
                     </div>
 
                     {{-- Description --}}
                     <div>
-                        <label for="description" class="block text-sm font-semibold text-slate-300 mb-1.5">Description</label>
+                        <label for="description" class="block text-sm font-semibold text-gray-900 mb-1.5">Description</label>
                         <textarea id="description" name="description" rows="3"
                                   placeholder="What topics will you cover in this session?"
-                                  class="w-full px-4 py-2.5 border border-slate-700 bg-slate-800 text-slate-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 resize-y">{{ old('description') }}</textarea>
+                                  class="w-full px-4 py-2.5 border border-gray-300 bg-white text-gray-900 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-600 focus:border-violet-600 resize-y">{{ old('description') }}</textarea>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         {{-- Scheduled Time --}}
                         <div>
-                            <label for="scheduled_at" class="block text-sm font-semibold text-slate-300 mb-1.5">
-                                Date & Time <span class="text-red-400">*</span>
+                            <label for="scheduled_at" class="block text-sm font-semibold text-gray-900 mb-1.5">
+                                Date & Time <span class="text-red-600">*</span>
                             </label>
                             <input type="datetime-local" id="scheduled_at" name="scheduled_at"
                                    value="{{ old('scheduled_at', now()->addDay()->format('Y-m-d\TH:i')) }}"
-                                   class="w-full px-4 py-2.5 border border-slate-700 bg-slate-800 text-slate-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 @error('scheduled_at') border-red-400 @enderror"
+                                   class="w-full px-4 py-2.5 border border-gray-300 bg-white text-gray-900 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-600 focus:border-violet-600 @error('scheduled_at') border-red-500 @enderror"
                                    required>
-                            @error('scheduled_at') <p class="text-red-400 text-xs mt-1">{{ $message }}</p> @enderror
+                            @error('scheduled_at') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
 
                         {{-- Duration --}}
                         <div>
-                            <label for="max_duration_minutes" class="block text-sm font-semibold text-slate-300 mb-1.5">
-                                Duration (minutes) <span class="text-red-400">*</span>
+                            <label for="max_duration_minutes" class="block text-sm font-semibold text-gray-900 mb-1.5">
+                                Duration (minutes) <span class="text-red-600">*</span>
                             </label>
                             <input type="number" id="max_duration_minutes" name="max_duration_minutes"
                                    value="{{ old('max_duration_minutes', 60) }}" min="15" max="300"
-                                   class="w-full px-4 py-2.5 border border-slate-700 bg-slate-800 text-slate-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
+                                   class="w-full px-4 py-2.5 border border-gray-300 bg-white text-gray-900 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-600 focus:border-violet-600"
                                    required>
                         </div>
                     </div>
@@ -103,10 +103,10 @@
 
                 {{-- Actions --}}
                 <div class="flex items-center justify-end gap-4">
-                    <a href="{{ route('dashboard') }}" class="px-5 py-2.5 text-sm text-slate-400 hover:text-slate-300 transition">Cancel</a>
+                    <a href="{{ route('dashboard') }}" class="px-5 py-2.5 text-sm text-gray-700 hover:text-gray-900 transition">Cancel</a>
                     <button type="submit"
-                            class="px-6 py-2.5 bg-violet-600 hover:bg-violet-500 text-white text-sm font-semibold rounded-lg transition shadow">
-                        🔴 Schedule Session
+                            class="px-6 py-2.5 bg-violet-600 hover:bg-violet-700 text-white text-sm font-semibold rounded-lg transition shadow">
+                        Schedule Session
                     </button>
                 </div>
             </form>
@@ -134,7 +134,7 @@
         } else {
             noStudents.classList.add('hidden');
             list.innerHTML = students.map(s =>
-                `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-violet-500/20 text-violet-300">
+                `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-violet-100 text-violet-900">
                     ${s.name}
                  </span>`
             ).join('');

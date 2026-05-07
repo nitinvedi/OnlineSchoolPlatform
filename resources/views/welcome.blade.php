@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
 <head>
     <meta charset="utf-8">
@@ -17,21 +17,21 @@
         #cursor-dot {
             position: fixed; top: 0; left: 0; z-index: 9999;
             width: 8px; height: 8px;
-            background: #F0EDE6; border-radius: 50%;
+            background: #111827; border-radius: 50%;
             pointer-events: none;
             transform: translate(-50%, -50%);
             transition: transform 0.08s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease, border-radius 0.2s ease;
-            mix-blend-mode: difference;
+             
         }
         #cursor-ring {
             position: fixed; top: 0; left: 0; z-index: 9998;
             width: 40px; height: 40px;
-            border: 1.5px solid rgba(240,237,230,0.5);
+            border: 1.5px solid rgba(17,24,39,0.2);
             border-radius: 50%;
             pointer-events: none;
             transform: translate(-50%, -50%);
             transition: transform 0.18s ease, width 0.25s ease, height 0.25s ease, opacity 0.2s ease;
-            mix-blend-mode: difference;
+             
         }
         body.cursor-hover #cursor-dot { width: 12px; height: 12px; }
         body.cursor-hover #cursor-ring { width: 56px; height: 56px; opacity: 0.6; }
@@ -45,7 +45,7 @@
             content: '';
             position: fixed; inset: 0; z-index: 0;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            opacity: 0.025;
+            opacity: 0.015;
             pointer-events: none;
         }
 
@@ -86,7 +86,7 @@
         .testimonial-card.hidden { display: none; }
 
         /* ── Progress bar on card ──────────────────────── */
-        .course-progress { height: 2px; background: #1E1E1E; position: relative; overflow: hidden; }
+        .course-progress { height: 2px; background: #E5E7EB; position: relative; overflow: hidden; }
         .course-progress-fill { height: 100%; background: #2255FF; }
 
         /* ── Mobile touch targets ──────────────────────── */
@@ -98,7 +98,7 @@
         /* ── Skeleton shimmer (for future use) ─────────── */
         @keyframes shimmer { from { background-position: -200% 0; } to { background-position: 200% 0; } }
         .shimmer {
-            background: linear-gradient(90deg, #111 25%, #1a1a1a 50%, #111 75%);
+            background: linear-gradient(90deg, #FFFFFF 25%, #1a1a1a 50%, #FFFFFF 75%);
             background-size: 200% 100%;
             animation: shimmer 1.6s infinite;
         }
@@ -127,7 +127,7 @@
         }
     </style>
 </head>
-<body class="bg-[#0A0A0A] text-[#F0EDE6] antialiased selection:bg-[#2255FF]/20 selection:text-[#F0EDE6] overflow-x-hidden">
+<body class="bg-[#FFFFFF] text-[#111827] antialiased selection:bg-[#2255FF]/20 selection:text-[#111827] overflow-x-hidden">
 
     {{-- Custom cursor --}}
     <div id="cursor-dot"></div>
@@ -190,7 +190,7 @@
     <nav x-data="{ scrolled: false, open: false, active: 'catalog' }"
          @scroll.window="scrolled = window.pageYOffset > 40"
          x-on:section-change.window="active = $event.detail"
-         :class="scrolled ? 'bg-[#0A0A0A] border-b border-[#1E1E1E]' : 'bg-transparent'"
+         :class="scrolled ? 'bg-[#FFFFFF] border-b border-[#E5E7EB]' : 'bg-transparent'"
          class="fixed inset-x-0 top-0 z-50 transition-all duration-500">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
@@ -198,7 +198,7 @@
                 {{-- Logo --}}
                 <a href="#hero" class="flex items-center gap-3 group">
                     <div class="w-9 h-9 bg-[#2255FF] flex items-center justify-center text-white font-display text-lg font-black transition-transform duration-200 group-hover:scale-105">L</div>
-                    <span class="font-mono text-xs uppercase tracking-[0.35em] text-[#F0EDE6]">LiveSchool</span>
+                    <span class="font-mono text-xs uppercase tracking-[0.35em] text-[#111827]">LiveSchool</span>
                 </a>
 
                 {{-- Desktop nav --}}
@@ -206,7 +206,7 @@
                     @foreach([['href'=>'#programs','key'=>'catalog','label'=>'Catalog'],['href'=>'#features','key'=>'features','label'=>'Features'],['href'=>'#enterprise','key'=>'enterprise','label'=>'Enterprise']] as $link)
                     <a href="{{ $link['href'] }}"
                        @click="active='{{ $link['key'] }}'"
-                       :class="active === '{{ $link['key'] }}' ? 'text-[#F0EDE6]' : 'text-[#555] hover:text-[#F0EDE6]'"
+                       :class="active === '{{ $link['key'] }}' ? 'text-[#111827]' : 'text-[#4B5563] hover:text-[#111827]'"
                        class="relative nav-strike font-mono text-[11px] uppercase tracking-[0.2em] transition-colors duration-150">
                         {{ $link['label'] }}
                         <span class="absolute inset-x-0 -bottom-1.5 h-px bg-[#2255FF] transition-opacity duration-150"
@@ -217,12 +217,12 @@
 
                 {{-- Desktop CTA --}}
                 <div class="hidden lg:flex items-center gap-5">
-                    <a href="{{ route('login') }}" class="font-mono text-[11px] uppercase tracking-[0.25em] text-[#555] hover:text-[#F0EDE6] transition-colors duration-150">Login</a>
-                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center border border-[#2255FF] bg-[#2255FF] px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.25em] text-white hover:bg-[#F0EDE6] hover:text-[#0A0A0A] hover:border-[#F0EDE6] transition-none">Join Free</a>
+                    <a href="{{ route('login') }}" class="font-mono text-[11px] uppercase tracking-[0.25em] text-[#4B5563] hover:text-[#111827] transition-colors duration-150">Login</a>
+                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center border border-[#2255FF] bg-[#2255FF] px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.25em] text-white hover:bg-[#111827] hover:text-[#FAFAFA] hover:border-[#111827] transition-none">Join Free</a>
                 </div>
 
                 {{-- Mobile hamburger --}}
-                <button @click="open = !open" class="lg:hidden inline-flex items-center justify-center w-10 h-10 border border-[#1E1E1E] text-[#F0EDE6] hover:border-[#2255FF] transition-colors duration-200">
+                <button @click="open = !open" class="lg:hidden inline-flex items-center justify-center w-10 h-10 border border-[#E5E7EB] text-[#111827] hover:border-[#2255FF] transition-colors duration-200">
                     <svg x-show="!open" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
                     <svg x-show="open"  class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
@@ -238,14 +238,14 @@
              x-transition:leave-start="opacity-100 translate-y-0"
              x-transition:leave-end="opacity-0 -translate-y-2"
              @click.outside="open = false"
-             class="lg:hidden border-t border-[#1E1E1E] bg-[#0A0A0A]">
+             class="lg:hidden border-t border-[#E5E7EB] bg-[#FFFFFF]">
             <div class="px-6 pb-8 pt-5 space-y-5 font-mono text-[11px] uppercase tracking-[0.2em]">
-                <a href="#programs"   @click="open=false;active='catalog'"    class="block text-[#555] hover:text-[#F0EDE6] py-2 transition-colors">Catalog</a>
-                <a href="#features"   @click="open=false;active='features'"   class="block text-[#555] hover:text-[#F0EDE6] py-2 transition-colors">Features</a>
-                <a href="#enterprise" @click="open=false;active='enterprise'" class="block text-[#555] hover:text-[#F0EDE6] py-2 transition-colors">Enterprise</a>
-                <div class="border-t border-[#1E1E1E] pt-5 flex flex-col gap-3">
-                    <a href="{{ route('login') }}"    class="block text-[#555] hover:text-[#F0EDE6] py-2 transition-colors">Login</a>
-                    <a href="{{ route('register') }}" class="block bg-[#2255FF] px-5 py-3 text-center text-white hover:bg-[#F0EDE6] hover:text-[#0A0A0A] transition-none">Join Free</a>
+                <a href="#programs"   @click="open=false;active='catalog'"    class="block text-[#4B5563] hover:text-[#111827] py-2 transition-colors">Catalog</a>
+                <a href="#features"   @click="open=false;active='features'"   class="block text-[#4B5563] hover:text-[#111827] py-2 transition-colors">Features</a>
+                <a href="#enterprise" @click="open=false;active='enterprise'" class="block text-[#4B5563] hover:text-[#111827] py-2 transition-colors">Enterprise</a>
+                <div class="border-t border-[#E5E7EB] pt-5 flex flex-col gap-3">
+                    <a href="{{ route('login') }}"    class="block text-[#4B5563] hover:text-[#111827] py-2 transition-colors">Login</a>
+                    <a href="{{ route('register') }}" class="block bg-[#2255FF] px-5 py-3 text-center text-white hover:bg-[#111827] hover:text-[#FAFAFA] transition-none">Join Free</a>
                 </div>
             </div>
         </div>
@@ -260,9 +260,9 @@
 
             {{-- Ambient blobs --}}
             <div class="absolute inset-0 pointer-events-none overflow-hidden">
-                <div class="absolute -left-32 top-20 h-96 w-96 rounded-none bg-[#2255FF]/10 blur-[120px]"></div>
-                <div class="absolute right-0 bottom-20 h-80 w-80 rounded-none bg-[#2255FF]/8 blur-[100px]"></div>
-                <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-none bg-[#2255FF]/4 blur-[160px]"></div>
+                <div class="absolute -left-32 top-20 h-96 w-96 rounded-none bg-[#2255FF]/[0.05] blur-[120px]"></div>
+                <div class="absolute right-0 bottom-20 h-80 w-80 rounded-none bg-[#2255FF]/[0.03] blur-[100px]"></div>
+                <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-none bg-[#2255FF]/[0.02] blur-[160px]"></div>
             </div>
 
             {{-- Vertical decorative text --}}
@@ -278,33 +278,33 @@
                 {{-- Top label --}}
                 <div class="flex items-center gap-4 mb-10" data-reveal>
                     <div class="w-px h-5 bg-[#2255FF]"></div>
-                    <span class="font-mono text-[10px] uppercase tracking-[0.4em] text-[#555]">Est. 2024 · Next-Gen Education Platform</span>
+                    <span class="font-mono text-[10px] uppercase tracking-[0.4em] text-[#4B5563]">Est. 2024 · Next-Gen Education Platform</span>
                     <div class="w-2 h-2 bg-[#2255FF] pulse-dot"></div>
                 </div>
 
                 <div class="grid gap-16 lg:grid-cols-[1.25fr_0.75fr] items-center">
                     <div>
                         {{-- Main headline --}}
-                        <h1 class="font-display font-black leading-none text-[#F0EDE6]"
+                        <h1 class="font-display font-black leading-none text-[#111827]"
                             style="font-size: clamp(3.5rem, 10vw, 9rem); tracking: -0.05em;" data-reveal>
                             UNLEASH<br>
                             YOUR <span class="text-[#2255FF]">TRUE</span><br>
                             POTENTIAL
                         </h1>
 
-                        <p class="mt-8 max-w-lg text-[15px] leading-8 text-[#555]" data-reveal style="transition-delay:80ms">
+                        <p class="mt-8 max-w-lg text-[15px] leading-8 text-[#4B5563]" data-reveal style="transition-delay:80ms">
                             Premium curriculum designed for ambitious learners who want skills, credibility, and real work outcomes — not just another certificate.
                         </p>
 
                         {{-- CTAs --}}
                         <div class="mt-10 flex flex-col sm:flex-row sm:items-center gap-4" data-reveal style="transition-delay:160ms">
                             <a href="{{ route('register') }}"
-                               class="inline-flex items-center justify-center gap-3 bg-[#2255FF] px-8 py-4 font-mono text-[11px] uppercase tracking-[0.25em] text-white hover:bg-[#F0EDE6] hover:text-[#0A0A0A] transition-none group">
+                               class="inline-flex items-center justify-center gap-3 bg-[#2255FF] px-8 py-4 font-mono text-[11px] uppercase tracking-[0.25em] text-white hover:bg-[#111827] hover:text-[#FAFAFA] transition-none group">
                                 Start Learning Now
                                 <span class="inline-block translate-x-0 group-hover:translate-x-1 transition-transform duration-150">→</span>
                             </a>
                             <a href="#programs"
-                               class="inline-flex items-center justify-center gap-3 border border-[#1E1E1E] px-8 py-4 font-mono text-[11px] uppercase tracking-[0.25em] text-[#555] hover:border-[#F0EDE6] hover:text-[#F0EDE6] transition-colors duration-150 group">
+                               class="inline-flex items-center justify-center gap-3 border border-[#E5E7EB] px-8 py-4 font-mono text-[11px] uppercase tracking-[0.25em] text-[#4B5563] hover:border-[#111827] hover:text-[#111827] transition-colors duration-150 group">
                                 See Programs
                                 <span class="inline-block opacity-0 group-hover:opacity-100 transition-opacity duration-150">↓</span>
                             </a>
@@ -317,53 +317,53 @@
                                     @foreach([1,2,3,4] as $avatar)
                                         <img src="https://i.pravatar.cc/128?img={{ 10 + $avatar }}"
                                              alt="Learner"
-                                             class="w-10 h-10 border-2 border-[#0A0A0A] bg-[#111] object-cover" />
+                                             class="w-10 h-10 border-2 border-[#FFFFFF] bg-[#FFFFFF] object-cover" />
                                     @endforeach
                                 </div>
                                 <div>
-                                    <p class="font-mono text-[11px] uppercase tracking-[0.35em] text-[#F0EDE6]">12,500+</p>
-                                    <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#333]">enrolled globally</p>
+                                    <p class="font-mono text-[11px] uppercase tracking-[0.35em] text-[#111827]">12,500+</p>
+                                    <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#6B7280]">enrolled globally</p>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-3 border-l border-[#1E1E1E] pl-8">
+                            <div class="flex items-center gap-3 border-l border-[#E5E7EB] pl-8">
                                 <div class="text-[#FFD166] text-sm">★★★★★</div>
-                                <span class="font-mono text-[11px] text-[#555]">4.9 avg rating</span>
+                                <span class="font-mono text-[11px] text-[#4B5563]">4.9 avg rating</span>
                             </div>
                         </div>
                     </div>
 
                     {{-- Right hero card --}}
                     <div class="relative hidden lg:block" data-reveal style="transition-delay:120ms">
-                        <div class="border border-[#1E1E1E] bg-[#111] p-8 relative overflow-hidden">
+                        <div class="border border-[#E5E7EB] bg-[#FFFFFF] p-8 relative overflow-hidden">
                             {{-- Accent corner --}}
                             <div class="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-[#2255FF]"></div>
                             <div class="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-[#2255FF]"></div>
 
                             <p class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#2255FF] mb-6">Live cohort experience</p>
-                            <h2 class="font-display text-3xl text-[#F0EDE6] leading-tight mb-4">Weekly live studio sessions with top mentors.</h2>
-                            <p class="text-[13px] leading-7 text-[#555] mb-8">Practice with peers, get live feedback, and keep every lesson instantly actionable.</p>
+                            <h2 class="font-display text-3xl text-[#111827] leading-tight mb-4">Weekly live studio sessions with top mentors.</h2>
+                            <p class="text-[13px] leading-7 text-[#4B5563] mb-8">Practice with peers, get live feedback, and keep every lesson instantly actionable.</p>
 
-                            <div class="border-t border-[#1E1E1E] pt-6 space-y-3">
+                            <div class="border-t border-[#E5E7EB] pt-6 space-y-3">
                                 @foreach(['Build a high-impact portfolio', 'Earn elite recognition badges', 'Land roles with product teams'] as $outcome)
                                 <div class="flex items-center gap-3">
                                     <span class="font-mono text-[#2255FF] text-sm">→</span>
-                                    <span class="font-mono text-[11px] uppercase tracking-[0.15em] text-[#555]">{{ $outcome }}</span>
+                                    <span class="font-mono text-[11px] uppercase tracking-[0.15em] text-[#4B5563]">{{ $outcome }}</span>
                                 </div>
                                 @endforeach
                             </div>
 
                             {{-- Live indicator --}}
-                            <div class="mt-8 flex items-center gap-3 bg-[#0A0A0A] px-4 py-3 border border-[#1E1E1E]">
+                            <div class="mt-8 flex items-center gap-3 bg-[#FFFFFF] px-4 py-3 border border-[#E5E7EB]">
                                 <div class="w-2 h-2 bg-[#1DB954] pulse-dot"></div>
-                                <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-[#555]">3 live sessions this week</span>
+                                <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-[#4B5563]">3 live sessions this week</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {{-- Trusted logos marquee --}}
-                <div class="mt-20 border-t border-b border-[#1E1E1E] py-5 marquee-wrapper" data-reveal style="transition-delay:300ms">
-                    <div class="marquee-track font-mono text-[10px] uppercase tracking-[0.4em] text-[#333]"
+                <div class="mt-20 border-t border-b border-[#E5E7EB] py-5 marquee-wrapper" data-reveal style="transition-delay:300ms">
+                    <div class="marquee-track font-mono text-[10px] uppercase tracking-[0.4em] text-[#6B7280]"
                          @mouseover="$el.classList.add('paused')"
                          @mouseleave="$el.classList.remove('paused')">
                         @foreach(array_merge($trustedLogos, $trustedLogos, $trustedLogos) as $logo)
@@ -371,12 +371,12 @@
                         @endforeach
                     </div>
                 </div>
-                <p class="mt-3 font-mono text-[10px] uppercase tracking-[0.35em] text-[#333] text-center">Trusted by alumni from global leaders</p>
+                <p class="mt-3 font-mono text-[10px] uppercase tracking-[0.35em] text-[#6B7280] text-center">Trusted by alumni from global leaders</p>
 
                 {{-- Scroll indicator --}}
                 <div class="mt-16 flex justify-center">
                     <a href="#programs" class="inline-flex flex-col items-center gap-2 group">
-                        <span class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#333] group-hover:text-[#555] transition-colors">Scroll to programs</span>
+                        <span class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#6B7280] group-hover:text-[#4B5563] transition-colors">Scroll to programs</span>
                         <span class="hero-arrow font-mono text-[#2255FF] text-lg">↓</span>
                     </a>
                 </div>
@@ -386,7 +386,7 @@
         {{-- ─────────────────────────────────────────────────────────────
              SIGNATURE PROGRAMS
         ───────────────────────────────────────────────────────────────── --}}
-        <section id="programs" class="py-28 border-t border-[#1E1E1E]">
+        <section id="programs" class="py-28 border-t border-[#E5E7EB]">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
 
                 <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between mb-14" data-reveal>
@@ -394,15 +394,15 @@
                         <div class="flex items-center gap-3 mb-4">
                             <span class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#2255FF]">▸ Elite Curriculum</span>
                         </div>
-                        <h2 class="font-display text-[#F0EDE6] leading-none" style="font-size: clamp(2.5rem, 6vw, 5.5rem);">
+                        <h2 class="font-display text-[#111827] leading-none" style="font-size: clamp(2.5rem, 6vw, 5.5rem);">
                             SIGNATURE<br>PROGRAMS
                         </h2>
-                        <p class="mt-5 max-w-xl text-[14px] leading-8 text-[#555]">
+                        <p class="mt-5 max-w-xl text-[14px] leading-8 text-[#4B5563]">
                             Rigorous learning paths engineered by experts to transform your professional trajectory.
                         </p>
                     </div>
                     <a href="{{ route('courses.index') }}"
-                       class="self-start inline-flex items-center gap-3 border border-[#1E1E1E] px-6 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-[#555] hover:border-[#F0EDE6] hover:text-[#F0EDE6] transition-colors duration-150 group">
+                       class="self-start inline-flex items-center gap-3 border border-[#E5E7EB] px-6 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-[#4B5563] hover:border-[#111827] hover:text-[#111827] transition-colors duration-150 group">
                         [ View All Courses
                         <span class="group-hover:translate-x-1 transition-transform duration-150">→</span>
                         ]
@@ -422,31 +422,31 @@
                                 $rating      = number_format($course->rating ?: 4.8, 1);
                                 $students    = number_format($course->student_count ?: rand(500,2000));
                             @endphp
-                            <article class="snap-start flex-shrink-0 w-[300px] sm:w-[320px] border border-[#1E1E1E] bg-[#111] p-6
+                            <article class="snap-start flex-shrink-0 w-[300px] sm:w-[320px] border border-[#E5E7EB] bg-[#FFFFFF] p-6
                                             transition-all duration-300 hover:border-[#2255FF] hover:-translate-y-1 group cursor-pointer"
                                      onclick="window.location='{{ route('courses.show', $course) }}'">
 
                                 {{-- Category + badges --}}
                                 <div class="flex items-center justify-between mb-5">
-                                    <span class="font-mono text-[9px] uppercase tracking-[0.35em] text-[#555] border border-[#1E1E1E] px-3 py-1.5">
+                                    <span class="font-mono text-[9px] uppercase tracking-[0.35em] text-[#4B5563] border border-[#E5E7EB] px-3 py-1.5">
                                         {{ $course->category->name ?? 'General' }}
                                     </span>
                                     @if($isFree)
                                         <span class="font-mono text-[9px] uppercase tracking-[0.25em] text-[#1DB954]">Free</span>
                                     @elseif($index === 0)
-                                        <span class="font-mono text-[9px] uppercase tracking-[0.25em] bg-[#F5A623] text-[#0A0A0A] px-2 py-1">Bestseller</span>
+                                        <span class="font-mono text-[9px] uppercase tracking-[0.25em] bg-[#F5A623] text-[#FAFAFA] px-2 py-1">Bestseller</span>
                                     @endif
                                 </div>
 
                                 {{-- Visual --}}
-                                <div class="flex h-40 items-center justify-center bg-[#0A0A0A] border border-[#1E1E1E] mb-5 overflow-hidden group-hover:border-[#2255FF] transition-colors duration-300">
+                                <div class="flex h-40 items-center justify-center bg-[#FFFFFF] border border-[#E5E7EB] mb-5 overflow-hidden group-hover:border-[#2255FF] transition-colors duration-300">
                                     <span class="font-display text-[6rem] leading-none text-[#2255FF] group-hover:scale-105 transition-transform duration-300">
                                         {{ strtoupper(substr($course->title, 0, 1)) }}
                                     </span>
                                 </div>
 
                                 {{-- Title --}}
-                                <h3 class="font-display text-[#F0EDE6] leading-tight mb-4 line-clamp-2"
+                                <h3 class="font-display text-[#111827] leading-tight mb-4 line-clamp-2"
                                     style="font-size: clamp(1.4rem, 2.5vw, 1.75rem);">
                                     {{ $course->title }}
                                 </h3>
@@ -455,29 +455,29 @@
                                 <div class="flex items-center gap-3 mb-5">
                                     <img src="{{ $instructorAvatar }}"
                                          alt="{{ $course->instructor->name ?? 'Instructor' }}"
-                                         class="w-9 h-9 object-cover border border-[#1E1E1E]" />
+                                         class="w-9 h-9 object-cover border border-[#E5E7EB]" />
                                     <div>
-                                        <p class="font-mono text-[11px] text-[#F0EDE6]">{{ $course->instructor->name ?? 'Instructor' }}</p>
-                                        <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#333]">Instructor</p>
+                                        <p class="font-mono text-[11px] text-[#111827]">{{ $course->instructor->name ?? 'Instructor' }}</p>
+                                        <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#6B7280]">Instructor</p>
                                     </div>
                                 </div>
 
                                 {{-- Meta --}}
-                                <div class="border-t border-[#1E1E1E] pt-4 flex items-center justify-between">
+                                <div class="border-t border-[#E5E7EB] pt-4 flex items-center justify-between">
                                     <div class="flex items-center gap-1.5">
                                         <span class="text-[#FFD166] text-xs">★</span>
-                                        <span class="font-mono text-[11px] text-[#F0EDE6]">{{ $rating }}</span>
-                                        <span class="font-mono text-[10px] text-[#333]">({{ $students }})</span>
+                                        <span class="font-mono text-[11px] text-[#111827]">{{ $rating }}</span>
+                                        <span class="font-mono text-[10px] text-[#6B7280]">({{ $students }})</span>
                                     </div>
-                                    <span class="font-mono text-[11px] uppercase tracking-[0.2em] text-[#F0EDE6] tabular-nums">{{ $priceLabel }}</span>
+                                    <span class="font-mono text-[11px] uppercase tracking-[0.2em] text-[#111827] tabular-nums">{{ $priceLabel }}</span>
                                 </div>
                             </article>
                         @empty
                             {{-- Empty state --}}
                             <div class="flex flex-col items-center justify-center w-full py-24 text-center">
-                                <span class="font-display text-6xl text-[#1E1E1E]">∅</span>
-                                <p class="font-display text-2xl text-[#333] mt-4">NO COURSES YET</p>
-                                <p class="font-mono text-[11px] text-[#333] mt-2">Check back soon — curriculum is being crafted.</p>
+                                <span class="font-display text-6xl text-[#E5E7EB]">∅</span>
+                                <p class="font-display text-2xl text-[#6B7280] mt-4">NO COURSES YET</p>
+                                <p class="font-mono text-[11px] text-[#6B7280] mt-2">Check back soon — curriculum is being crafted.</p>
                             </div>
                         @endforelse
                     </div>
@@ -488,7 +488,7 @@
         {{-- ─────────────────────────────────────────────────────────────
              STATS BAR
         ───────────────────────────────────────────────────────────────── --}}
-        <section id="stats" class="border-t border-[#1E1E1E] bg-[#0A0A0A]">
+        <section id="stats" class="border-t border-[#E5E7EB] bg-[#FFFFFF]">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
                 <div class="grid grid-cols-1 md:grid-cols-3">
                     @foreach([
@@ -497,7 +497,7 @@
                         ['count'=>'49',    'suffix'=>'/5','label'=>'Average Rating',     'sublabel'=>'across all courses'],
                     ] as $i => $stat)
                     <div class="flex flex-col items-center justify-center py-16 px-8
-                                {{ $i < 2 ? 'border-b md:border-b-0 md:border-r border-[#1E1E1E]' : '' }}"
+                                {{ $i < 2 ? 'border-b md:border-b-0 md:border-r border-[#E5E7EB]' : '' }}"
                          data-reveal>
                         <div class="flex items-end gap-1">
                                 <span class="font-mono text-[#2255FF] leading-none tabular-nums"
@@ -505,8 +505,8 @@
                                   data-count="{{ $stat['count'] }}">0</span>
                                 <span class="font-mono text-[#2255FF] text-3xl mb-2 tabular-nums">{{ $stat['suffix'] }}</span>
                         </div>
-                        <p class="font-mono text-[11px] uppercase tracking-[0.35em] text-[#F0EDE6] mt-3">{{ $stat['label'] }}</p>
-                        <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#333] mt-1">{{ $stat['sublabel'] }}</p>
+                        <p class="font-mono text-[11px] uppercase tracking-[0.35em] text-[#111827] mt-3">{{ $stat['label'] }}</p>
+                        <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#6B7280] mt-1">{{ $stat['sublabel'] }}</p>
                     </div>
                     @endforeach
                 </div>
@@ -516,12 +516,12 @@
         {{-- ─────────────────────────────────────────────────────────────
              FEATURES / BENTO
         ───────────────────────────────────────────────────────────────── --}}
-        <section id="features" class="py-28 border-t border-[#1E1E1E]">
+        <section id="features" class="py-28 border-t border-[#E5E7EB]">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
 
                 <div class="mb-14" data-reveal>
                     <span class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#2255FF]">▸ Experience</span>
-                    <h2 class="font-display text-[#F0EDE6] mt-3 leading-none" style="font-size: clamp(2.5rem, 6vw, 5rem);">
+                    <h2 class="font-display text-[#111827] mt-3 leading-none" style="font-size: clamp(2.5rem, 6vw, 5rem);">
                         WHY<br>LIVESCHOOL
                     </h2>
                 </div>
@@ -545,39 +545,39 @@
                     </div>
 
                     {{-- Cell 2: Elite Recognition (dark) --}}
-                    <div class="border border-[#1E1E1E] bg-[#111] p-10 flex flex-col justify-between min-h-[280px] hover:border-[#2255FF] transition-colors duration-300 group" data-reveal style="transition-delay:80ms">
-                        <div class="w-14 h-14 border border-[#1E1E1E] bg-[#0A0A0A] flex items-center justify-center group-hover:border-[#2255FF] transition-colors duration-300">
+                    <div class="border border-[#E5E7EB] bg-[#FFFFFF] p-10 flex flex-col justify-between min-h-[280px] hover:border-[#2255FF] transition-colors duration-300 group" data-reveal style="transition-delay:80ms">
+                        <div class="w-14 h-14 border border-[#E5E7EB] bg-[#FFFFFF] flex items-center justify-center group-hover:border-[#2255FF] transition-colors duration-300">
                             <svg class="w-6 h-6 text-[#2255FF]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.745 3.745 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.745 3.745 0 013.296-1.043A3.745 3.745 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.745 3.745 0 013.296 1.043 3.745 3.745 0 011.043 3.296A3.745 3.745 0 0121 12z" />
                             </svg>
                         </div>
                         <div>
-                            <h4 class="font-display text-[#F0EDE6] text-2xl mb-3">ELITE RECOGNITION</h4>
-                            <p class="text-[13px] leading-7 text-[#555]">Earn blockchain-verifiable credentials that open doors at the world's most innovative companies.</p>
+                            <h4 class="font-display text-[#111827] text-2xl mb-3">ELITE RECOGNITION</h4>
+                            <p class="text-[13px] leading-7 text-[#4B5563]">Earn blockchain-verifiable credentials that open doors at the world's most innovative companies.</p>
                         </div>
                     </div>
 
                     {{-- Cell 3: Portfolio Architecture --}}
-                    <div class="border border-[#1E1E1E] bg-[#111] p-10 flex flex-col justify-between min-h-[280px] hover:border-[#2255FF] transition-colors duration-300 group" data-reveal style="transition-delay:160ms">
-                        <div class="w-14 h-14 border border-[#1E1E1E] bg-[#0A0A0A] flex items-center justify-center group-hover:border-[#2255FF] transition-colors duration-300">
+                    <div class="border border-[#E5E7EB] bg-[#FFFFFF] p-10 flex flex-col justify-between min-h-[280px] hover:border-[#2255FF] transition-colors duration-300 group" data-reveal style="transition-delay:160ms">
+                        <div class="w-14 h-14 border border-[#E5E7EB] bg-[#FFFFFF] flex items-center justify-center group-hover:border-[#2255FF] transition-colors duration-300">
                             <svg class="w-6 h-6 text-[#2255FF]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
                             </svg>
                         </div>
                         <div>
-                            <h4 class="font-display text-[#F0EDE6] text-2xl mb-3">PORTFOLIO ARCHITECTURE</h4>
-                            <p class="text-[13px] leading-7 text-[#555]">Build production-grade projects that demonstrate mastery and solve real-world complexities.</p>
+                            <h4 class="font-display text-[#111827] text-2xl mb-3">PORTFOLIO ARCHITECTURE</h4>
+                            <p class="text-[13px] leading-7 text-[#4B5563]">Build production-grade projects that demonstrate mastery and solve real-world complexities.</p>
                         </div>
                     </div>
 
-                    {{-- Cell 4: Community (white inverted) --}}
-                    <div class="bg-[#F0EDE6] p-10 flex flex-col justify-between min-h-[280px]" data-reveal style="transition-delay:240ms">
-                        <span class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#333]">Ecosystem</span>
+                    {{-- Cell 4: Community (Light themed) --}}
+                    <div class="border border-[#E5E7EB] bg-[#FFFFFF] p-10 flex flex-col justify-between min-h-[280px] hover:border-[#2255FF] transition-colors duration-300 group" data-reveal style="transition-delay:240ms">
+                        <span class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#6B7280]">Ecosystem</span>
                         <div>
-                            <h4 class="font-display text-[#0A0A0A] leading-none mb-4" style="font-size:clamp(2rem,4vw,3rem);">
+                            <h4 class="font-display text-[#111827] leading-none mb-4" style="font-size:clamp(2rem,4vw,3rem);">
                                 VIBRANT<br>COMMUNITY
                             </h4>
-                            <p class="text-[13px] leading-7 text-[#555]">
+                            <p class="text-[13px] leading-7 text-[#4B5563]">
                                 Join 15k+ elite builders in a collaborative space designed for high-performance networking and growth.
                             </p>
                         </div>
@@ -589,13 +589,13 @@
         {{-- ─────────────────────────────────────────────────────────────
              TESTIMONIALS
         ───────────────────────────────────────────────────────────────── --}}
-        <section id="testimonials" class="py-28 border-t border-[#1E1E1E]">
+        <section id="testimonials" class="py-28 border-t border-[#E5E7EB]">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
 
                 <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between mb-12" data-reveal>
                     <div>
                         <span class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#2255FF]">▸ What Learners Say</span>
-                        <h2 class="font-display text-[#F0EDE6] mt-4 leading-none" style="font-size: clamp(2rem, 5vw, 4.5rem);">
+                        <h2 class="font-display text-[#111827] mt-4 leading-none" style="font-size: clamp(2rem, 5vw, 4.5rem);">
                             REAL FEEDBACK<br>FROM ALUMNI
                         </h2>
                     </div>
@@ -604,30 +604,30 @@
                         @foreach($testimonials as $index => $testimonial)
                             <button type="button"
                                     data-testimonial-dot="{{ $index }}"
-                                    class="w-8 h-1 bg-[#1E1E1E] transition-all duration-200 hover:bg-[#555]"></button>
+                                    class="w-8 h-1 bg-[#E5E7EB] transition-all duration-200 hover:bg-[#4B5563]"></button>
                         @endforeach
                     </div>
                 </div>
 
-                <div data-testimonials class="border border-[#1E1E1E] bg-[#111] p-8 md:p-10" @mouseenter="clearInterval(window._testimonialTimer)" @mouseleave="startTestimonialTimer()">
+                <div data-testimonials class="border border-[#E5E7EB] bg-[#FFFFFF] p-8 md:p-10" @mouseenter="clearInterval(window._testimonialTimer)" @mouseleave="startTestimonialTimer()">
                     @foreach($testimonials as $index => $testimonial)
                         <article class="testimonial-card {{ $index !== 0 ? 'hidden' : '' }}">
                             <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
                                 <div class="flex items-center gap-4">
-                                    <div class="w-14 h-14 bg-[#0A0A0A] border border-[#1E1E1E] flex items-center justify-center font-display text-2xl text-[#2255FF]">
+                                    <div class="w-14 h-14 bg-[#FFFFFF] border border-[#E5E7EB] flex items-center justify-center font-display text-2xl text-[#2255FF]">
                                         {{ $testimonial['initial'] }}
                                     </div>
                                     <div>
-                                        <p class="font-mono text-[13px] text-[#F0EDE6]">{{ $testimonial['name'] }}</p>
-                                        <p class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#333]">{{ $testimonial['role'] }} · {{ $testimonial['company'] }}</p>
+                                        <p class="font-mono text-[13px] text-[#111827]">{{ $testimonial['name'] }}</p>
+                                        <p class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#6B7280]">{{ $testimonial['role'] }} · {{ $testimonial['company'] }}</p>
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <div class="text-[#FFD166] text-sm">★★★★★</div>
-                                    <span class="font-mono text-[11px] text-[#555]">{{ $testimonial['rating'] }}</span>
+                                    <span class="font-mono text-[11px] text-[#4B5563]">{{ $testimonial['rating'] }}</span>
                                 </div>
                             </div>
-                            <p class="mt-8 text-lg leading-8 text-[#555] max-w-3xl border-l-2 border-[#2255FF] pl-6">
+                            <p class="mt-8 text-lg leading-8 text-[#4B5563] max-w-3xl border-l-2 border-[#2255FF] pl-6">
                                 "{{ $testimonial['quote'] }}"
                             </p>
                         </article>
@@ -639,49 +639,49 @@
         {{-- ─────────────────────────────────────────────────────────────
              INSTRUCTOR SPOTLIGHT
         ───────────────────────────────────────────────────────────────── --}}
-        <section id="instructors" class="py-28 border-t border-[#1E1E1E]">
+        <section id="instructors" class="py-28 border-t border-[#E5E7EB]">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
 
                 <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between mb-12" data-reveal>
                     <div>
                         <span class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#2255FF]">▸ Instructor Spotlight</span>
-                        <h2 class="font-display text-[#F0EDE6] mt-4 leading-none" style="font-size: clamp(2rem, 5vw, 4.5rem);">
+                        <h2 class="font-display text-[#111827] mt-4 leading-none" style="font-size: clamp(2rem, 5vw, 4.5rem);">
                             MEET THE<br>INSTRUCTORS
                         </h2>
                     </div>
-                    <a href="#" class="self-start inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-[#555] hover:text-[#F0EDE6] underline-draw transition-colors duration-150">
+                    <a href="#" class="self-start inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-[#4B5563] hover:text-[#111827] underline-draw transition-colors duration-150">
                         Meet All Instructors →
                     </a>
                 </div>
 
                 <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     @foreach($instructors as $instructor)
-                        <article class="border border-[#1E1E1E] bg-[#111] p-8 hover:border-[#2255FF] transition-all duration-300 hover:-translate-y-1 group" data-reveal>
+                        <article class="border border-[#E5E7EB] bg-[#FFFFFF] p-8 hover:border-[#2255FF] transition-all duration-300 hover:-translate-y-1 group" data-reveal>
                             <div class="flex items-center gap-4 mb-8">
-                                <div class="w-14 h-14 bg-[#0A0A0A] border border-[#1E1E1E] flex items-center justify-center font-display text-2xl text-[#2255FF] group-hover:border-[#2255FF] transition-colors duration-300">
+                                <div class="w-14 h-14 bg-[#FFFFFF] border border-[#E5E7EB] flex items-center justify-center font-display text-2xl text-[#2255FF] group-hover:border-[#2255FF] transition-colors duration-300">
                                     {{ $instructor['initial'] }}
                                 </div>
                                 <div>
-                                    <p class="font-mono text-[13px] text-[#F0EDE6]">{{ $instructor['name'] }}</p>
-                                    <p class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#555]">{{ $instructor['expertise'] }}</p>
+                                    <p class="font-mono text-[13px] text-[#111827]">{{ $instructor['name'] }}</p>
+                                    <p class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#4B5563]">{{ $instructor['expertise'] }}</p>
                                 </div>
                             </div>
 
                             {{-- Rating bar --}}
                             <div class="mb-6">
                                 <div class="flex items-center justify-between mb-2">
-                                    <span class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#333]">Rating</span>
-                                    <span class="font-mono text-[11px] text-[#F0EDE6]">{{ $instructor['rating'] }}/5</span>
+                                    <span class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#6B7280]">Rating</span>
+                                    <span class="font-mono text-[11px] text-[#111827]">{{ $instructor['rating'] }}/5</span>
                                 </div>
-                                <div class="h-px bg-[#1E1E1E] relative overflow-hidden">
+                                <div class="h-px bg-[#E5E7EB] relative overflow-hidden">
                                     <div class="absolute inset-y-0 left-0 bg-[#2255FF] stat-bar-fill"
                                          style="width: {{ ($instructor['rating']/5)*100 }}%"></div>
                                 </div>
                             </div>
 
-                            <div class="flex items-center gap-3 border-t border-[#1E1E1E] pt-5">
-                                <span class="font-mono text-[11px] text-[#555] border border-[#1E1E1E] px-3 py-1.5">{{ $instructor['courses'] }} courses</span>
-                                <span class="font-mono text-[11px] text-[#555] border border-[#1E1E1E] px-3 py-1.5">{{ $instructor['followers'] }} followers</span>
+                            <div class="flex items-center gap-3 border-t border-[#E5E7EB] pt-5">
+                                <span class="font-mono text-[11px] text-[#4B5563] border border-[#E5E7EB] px-3 py-1.5">{{ $instructor['courses'] }} courses</span>
+                                <span class="font-mono text-[11px] text-[#4B5563] border border-[#E5E7EB] px-3 py-1.5">{{ $instructor['followers'] }} followers</span>
                             </div>
                         </article>
                     @endforeach
@@ -692,27 +692,27 @@
         {{-- ─────────────────────────────────────────────────────────────
              FAQ
         ───────────────────────────────────────────────────────────────── --}}
-        <section id="faq" class="py-28 border-t border-[#1E1E1E]">
+        <section id="faq" class="py-28 border-t border-[#E5E7EB]">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
                 <div class="grid gap-16 lg:grid-cols-2">
                     <div data-reveal>
                         <span class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#2255FF]">▸ FAQ</span>
-                        <h2 class="font-display text-[#F0EDE6] mt-4 leading-none" style="font-size: clamp(2rem, 5vw, 4.5rem);">
+                        <h2 class="font-display text-[#111827] mt-4 leading-none" style="font-size: clamp(2rem, 5vw, 4.5rem);">
                             COMMON<br>QUESTIONS
                         </h2>
-                        <p class="mt-6 text-[14px] leading-8 text-[#555] max-w-sm">
+                        <p class="mt-6 text-[14px] leading-8 text-[#4B5563] max-w-sm">
                             Everything you need to know about LiveSchool before you commit.
                         </p>
                     </div>
 
                     <div class="space-y-0" x-data="{ open: null }">
                         @foreach($faqItems as $faqIndex => $faq)
-                            <div class="border-t border-[#1E1E1E] {{ $loop->last ? 'border-b' : '' }}" data-reveal style="transition-delay: {{ $faqIndex * 60 }}ms">
+                            <div class="border-t border-[#E5E7EB] {{ $loop->last ? 'border-b' : '' }}" data-reveal style="transition-delay: {{ $faqIndex * 60 }}ms">
                                 <button type="button"
                                         @click="open = open === {{ $faqIndex }} ? null : {{ $faqIndex }}"
                                         class="w-full flex items-center justify-between py-6 text-left group">
-                                    <span class="font-mono text-[12px] uppercase tracking-[0.15em] text-[#F0EDE6] group-hover:text-[#2255FF] transition-colors duration-150">{{ $faq['q'] }}</span>
-                                    <span class="font-mono text-[#555] ml-4 flex-shrink-0 transition-transform duration-200"
+                                    <span class="font-mono text-[12px] uppercase tracking-[0.15em] text-[#111827] group-hover:text-[#2255FF] transition-colors duration-150">{{ $faq['q'] }}</span>
+                                    <span class="font-mono text-[#4B5563] ml-4 flex-shrink-0 transition-transform duration-200"
                                           :class="open === {{ $faqIndex }} ? 'rotate-45' : 'rotate-0'">+</span>
                                 </button>
                                 <div x-show="open === {{ $faqIndex }}"
@@ -723,7 +723,7 @@
                                      x-transition:leave-start="opacity-100 translate-y-0"
                                      x-transition:leave-end="opacity-0 -translate-y-2"
                                      class="pb-6">
-                                    <p class="text-[14px] leading-7 text-[#555] border-l-2 border-[#2255FF] pl-4">{{ $faq['a'] }}</p>
+                                    <p class="text-[14px] leading-7 text-[#4B5563] border-l-2 border-[#2255FF] pl-4">{{ $faq['a'] }}</p>
                                 </div>
                             </div>
                         @endforeach
@@ -735,9 +735,9 @@
         {{-- ─────────────────────────────────────────────────────────────
              FINAL CTA
         ───────────────────────────────────────────────────────────────── --}}
-        <section id="enterprise" class="py-28 border-t border-[#1E1E1E]">
+        <section id="enterprise" class="py-28 border-t border-[#E5E7EB]">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
-                <div class="relative overflow-hidden border border-[#1E1E1E] bg-[#111] p-16 text-center">
+                <div class="relative overflow-hidden border border-[#E5E7EB] bg-[#FFFFFF] p-16 text-center">
 
                     {{-- Corner accents --}}
                     <div class="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-[#2255FF]"></div>
@@ -746,23 +746,23 @@
                     <div class="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-[#2255FF]"></div>
 
                     <div data-reveal>
-                        <span class="font-mono text-[10px] uppercase tracking-[0.4em] text-[#333]">Ready when you are</span>
-                        <h2 class="font-display text-[#F0EDE6] mt-6 leading-none" style="font-size: clamp(2.5rem, 8vw, 7rem);">
+                        <span class="font-mono text-[10px] uppercase tracking-[0.4em] text-[#6B7280]">Ready when you are</span>
+                        <h2 class="font-display text-[#111827] mt-6 leading-none" style="font-size: clamp(2.5rem, 8vw, 7rem);">
                             READY TO BUILD<br>THE <span class="text-[#2255FF]">FUTURE?</span>
                         </h2>
-                        <p class="mt-8 max-w-xl mx-auto text-[15px] leading-8 text-[#555]">
+                        <p class="mt-8 max-w-xl mx-auto text-[15px] leading-8 text-[#4B5563]">
                             Join LiveSchool and get the curriculum, community, and coaching that turns ambition into market-ready skills.
                         </p>
 
                         <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-5">
                             <a href="{{ route('register') }}"
-                               class="inline-flex items-center justify-center gap-3 bg-[#2255FF] px-10 py-4 font-mono text-[11px] uppercase tracking-[0.25em] text-white hover:bg-[#F0EDE6] hover:text-[#0A0A0A] transition-none group">
+                               class="inline-flex items-center justify-center gap-3 bg-[#2255FF] px-10 py-4 font-mono text-[11px] uppercase tracking-[0.25em] text-white hover:bg-[#111827] hover:text-[#FAFAFA] transition-none group">
                                 Create Elite Account
                                 <span class="group-hover:translate-x-1 transition-transform duration-150">→</span>
                             </a>
                             <div class="flex flex-col items-center gap-1">
-                                <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-[#333]">No credit card required</span>
-                                <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-[#333]">Instant workspace access</span>
+                                <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-[#6B7280]">No credit card required</span>
+                                <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-[#6B7280]">Instant workspace access</span>
                             </div>
                         </div>
                     </div>
@@ -773,7 +773,7 @@
         {{-- ─────────────────────────────────────────────────────────────
              FOOTER
         ───────────────────────────────────────────────────────────────── --}}
-        <footer class="border-t border-[#1E1E1E] pt-16 pb-8">
+        <footer class="border-t border-[#E5E7EB] pt-16 pb-8">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
                 <div class="grid gap-12 lg:grid-cols-[2fr_1fr_1fr_1fr]">
 
@@ -781,54 +781,54 @@
                     <div>
                         <div class="flex items-center gap-3 mb-6">
                             <div class="w-8 h-8 bg-[#2255FF] flex items-center justify-center font-display text-white text-base">L</div>
-                            <span class="font-mono text-[11px] uppercase tracking-[0.35em] text-[#F0EDE6]">LiveSchool</span>
+                            <span class="font-mono text-[11px] uppercase tracking-[0.35em] text-[#111827]">LiveSchool</span>
                         </div>
-                        <p class="text-[13px] leading-7 text-[#333] max-w-xs">
+                        <p class="text-[13px] leading-7 text-[#6B7280] max-w-xs">
                             Defining the new standard for professional education through immersion and elite mentorship.
                         </p>
                         {{-- Platform status --}}
-                        <div class="mt-8 inline-flex items-center gap-3 border border-[#1E1E1E] px-4 py-2">
+                        <div class="mt-8 inline-flex items-center gap-3 border border-[#E5E7EB] px-4 py-2">
                             <div class="w-2 h-2 bg-[#1DB954] pulse-dot"></div>
-                            <span class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#333]">All systems operational</span>
+                            <span class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#6B7280]">All systems operational</span>
                         </div>
                     </div>
 
                     {{-- Platform links --}}
                     <div>
-                        <p class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#333] mb-6">Platform</p>
+                        <p class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#6B7280] mb-6">Platform</p>
                         <ul class="space-y-4">
                             @foreach(['Catalog'=>'#programs','Instructions'=>'#features','Enterprise'=>'#enterprise'] as $label => $href)
-                                <li><a href="{{ $href }}" class="font-mono text-[12px] text-[#555] hover:text-[#F0EDE6] underline-draw transition-colors duration-150">{{ $label }}</a></li>
+                                <li><a href="{{ $href }}" class="font-mono text-[12px] text-[#4B5563] hover:text-[#111827] underline-draw transition-colors duration-150">{{ $label }}</a></li>
                             @endforeach
                         </ul>
                     </div>
 
                     {{-- Community links --}}
                     <div>
-                        <p class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#333] mb-6">Community</p>
+                        <p class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#6B7280] mb-6">Community</p>
                         <ul class="space-y-4">
                             @foreach(['Events'=>'#','Forum'=>'#','Alumni'=>'#'] as $label => $href)
-                                <li><a href="{{ $href }}" class="font-mono text-[12px] text-[#555] hover:text-[#F0EDE6] underline-draw transition-colors duration-150">{{ $label }}</a></li>
+                                <li><a href="{{ $href }}" class="font-mono text-[12px] text-[#4B5563] hover:text-[#111827] underline-draw transition-colors duration-150">{{ $label }}</a></li>
                             @endforeach
                         </ul>
                     </div>
 
                     {{-- Connect --}}
                     <div>
-                        <p class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#333] mb-6">Connect</p>
+                        <p class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#6B7280] mb-6">Connect</p>
                         <div class="flex items-center gap-4">
-                            <a href="#" class="font-mono text-[12px] text-[#555] hover:text-[#F0EDE6] transition-colors duration-150">TW</a>
-                            <a href="#" class="font-mono text-[12px] text-[#555] hover:text-[#F0EDE6] transition-colors duration-150">IG</a>
+                            <a href="#" class="font-mono text-[12px] text-[#4B5563] hover:text-[#111827] transition-colors duration-150">TW</a>
+                            <a href="#" class="font-mono text-[12px] text-[#4B5563] hover:text-[#111827] transition-colors duration-150">IG</a>
                         </div>
                     </div>
                 </div>
 
                 {{-- Footer bottom --}}
-                <div class="mt-16 border-t border-[#1E1E1E] pt-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                    <span class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#333]">© {{ date('Y') }} LiveSchool Platform. Knowledge for excellence.</span>
+                <div class="mt-16 border-t border-[#E5E7EB] pt-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                    <span class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#6B7280]">© {{ date('Y') }} LiveSchool Platform. Knowledge for excellence.</span>
                     <div class="flex flex-wrap items-center gap-6">
                         @foreach(['Privacy', 'Terms', 'Contact'] as $link)
-                            <a href="#" class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#333] hover:text-[#555] transition-colors duration-150">{{ $link }}</a>
+                            <a href="#" class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#6B7280] hover:text-[#4B5563] transition-colors duration-150">{{ $link }}</a>
                         @endforeach
                     </div>
                 </div>
@@ -916,7 +916,7 @@
         const setTestimonial = (i) => {
             cards.forEach((c, ci) => c.classList.toggle('hidden', ci !== i));
             dots.forEach((d, di) => {
-                d.style.background = di === i ? '#2255FF' : '#1E1E1E';
+                d.style.background = di === i ? '#2255FF' : '#E5E7EB';
             });
             idx = i;
         };

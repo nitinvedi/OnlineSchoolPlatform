@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -95,7 +95,7 @@
         /* ── Input styles (global for slot forms) ───────── */
         .ls-input {
             width: 100%;
-            background: #111111;
+            background: #F8FAFC;
             border: 1px solid #1E1E1E;
             color: #F0EDE6;
             padding: 14px 16px;
@@ -107,13 +107,13 @@
             -webkit-appearance: none;
         }
         .ls-input:focus       { border-color: #2255FF; }
-        .ls-input::placeholder{ color: #333; }
+        .ls-input::placeholder{ color: #94A3B8; }
         .ls-input.error       { border-color: #FF3B30; }
         .ls-label {
             display: block;
             font-family: 'JetBrains Mono', monospace;
             font-size: 10px; text-transform: uppercase;
-            letter-spacing: .15em; color: #555;
+            letter-spacing: .15em; color: #64748B;
             margin-bottom: 8px;
         }
         .ls-error {
@@ -135,7 +135,7 @@
         .ls-btn-ghost {
             display: inline-flex; align-items: center; justify-content: center; gap: 10px;
             width: 100%; padding: 14px 24px;
-            background: transparent; color: #555;
+            background: transparent; color: #64748B;
             font-family: 'JetBrains Mono', monospace;
             font-size: 11px; text-transform: uppercase; letter-spacing: .2em;
             border: 1px solid #1E1E1E; cursor: pointer;
@@ -158,7 +158,7 @@
         .eye-btn {
             position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
             background: none; border: none; cursor: pointer;
-            color: #333; padding: 4px;
+            color: #94A3B8; padding: 4px;
             transition: color .15s ease;
         }
         .eye-btn:hover { color: #F0EDE6; }
@@ -168,7 +168,7 @@
             display: flex; align-items: center; gap: 12px;
             font-family: 'JetBrains Mono', monospace;
             font-size: 10px; text-transform: uppercase;
-            letter-spacing: .2em; color: #333;
+            letter-spacing: .2em; color: #94A3B8;
         }
         .or-divider::before,
         .or-divider::after {
@@ -221,7 +221,7 @@
             font-family: 'JetBrains Mono', monospace;
             font-size: 9px; font-weight: 600;
             text-transform: uppercase; letter-spacing: 0.1em;
-            color: #555; width: 50px; text-align: right;
+            color: #64748B; width: 50px; text-align: right;
             transition: color .3s ease;
         }
         .strength-label.weak   { color: #FF3B30; }
@@ -286,7 +286,7 @@
         .wizard-step-label {
             font-family: 'JetBrains Mono', monospace;
             font-size: 10px; text-transform: uppercase;
-            letter-spacing: 0.25em; color: #555;
+            letter-spacing: 0.25em; color: #64748B;
         }
         .wizard-content {
             flex: 1; display: flex; flex-direction: column;
@@ -339,7 +339,7 @@
         }
         .wizard-level-desc {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 11px; color: #555; text-transform: uppercase;
+            font-size: 11px; color: #64748B; text-transform: uppercase;
             letter-spacing: 0.15em;
         }
         .wizard-slider-container {
@@ -348,7 +348,7 @@
         .wizard-slider-label {
             font-family: 'JetBrains Mono', monospace;
             font-size: 10px; text-transform: uppercase;
-            letter-spacing: 0.2em; color: #555; margin-bottom: 16px;
+            letter-spacing: 0.2em; color: #64748B; margin-bottom: 16px;
         }
         .wizard-slider {
             width: 100%; height: 4px; border-radius: 0;
@@ -385,7 +385,7 @@
             transition: all .2s ease; border-radius: 0;
         }
         .wizard-nav-btn.back {
-            background: transparent; color: #333;
+            background: transparent; color: #94A3B8;
             border: 1px solid #1E1E1E;
         }
         .wizard-nav-btn.back:hover { border-color: #F0EDE6; color: #F0EDE6; }
@@ -395,11 +395,11 @@
             position: absolute; top: 20px; right: 32px;
             font-family: 'JetBrains Mono', monospace;
             font-size: 10px; text-transform: uppercase;
-            letter-spacing: 0.2em; color: #333;
+            letter-spacing: 0.2em; color: #94A3B8;
             cursor: pointer; border: none; background: transparent;
             transition: color .2s ease;
         }
-        .wizard-skip:hover { color: #555; }
+        .wizard-skip:hover { color: #64748B; }
 
         /* ── Form field animation ──────────────────────────── */
         .field-error-slide {
@@ -455,7 +455,7 @@
         }
     </style>
 </head>
-<body class="bg-[#0A0A0A] text-[#F0EDE6] antialiased selection:bg-[#2255FF]/20 selection:text-[#F0EDE6] min-h-screen">
+<body class="bg-[#F8FAFC] text-[#0F172A] antialiased selection:bg-[#2255FF]/10 selection:text-[#2255FF] min-h-screen">
 
     {{-- Custom cursor --}}
     <div id="cursor-dot"></div>
@@ -466,7 +466,7 @@
         {{-- ─────────────────────────────────────────────────
              LEFT PANEL — Decorative branding (desktop only)
         ───────────────────────────────────────────────────── --}}
-        <div class="hidden lg:flex w-[52%] relative flex-col overflow-hidden border-r border-[#1E1E1E] bg-[#080808]">
+        <div class="hidden lg:flex w-[52%] relative flex-col overflow-hidden border-r border-slate-200 bg-white">
 
             {{-- Dot grid --}}
             <div class="absolute inset-0 dot-grid"></div>
@@ -478,13 +478,13 @@
             {{-- Top bar --}}
             <div class="relative z-10 flex items-center justify-between px-14 pt-12">
                 <a href="/" class="flex items-center gap-3 group">
-                    <div class="w-9 h-9 bg-[#2255FF] flex items-center justify-center font-display text-white text-lg transition-transform duration-200 group-hover:scale-105">L</div>
-                    <span class="font-mono text-[11px] uppercase tracking-[0.35em] text-[#F0EDE6]">LiveSchool</span>
+                    <div class="w-9 h-9 bg-violet-600 flex items-center justify-center font-display text-white text-lg transition-transform duration-200 group-hover:scale-105">L</div>
+                    <span class="font-mono text-[11px] uppercase tracking-[0.35em] text-gray-900">LiveSchool</span>
                 </a>
                 {{-- Live status --}}
                 <div class="flex items-center gap-2.5">
                     <div class="live-dot w-2 h-2 rounded-full bg-[#1DB954]"></div>
-                    <span class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#333]">Platform live</span>
+                    <span class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#94A3B8]">Platform live</span>
                 </div>
             </div>
 
@@ -493,22 +493,22 @@
 
                 {{-- Vertical decorative label --}}
                 <div class="absolute right-10 top-1/2 -translate-y-1/2">
-                    <span class="vert-text font-mono text-[9px] uppercase text-[#1A1A1A]">Knowledge for excellence</span>
+                    <span class="vert-text font-mono text-[9px] uppercase text-gray-600">Knowledge for excellence</span>
                 </div>
 
                 {{-- Headline --}}
                 <div class="fade-up">
-                    <span class="font-mono text-[10px] uppercase tracking-[0.4em] text-[#555] flex items-center gap-3">
+                    <span class="font-mono text-[10px] uppercase tracking-[0.4em] text-[#64748B] flex items-center gap-3">
                         <span class="w-px h-4 bg-[#2255FF] inline-block"></span>
                         Est. 2024 · Next-Gen Education
                     </span>
-                    <h1 class="font-display text-[#F0EDE6] leading-none mt-6"
+                    <h1 class="font-display text-gray-900 leading-none mt-6"
                         style="font-size: clamp(3rem, 6vw, 5.5rem);">
                         BUILD THE<br>
-                        <span class="text-[#2255FF]">FUTURE</span><br>
+                        <span class="text-violet-600">FUTURE</span><br>
                         OF LEARNING.
                     </h1>
-                    <p class="mt-6 text-[14px] leading-8 text-[#555] max-w-sm">
+                    <p class="mt-6 text-[14px] leading-8 text-[#64748B] max-w-sm">
                         Join an elite community of builders and scholars. Access world-class curriculum and interactive live environments.
                     </p>
                 </div>
@@ -520,9 +520,9 @@
                         ['value'=>'4.9★',   'label'=>'Avg Rating'],
                         ['value'=>'98%',    'label'=>'Completion'],
                     ] as $i => $stat)
-                    <div class="flex flex-col items-center justify-center px-8 py-5 {{ $i < 2 ? 'border-r border-[#1E1E1E]' : '' }} {{ $i > 0 ? '' : '' }}">
-                        <span class="font-display text-[#F0EDE6] text-2xl">{{ $stat['value'] }}</span>
-                        <span class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#333] mt-1">{{ $stat['label'] }}</span>
+                    <div class="flex flex-col items-center justify-center px-8 py-5 {{ $i < 2 ? 'border-r border-gray-200' : '' }} {{ $i > 0 ? '' : '' }}">
+                        <span class="font-display text-gray-900 text-2xl">{{ $stat['value'] }}</span>
+                        <span class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#94A3B8] mt-1">{{ $stat['label'] }}</span>
                     </div>
                     @endforeach
                 </div>
@@ -533,32 +533,32 @@
                         @foreach([1,2,3,4,5] as $i)
                             <img src="https://i.pravatar.cc/80?img={{ $i + 8 }}"
                                  alt="Learner"
-                                 class="w-9 h-9 object-cover border-2 border-[#080808]" />
+                                 class="w-9 h-9 object-cover border-2 border-white" />
                         @endforeach
                     </div>
                     <div>
-                        <p class="font-mono text-[11px] text-[#F0EDE6]">+12k learners</p>
-                        <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#333]">trusting LiveSchool today</p>
+                        <p class="font-mono text-[11px] text-gray-900">+12k learners</p>
+                        <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#94A3B8]">trusting LiveSchool today</p>
                     </div>
                 </div>
 
                 {{-- Feature chips --}}
                 <div class="mt-10 flex flex-wrap gap-3 fade-up delay-4">
                     @foreach(['🎥 Live sessions','📜 Certificates','🏆 Elite badges','👥 Community'] as $chip)
-                        <span class="font-mono text-[10px] uppercase tracking-[0.15em] text-[#555] border border-[#1E1E1E] px-3 py-2">{{ $chip }}</span>
+                        <span class="font-mono text-[10px] uppercase tracking-[0.15em] text-gray-600 border border-gray-200 px-3 py-2">{{ $chip }}</span>
                     @endforeach
                 </div>
             </div>
 
             {{-- Bottom testimonial strip --}}
-            <div class="relative z-10 mx-14 mb-12 border border-[#1E1E1E] bg-[#0A0A0A] p-6 fade-up delay-5">
+            <div class="relative z-10 mx-14 mb-12 border border-gray-200 bg-gray-50 p-6 fade-up delay-5">
                 <div class="flex items-start gap-4">
-                    <div class="w-10 h-10 bg-[#111] border border-[#1E1E1E] flex items-center justify-center font-display text-[#2255FF] text-xl flex-shrink-0">M</div>
+                    <div class="w-10 h-10 bg-white border border-gray-200 flex items-center justify-center font-display text-violet-600 text-xl flex-shrink-0">M</div>
                     <div>
-                        <p class="text-[13px] leading-6 text-[#555] border-l-2 border-[#2255FF] pl-3">
+                        <p class="text-[13px] leading-6 text-gray-600 border-l-2 border-violet-600 pl-3">
                             "LiveSchool helped me ship my first SaaS product while learning design, strategy, and mentorship."
                         </p>
-                        <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#333] mt-3">Maya Patel · Product Designer · Spark Labs</p>
+                        <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#94A3B8] mt-3">Maya Patel · Product Designer · Spark Labs</p>
                     </div>
                 </div>
             </div>
@@ -567,15 +567,15 @@
         {{-- ─────────────────────────────────────────────────
              RIGHT PANEL — Form slot
         ───────────────────────────────────────────────────── --}}
-        <div class="w-full lg:w-[48%] flex flex-col min-h-screen bg-[#0A0A0A] relative">
+        <div class="w-full lg:w-[48%] flex flex-col min-h-screen bg-[#F8FAFC] relative">
 
             {{-- Mobile logo --}}
             <div class="lg:hidden flex items-center justify-between px-6 pt-8 pb-0">
                 <a href="/" class="flex items-center gap-3">
-                    <div class="w-9 h-9 bg-[#2255FF] flex items-center justify-center font-display text-white text-lg">L</div>
-                    <span class="font-mono text-[11px] uppercase tracking-[0.35em] text-[#F0EDE6]">LiveSchool</span>
+                    <div class="w-9 h-9 bg-violet-600 flex items-center justify-center font-display text-white text-lg">L</div>
+                    <span class="font-mono text-[11px] uppercase tracking-[0.35em] text-gray-900">LiveSchool</span>
                 </a>
-                <a href="/" class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#555] hover:text-[#F0EDE6] transition-colors duration-150">← Back</a>
+                <a href="/" class="font-mono text-[10px] uppercase tracking-[0.25em] text-gray-600 hover:text-gray-900 transition-colors duration-150">← Back</a>
             </div>
 
             {{-- Ambient blob --}}
@@ -587,7 +587,7 @@
 
                     {{-- Back to home (desktop) --}}
                     <a href="/"
-                       class="hidden lg:inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.25em] text-[#333] hover:text-[#555] transition-colors duration-150 mb-10 fade-up">
+                       class="hidden lg:inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.25em] text-[#94A3B8] hover:text-[#64748B] transition-colors duration-150 mb-10 fade-up">
                         ← liveschool.com
                     </a>
 
@@ -600,8 +600,8 @@
                     <div class="mt-12 pt-8 border-t border-[#1E1E1E] fade-up delay-4">
                         <div class="flex flex-wrap items-center justify-between gap-3">
                             <div class="flex items-center gap-4">
-                                <a href="#" class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#333] hover:text-[#555] transition-colors">Privacy</a>
-                                <a href="#" class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#333] hover:text-[#555] transition-colors">Terms</a>
+                                <a href="#" class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#94A3B8] hover:text-[#64748B] transition-colors">Privacy</a>
+                                <a href="#" class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#94A3B8] hover:text-[#64748B] transition-colors">Terms</a>
                             </div>
                             <span class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#1E1E1E]">© {{ date('Y') }} LiveSchool</span>
                         </div>

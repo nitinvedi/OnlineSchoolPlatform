@@ -20,7 +20,7 @@
         $todayDate = now()->format('l, F j, Y');
     @endphp
 
-    <div class="min-h-screen bg-[#111] text-white">
+    <div class="min-h-screen bg-[#F8FAFC] text-[#0F172A]">
 
         <div class="max-w-[1500px] mx-auto px-6 py-8">
 
@@ -36,12 +36,15 @@
                         </span>
                     </h1>
 
-                    <div class="flex items-center gap-4 mt-4 text-slate-400">
+                    <div class="flex items-center gap-4 mt-4 text-gray-600">
                         <p class="text-base">{{ $todayDate }}</p>
-                        <span class="text-2xl">🔥 {{ $stats['streak'] }}-day streak</span>
+                        <div class="flex items-center gap-2 text-sm text-orange-600">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2s4 3 4 7-2 6-4 8-4-3-4-7 2-8 4-8z"/></svg>
+                            <span class="text-lg font-medium">{{ $stats['streak'] }}-day streak</span>
+                        </div>
                     </div>
 
-                    <p class="text-slate-400 mt-4 text-base max-w-2xl">
+                    <p class="text-gray-600 mt-4 text-base max-w-2xl">
                         {{ $quote }}
                     </p>
 
@@ -51,7 +54,7 @@
 
                     <a
                         href="{{ route('courses.index') }}"
-                        class="h-11 px-5 rounded-xl bg-violet-600 hover:bg-violet-500 transition flex items-center justify-center text-sm font-medium"
+                        class="h-11 px-5 rounded-xl bg-violet-600 hover:bg-violet-500 transition flex items-center justify-center text-sm font-medium text-white"
                     >
                         Explore Courses
                     </a>
@@ -79,7 +82,7 @@
                             }
                         @endphp
 
-                        <div class="relative overflow-hidden rounded-3xl bg-transparent min-h-[420px]">
+                        <div class="relative overflow-hidden rounded-3xl bg-white shadow-sm border border-slate-200 min-h-[420px]">
 
                             {{-- Background --}}
                             <img
@@ -87,14 +90,14 @@
                                 class="absolute inset-0 w-full h-full object-cover opacity-30"
                             >
 
-                            <div class="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-[#0f172a]/70 to-transparent"></div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-white via-white/70 to-transparent"></div>
 
                             {{-- Content --}}
                             <div class="relative z-10 h-full flex flex-col justify-end p-8 lg:p-10">
 
                                 <div class="max-w-2xl">
 
-                                    <div class="inline-flex items-center px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300 text-xs font-medium mb-6">
+                                    <div class="inline-flex items-center px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-600 text-xs font-medium mb-6">
                                         Continue Learning
                                     </div>
 
@@ -102,7 +105,7 @@
                                         {{ $jumpBackIn->course->title }}
                                     </h2>
 
-                                    <p class="text-slate-300 mb-8 text-base leading-relaxed">
+                                    <p class="text-gray-700 mb-8 text-base leading-relaxed">
                                         {{ $nextLesson ? 'Up next: ' . $nextLesson->title : 'You’ve completed this course. Review lessons anytime.' }}
                                     </p>
 
@@ -110,16 +113,17 @@
 
                                         <a
                                             href="{{ $nextLesson ? route('lessons.show', [$jumpBackIn->course, $nextLesson]) : route('courses.show', $jumpBackIn->course) }}"
-                                            class="h-12 px-6 rounded-xl bg-white text-slate-900 hover:bg-slate-100 transition flex items-center gap-2 text-sm font-medium w-fit"
+                                            class="h-12 px-6 rounded-lg bg-violet-600 text-white hover:bg-violet-700 transition flex items-center gap-2 text-sm font-semibold w-fit"
                                         >
-                                            ▶ Continue
+                                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                                            Continue
                                         </a>
 
                                         <div class="flex-1 max-w-md">
 
                                             <div class="flex items-center justify-between mb-2">
 
-                                                <span class="text-sm text-slate-400">
+                                                <span class="text-sm text-gray-600">
                                                     Progress
                                                 </span>
 
@@ -129,7 +133,7 @@
 
                                             </div>
 
-                                            <div class="h-2 rounded-full bg-white/10 overflow-hidden">
+                                            <div class="h-2 rounded-full bg-slate-100 border border-slate-200 overflow-hidden">
 
                                                 <div
                                                     class="h-full bg-violet-500 rounded-full transition-all duration-700"
@@ -150,17 +154,19 @@
 
                     @else
 
-                        <div class="rounded-3xl bg-transparent min-h-[420px] flex flex-col items-center justify-center text-center p-10">
+                        <div class="rounded-3xl bg-white shadow-sm border border-slate-200 min-h-[420px] flex flex-col items-center justify-center text-center p-10">
 
-                            <div class="w-20 h-20 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center mb-8 text-4xl">
-                                📚
+                            <div class="w-20 h-20 rounded-3xl bg-slate-50 border border-slate-200 flex items-center justify-center mb-8">
+                                <svg class="w-10 h-10 text-violet-600" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M19 2H9a2 2 0 00-2 2v14a2 2 0 002 2h10V2zM7 6H5a2 2 0 00-2 2v12a2 2 0 002 2h2V6z"/>
+                                </svg>
                             </div>
 
                             <h2 class="text-3xl font-semibold mb-4">
                                 Start Learning
                             </h2>
 
-                            <p class="text-slate-400 max-w-lg leading-relaxed mb-8">
+                            <p class="text-gray-600 max-w-lg leading-relaxed mb-8">
                                 Explore courses and begin building skills through hands-on learning.
                             </p>
 
@@ -181,23 +187,23 @@
                 <div class="lg:col-span-4 space-y-6">
 
                     {{-- Completion Card --}}
-                    <div class="rounded-3xl bg-transparent p-6">
+                    <div class="rounded-3xl bg-white shadow-sm border border-slate-200 p-6">
 
                         <div class="flex items-center justify-between">
 
                             <div>
 
-                                <p class="text-sm text-slate-400 mb-3">
+                                <p class="text-sm text-gray-600 mb-3">
                                     Course Completion
                                 </p>
 
                                 <div class="flex items-end gap-2">
 
-                                    <h3 class="text-5xl font-semibold tracking-tight">
+                                    <h3 class="text-5xl font-bold tracking-tight text-gray-900">
                                         {{ $stats['completedCourses'] }}
                                     </h3>
 
-                                    <span class="text-slate-500 mb-2">
+                                    <span class="text-gray-600 mb-2">
                                         / {{ $stats['enrolledCourses'] }}
                                     </span>
 
@@ -227,7 +233,7 @@
                                         cy="40"
                                         r="36"
                                         fill="transparent"
-                                        stroke="rgba(255,255,255,0.08)"
+                                        stroke="rgba(0,0,0,0.05)"
                                         stroke-width="7"
                                     ></circle>
 
@@ -260,28 +266,28 @@
                     </div>
 
                     {{-- Streak --}}
-                    <div class="rounded-3xl bg-transparent p-6">
+                    <div class="rounded-3xl bg-white shadow-sm border border-slate-200 p-6">
 
-                        <p class="text-sm text-slate-400 mb-4">This Month</p>
+                        <p class="text-sm text-gray-600 mb-4">This Month</p>
 
                         <div class="space-y-4">
 
                             <div>
                                 <div class="flex items-center justify-between mb-2">
-                                    <span class="text-sm font-medium">Learning Hours</span>
-                                    <span class="text-lg font-bold text-violet-400">{{ round($stats['learningHours'], 1) }}h</span>
+                                    <span class="text-sm font-medium text-gray-900">Learning Hours</span>
+                                    <span class="text-lg font-bold text-violet-600">{{ round($stats['learningHours'], 1) }}h</span>
                                 </div>
-                                <div class="h-2 rounded-full bg-white/10 overflow-hidden">
-                                    <div class="h-full bg-blue-500 rounded-full" style="width: {{ min(round(($stats['learningHours'] / 100) * 100), 100) }}%"></div>
+                                <div class="h-2 rounded-full bg-slate-100 border border-slate-200 overflow-hidden">
+                                    <div class="h-full bg-violet-600 rounded-full" style="width: {{ min(round(($stats['learningHours'] / 100) * 100), 100) }}%"></div>
                                 </div>
                             </div>
 
                             <div>
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-sm font-medium">Streak</span>
-                                    <span class="text-lg font-bold text-orange-400">{{ $stats['streak'] }} days 🔥</span>
+                                    <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm font-medium text-gray-900">Streak</span>
+                                    <span class="text-lg font-bold text-orange-600">{{ $stats['streak'] }} days</span>
                                 </div>
-                                <div class="h-2 rounded-full bg-white/10 overflow-hidden">
+                                <div class="h-2 rounded-full bg-slate-100 border border-slate-200 overflow-hidden">
                                     <div class="h-full bg-orange-500 rounded-full" style="width: {{ min(($stats['streak'] / 30) * 100, 100) }}%"></div>
                                 </div>
                             </div>
@@ -298,11 +304,11 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
 
                 {{-- Weekly Activity Chart --}}
-                <div class="lg:col-span-8 rounded-3xl bg-transparent p-8">
+                <div class="lg:col-span-8 rounded-3xl bg-white shadow-sm border border-slate-200 p-8">
 
                     <div class="mb-8">
                         <h3 class="text-2xl font-semibold">Weekly Progress</h3>
-                        <p class="text-sm text-slate-400 mt-1">Lessons completed per day</p>
+                        <p class="text-sm text-gray-600 mt-1">Lessons completed per day</p>
                     </div>
 
                     <div class="flex items-end justify-between gap-3 h-48">
@@ -312,7 +318,7 @@
                                 <div class="w-full max-w-12 bg-gradient-to-t from-violet-500 to-violet-400 rounded-t-lg transition-all hover:from-violet-600 hover:to-violet-500"
                                     style="height: {{ $day['lessons'] > 0 ? ($day['lessons'] * 40) : 8 }}px">
                                 </div>
-                                <span class="text-xs text-slate-400">{{ $day['day'] }}</span>
+                                <span class="text-xs text-gray-600">{{ $day['day'] }}</span>
                             </div>
                         @endforeach
 
@@ -321,13 +327,13 @@
                 </div>
 
                 {{-- Upcoming Live Sessions --}}
-                <div class="lg:col-span-4 rounded-3xl bg-transparent p-8">
+                <div class="lg:col-span-4 rounded-3xl bg-white shadow-sm border border-slate-200 p-8">
 
                     <div class="mb-8">
 
                         <h3 class="text-2xl font-semibold">Live Sessions</h3>
 
-                        <p class="text-sm text-slate-400 mt-1">Join your upcoming classes</p>
+                        <p class="text-sm text-gray-600 mt-1">Join your upcoming classes</p>
 
                     </div>
 
@@ -345,14 +351,14 @@
 
                         @forelse($upcomingSessions as $session)
 
-                            <div class="p-4 rounded-2xl border border-white/5 bg-white/[0.03] hover:bg-white/[0.05] transition">
+                            <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50 border border-slate-200 hover:bg-white/[0.05] transition">
 
                                 <div class="flex items-start justify-between gap-3 mb-2">
 
                                     @if($session->status === 'live')
                                         <span class="px-2 py-1 rounded-full bg-red-500 text-white text-xs font-medium">Live</span>
                                     @else
-                                        <span class="text-xs text-violet-400 font-medium">
+                                        <span class="text-xs text-violet-600 font-medium">
                                             {{ $session->scheduled_at->format('M d • h:i A') }}
                                         </span>
                                     @endif
@@ -363,22 +369,23 @@
                                     {{ $session->topic ?? $session->title }}
                                 </h4>
 
-                                <p class="text-xs text-slate-400 mb-3 line-clamp-1">
+                                <p class="text-xs text-gray-600 mb-3 line-clamp-1">
                                     {{ $session->course->title }}
                                 </p>
 
                                 <a
                                     href="{{ route('live-sessions.show', $session) }}"
-                                    class="text-xs text-violet-400 hover:text-violet-300 font-medium transition"
+                                    class="text-xs text-violet-600 hover:text-violet-700 font-medium transition inline-flex items-center gap-1"
                                 >
-                                    Join →
+                                    <span>Join</span>
+                                    <svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6l6 6-6 6"/></svg>
                                 </a>
 
                             </div>
 
                         @empty
 
-                            <div class="h-32 rounded-2xl border border-dashed border-white/10 flex items-center justify-center text-slate-500 text-sm text-center p-4">
+                            <div class="h-32 rounded-2xl border border-dashed border-slate-200 flex items-center justify-center text-gray-600 text-sm text-center p-4">
                                 No upcoming live sessions
                             </div>
 
@@ -394,11 +401,11 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
 
                 {{-- Achievements/Badges --}}
-                <div class="lg:col-span-6 rounded-3xl bg-transparent p-8">
+                <div class="lg:col-span-6 rounded-3xl bg-white shadow-sm border border-slate-200 p-8">
 
                     <div class="mb-8">
                         <h3 class="text-2xl font-semibold">Achievements</h3>
-                        <p class="text-sm text-slate-400 mt-1">Badges you've earned on your learning journey</p>
+                        <p class="text-sm text-gray-600 mt-1">Badges you've earned on your learning journey</p>
                     </div>
 
                     @if($badges->count() > 0)
@@ -407,19 +414,23 @@
 
                             @foreach($badges as $userBadge)
 
-                                <div class="flex flex-col items-center text-center p-4 rounded-2xl border border-white/5 bg-white/[0.03] hover:bg-white/[0.05] transition">
+                                <div class="flex flex-col items-center text-center p-4 rounded-2xl border border-slate-200 bg-slate-50 border border-slate-200 hover:bg-white/[0.05] transition">
 
                                     <div class="text-4xl mb-2">
-                                        {{ $userBadge->badge->icon_url ?? '🏆' }}
+                                        @if($userBadge->badge->icon_url)
+                                            <img src="{{ $userBadge->badge->icon_url }}" alt="{{ $userBadge->badge->name }}" class="w-10 h-10" />
+                                        @else
+                                            <svg class="w-10 h-10 text-amber-500" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2 6h6l-5 4 2 6-5-4-5 4 2-6-5-4h6z"/></svg>
+                                        @endif
                                     </div>
 
                                     <h4 class="text-xs font-bold mb-1">{{ $userBadge->badge->name }}</h4>
 
-                                    <p class="text-[10px] text-slate-400 line-clamp-2">
+                                    <p class="text-[10px] text-gray-600 line-clamp-2">
                                         {{ $userBadge->badge->description }}
                                     </p>
 
-                                    <p class="text-[10px] text-violet-400 mt-2">
+                                    <p class="text-[10px] text-violet-600 mt-2">
                                         {{ $userBadge->earned_at->format('M d') }}
                                     </p>
 
@@ -432,8 +443,10 @@
                     @else
 
                         <div class="text-center py-12">
-                            <div class="text-4xl mb-4">🔓</div>
-                            <p class="text-slate-400 text-sm">Complete courses, build streaks, and earn badges!</p>
+                            <div class="text-4xl mb-4">
+                                <svg class="w-10 h-10 mx-auto text-gray-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17a2 2 0 100-4 2 2 0 000 4zM17 8V7a5 5 0 10-10 0v1H5v12h14V8h-2zM9 7a3 3 0 116 0v1H9V7z"/></svg>
+                            </div>
+                                <p class="text-gray-600 text-sm">Complete courses, build streaks, and earn badges!</p>
                         </div>
 
                     @endif
@@ -441,11 +454,11 @@
                 </div>
 
                 {{-- Recent Certificates --}}
-                <div class="lg:col-span-6 rounded-3xl bg-transparent p-8">
+                <div class="lg:col-span-6 rounded-3xl bg-white shadow-sm border border-slate-200 p-8">
 
                     <div class="mb-8">
                         <h3 class="text-2xl font-semibold">Certificates</h3>
-                        <p class="text-sm text-slate-400 mt-1">Your earned certificates</p>
+                        <p class="text-sm text-gray-600 mt-1">Your earned certificates</p>
                     </div>
 
                     @if($certificates->count() > 0)
@@ -454,17 +467,17 @@
 
                             @foreach($certificates as $cert)
 
-                                <div class="p-4 rounded-2xl border border-white/5 bg-white/[0.03] hover:bg-white/[0.05] transition flex items-center justify-between gap-4">
+                                <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50 border border-slate-200 hover:bg-white/[0.05] transition flex items-center justify-between gap-4">
 
                                     <div class="flex items-center gap-4 flex-1 min-w-0">
 
                                         <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-lg flex-shrink-0">
-                                            📜
+                                            <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M6 2h9a2 2 0 012 2v16l-5-3-5 3V4a2 2 0 011-2z"/></svg>
                                         </div>
 
                                         <div class="min-w-0">
                                             <h4 class="font-medium line-clamp-1">{{ $cert->course->title }}</h4>
-                                            <p class="text-xs text-slate-400">{{ $cert->issued_at->format('M d, Y') }}</p>
+                                            <p class="text-xs text-slate-500">{{ $cert->issued_at->format('M d, Y') }}</p>
                                         </div>
 
                                     </div>
@@ -485,8 +498,10 @@
                     @else
 
                         <div class="text-center py-12">
-                            <div class="text-4xl mb-4">📜</div>
-                            <p class="text-slate-400 text-sm">Complete courses to earn certificates</p>
+                                            <div class="text-4xl mb-4">
+                                                <svg class="w-10 h-10 mx-auto text-gray-400" viewBox="0 0 24 24" fill="currentColor"><path d="M6 2h9a2 2 0 012 2v16l-5-3-5 3V4a2 2 0 011-2z"/></svg>
+                                            </div>
+                            <p class="text-gray-600 text-sm">Complete courses to earn certificates</p>
                         </div>
 
                     @endif
@@ -498,18 +513,18 @@
             {{-- Upcoming Deadlines --}}
             @if($upcomingDeadlines->count() > 0)
 
-                <div class="rounded-3xl bg-transparent p-8 mb-8">
+                <div class="rounded-3xl bg-white shadow-sm border border-slate-200 p-8 mb-8">
 
                     <div class="mb-8">
                         <h3 class="text-2xl font-semibold">Upcoming Deadlines</h3>
-                        <p class="text-sm text-slate-400 mt-1">Stay on top of your commitments</p>
+                        <p class="text-sm text-gray-600 mt-1">Stay on top of your commitments</p>
                     </div>
 
                     <div class="space-y-3">
 
                         @foreach($upcomingDeadlines as $deadline)
 
-                            <div class="p-4 rounded-2xl border border-white/5 bg-white/[0.03] hover:bg-white/[0.05] transition">
+                            <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50 border border-slate-200 hover:bg-white/[0.05] transition">
 
                                 <div class="flex items-start justify-between gap-4">
 
@@ -529,7 +544,7 @@
 
                                         <h4 class="font-medium">{{ $deadline['title'] }}</h4>
 
-                                        <p class="text-sm text-slate-400">{{ $deadline['course'] }}</p>
+                                        <p class="text-sm text-gray-600">{{ $deadline['course'] }}</p>
 
                                     </div>
 
@@ -561,7 +576,7 @@
 
                     <div>
                         <h3 class="text-2xl font-semibold">Your Courses</h3>
-                        <p class="text-sm text-slate-400 mt-1">Continue learning from where you left off</p>
+                        <p class="text-sm text-slate-500 mt-1">Continue learning from where you left off</p>
                     </div>
 
                     <span class="text-sm text-slate-500">
@@ -575,11 +590,11 @@
 
                     <div x-data="{ activeFilter: 'all' }" class="mb-8">
 
-                        <div class="flex gap-2 border-b border-white/10 pb-4">
+                        <div class="flex gap-2 border-b border-slate-200 pb-4">
 
                             <button
                                 @click="activeFilter = 'all'"
-                                :class="{ 'text-violet-400 border-b-2 border-violet-500': activeFilter === 'all', 'text-slate-400': activeFilter !== 'all' }"
+                                :class="{ 'text-violet-400 border-b-2 border-violet-500': activeFilter === 'all', 'text-slate-500': activeFilter !== 'all' }"
                                 class="px-4 py-2 text-sm font-medium transition border-b-2 border-transparent"
                             >
                                 All ({{ $enrollments->total() }})
@@ -587,7 +602,7 @@
 
                             <button
                                 @click="activeFilter = 'inprogress'"
-                                :class="{ 'text-violet-400 border-b-2 border-violet-500': activeFilter === 'inprogress', 'text-slate-400': activeFilter !== 'inprogress' }"
+                                :class="{ 'text-violet-400 border-b-2 border-violet-500': activeFilter === 'inprogress', 'text-slate-500': activeFilter !== 'inprogress' }"
                                 class="px-4 py-2 text-sm font-medium transition border-b-2 border-transparent"
                             >
                                 In Progress ({{ $enrollmentsInProgress->count() }})
@@ -595,7 +610,7 @@
 
                             <button
                                 @click="activeFilter = 'completed'"
-                                :class="{ 'text-violet-400 border-b-2 border-violet-500': activeFilter === 'completed', 'text-slate-400': activeFilter !== 'completed' }"
+                                :class="{ 'text-violet-400 border-b-2 border-violet-500': activeFilter === 'completed', 'text-slate-500': activeFilter !== 'completed' }"
                                 class="px-4 py-2 text-sm font-medium transition border-b-2 border-transparent"
                             >
                                 Completed ({{ $enrollmentsCompleted->count() }})
@@ -612,7 +627,7 @@
 
                                     <a
                                         href="{{ route('courses.show', $enrollment->course) }}"
-                                        class="rounded-3xl bg-transparent overflow-hidden hover:border-violet-500/30 transition group"
+                                        class="rounded-3xl bg-white shadow-sm border border-slate-200 overflow-hidden hover:border-violet-500/30 transition group"
                                     >
 
                                         <div class="aspect-[16/9] overflow-hidden relative">
@@ -636,18 +651,18 @@
                                                 {{ $enrollment->course->title }}
                                             </h4>
 
-                                            <p class="text-sm text-slate-400 mb-4">
+                                            <p class="text-sm text-slate-500 mb-4">
                                                 {{ $enrollment->course->instructor->name }}
                                             </p>
 
                                             <div class="mb-4">
 
                                                 <div class="flex items-center justify-between mb-2">
-                                                    <span class="text-sm text-slate-400">Progress</span>
+                                                    <span class="text-sm text-slate-500">Progress</span>
                                                     <span class="text-sm font-medium">{{ $enrollment->progress_percent ?? 0 }}%</span>
                                                 </div>
 
-                                                <div class="h-2 rounded-full bg-white/10 overflow-hidden">
+                                                <div class="h-2 rounded-full bg-slate-100 border border-slate-200 overflow-hidden">
                                                     <div
                                                         class="h-full bg-violet-500 rounded-full transition-all duration-700"
                                                         style="width: {{ $enrollment->progress_percent ?? 0 }}%"
@@ -656,7 +671,7 @@
 
                                             </div>
 
-                                            <div class="flex items-center justify-between text-xs text-slate-400">
+                                            <div class="flex items-center justify-between text-xs text-slate-500">
                                                 <span>{{ $enrollment->updated_at->diffForHumans() }}</span>
                                                 @if($enrollment->completed_at)
                                                     <span class="text-emerald-400">Completed</span>
@@ -684,7 +699,7 @@
 
                                         <a
                                             href="{{ route('courses.show', $enrollment->course) }}"
-                                            class="rounded-3xl bg-transparent overflow-hidden hover:border-violet-500/30 transition group"
+                                            class="rounded-3xl bg-white shadow-sm border border-slate-200 overflow-hidden hover:border-violet-500/30 transition group"
                                         >
 
                                             <div class="aspect-[16/9] overflow-hidden">
@@ -700,18 +715,18 @@
                                                     {{ $enrollment->course->title }}
                                                 </h4>
 
-                                                <p class="text-sm text-slate-400 mb-4">
+                                                <p class="text-sm text-slate-500 mb-4">
                                                     {{ $enrollment->course->instructor->name }}
                                                 </p>
 
                                                 <div class="mb-4">
 
                                                     <div class="flex items-center justify-between mb-2">
-                                                        <span class="text-sm text-slate-400">Progress</span>
+                                                        <span class="text-sm text-slate-500">Progress</span>
                                                         <span class="text-sm font-medium">{{ $enrollment->progress_percent ?? 0 }}%</span>
                                                     </div>
 
-                                                    <div class="h-2 rounded-full bg-white/10 overflow-hidden">
+                                                    <div class="h-2 rounded-full bg-slate-100 border border-slate-200 overflow-hidden">
                                                         <div
                                                             class="h-full bg-violet-500 rounded-full transition-all duration-700"
                                                             style="width: {{ $enrollment->progress_percent ?? 0 }}%"
@@ -720,7 +735,7 @@
 
                                                 </div>
 
-                                                <span class="text-xs text-slate-400">
+                                                <span class="text-xs text-slate-500">
                                                     Last accessed {{ $enrollment->updated_at->diffForHumans() }}
                                                 </span>
 
@@ -735,7 +750,7 @@
                             @else
 
                                 <div class="text-center py-12">
-                                    <p class="text-slate-400">No courses in progress</p>
+                                    <p class="text-slate-500">No courses in progress</p>
                                 </div>
 
                             @endif
@@ -753,7 +768,7 @@
 
                                         <a
                                             href="{{ route('courses.show', $enrollment->course) }}"
-                                            class="rounded-3xl bg-transparent overflow-hidden hover:border-violet-500/30 transition group"
+                                            class="rounded-3xl bg-white shadow-sm border border-slate-200 overflow-hidden hover:border-violet-500/30 transition group"
                                         >
 
                                             <div class="aspect-[16/9] overflow-hidden relative">
@@ -772,18 +787,18 @@
                                                     {{ $enrollment->course->title }}
                                                 </h4>
 
-                                                <p class="text-sm text-slate-400 mb-4">
+                                                <p class="text-sm text-slate-500 mb-4">
                                                     {{ $enrollment->course->instructor->name }}
                                                 </p>
 
                                                 <div class="mb-4">
-                                                    <div class="h-2 rounded-full bg-white/10 overflow-hidden">
+                                                    <div class="h-2 rounded-full bg-slate-100 border border-slate-200 overflow-hidden">
                                                         <div class="h-full bg-emerald-500 rounded-full w-full"></div>
                                                     </div>
                                                 </div>
 
                                                 <div class="flex items-center justify-between text-xs">
-                                                    <span class="text-slate-400">Completed</span>
+                                                    <span class="text-slate-500">Completed</span>
                                                     <span class="text-emerald-400 font-medium">100%</span>
                                                 </div>
 

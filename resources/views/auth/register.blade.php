@@ -17,10 +17,10 @@
         
         {{-- ── Page title ─────────────────────────────── --}}
         <div class="mb-12">
-            <h2 class="font-display text-[#F0EDE6] leading-none" style="font-size: clamp(2.8rem, 4vw, 4rem);">
+            <h2 class="font-display text-[#0F172A] leading-none" style="font-size: clamp(2.8rem, 4vw, 4rem);">
                 JOIN<br>LIVESCHOOL.
             </h2>
-            <p class="font-mono text-[13px] text-[#555] mt-4">
+            <p class="font-mono text-[13px] text-slate-500 mt-4">
                 Start your journey with world-class education.
             </p>
         </div>
@@ -186,8 +186,8 @@
         </form>
 
         {{-- ── Sign in link ────────────────────────────– --}}
-        <div class="mt-10 pt-8 border-t border-[#1E1E1E]">
-            <p class="font-mono text-[11px] uppercase tracking-[0.15em] text-[#555] text-center">
+        <div class="mt-10 pt-8 border-t border-slate-200">
+            <p class="font-mono text-[11px] uppercase tracking-[0.15em] text-slate-500 text-center">
                 Already have an account?
                 <a href="{{ route('login') }}" class="link-underline">
                     Sign in →

@@ -1,45 +1,45 @@
 <x-app-layout>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
-        .player-theme { background-color: #020617; color: #f8fafc; min-height: 100vh; }
-        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .player-theme { background-color: #ffffff; color: #111827; min-height: 100vh; }
+        .glass-panel { background: #ffffff; border: 1px solid rgba(229,231,235,1); }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .video-glow { box-shadow: 0 0 80px rgba(14, 165, 233, 0.15); }
+        .video-glow { box-shadow: 0 6px 24px rgba(15, 23, 42, 0.06); }
     </style>
 
-    <div x-data="{ sidebarOpen: true, activeTab: 'overview', theaterMode: false }" 
-         class="player-theme -mt-8 pt-8 flex flex-col md:flex-row transition-all duration-500 min-h-screen">
+        <div x-data="{ sidebarOpen: true, activeTab: 'overview', theaterMode: false }" 
+            class="player-theme -mt-8 pt-8 flex flex-col md:flex-row transition-all duration-500 min-h-screen">
         
         {{-- Main Player Area --}}
         <div :class="{'w-full': theaterMode || !sidebarOpen, 'w-full lg:w-[70%] xl:w-[75%]': !theaterMode && sidebarOpen}" 
              class="flex-1 flex flex-col transition-all duration-500 ease-in-out relative z-10">
             
             {{-- Top Bar (Breadcrumbs & Toggles) --}}
-            <div class="px-6 py-4 flex items-center justify-between glass-panel border-b-0 border-r-0 rounded-br-2xl md:rounded-none z-20">
-                <div class="flex items-center gap-2 text-sm font-bold text-slate-400">
+            <div class="px-6 py-4 flex items-center justify-between glass-panel rounded-br-2xl md:rounded-none z-20">
+                <div class="flex items-center gap-2 text-sm font-semibold text-gray-600">
                     <a href="{{ route('courses.show', $course) }}" class="hover:text-sky-400 transition flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                         Back to Course
                     </a>
                     <span class="mx-2 opacity-50">/</span>
-                    <span class="text-slate-200 truncate max-w-[200px] sm:max-w-xs">{{ $lesson->title }}</span>
+                    <span class="text-gray-700 truncate max-w-[200px] sm:max-w-xs">{{ $lesson->title }}</span>
                 </div>
                 
                 <div class="flex items-center gap-3">
-                    <button @click="theaterMode = !theaterMode" class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/10 transition text-sm font-bold text-slate-300">
+                    <button @click="theaterMode = !theaterMode" class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition text-sm font-semibold text-gray-700">
                         <svg x-show="!theaterMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
                         <svg x-show="theaterMode" style="display: none;" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 14h6m0 0v6m0-6l-7 7m17-11h-6m0 0V4m0 6l7-7m-7 17v-6m0 0h6m-6 0l7 7M10 10H4m6 0V4m0 6l-7-7"></path></svg>
                         <span x-text="theaterMode ? 'Exit Theater' : 'Theater Mode'"></span>
                     </button>
-                    <button @click="sidebarOpen = !sidebarOpen" class="md:hidden lg:flex items-center justify-center w-10 h-10 rounded-lg hover:bg-white/10 transition text-slate-300">
+                    <button @click="sidebarOpen = !sidebarOpen" class="md:hidden lg:flex items-center justify-center w-10 h-10 rounded-lg hover:bg-gray-100 transition text-gray-600">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                     </button>
                 </div>
             </div>
 
             {{-- Video Container --}}
-            <div class="w-full bg-black relative flex items-center justify-center video-glow" :class="{'aspect-video': true, 'h-screen max-h-screen': theaterMode}">
+            <div class="w-full bg-gray-100 relative flex items-center justify-center video-glow" :class="{'aspect-video': true, 'h-screen max-h-screen': theaterMode}">
                 @if($lesson->type === 'video' && $lesson->video_url)
                     @php
                         $videoUrl = $lesson->video_url;
@@ -58,12 +58,12 @@
                         </video>
                     @endif
                 @elseif($lesson->type === 'quiz')
-                    <div class="text-center p-8">
-                        <div class="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-500/20 transform -rotate-6">
-                            <span class="text-4xl text-white">📝</span>
+                        <div class="text-center p-8">
+                        <div class="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-100 transform -rotate-6">
+                            <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h18v2H3V3zm2 6h14v2H5V9zm0 6h14v2H5v-2z"></path></svg>
                         </div>
-                        <h2 class="text-3xl font-black text-white mb-4">Knowledge Check</h2>
-                        <p class="text-slate-400 font-medium max-w-md mx-auto mb-8">Test what you've learned in this section to ensure you're ready to move forward.</p>
+                        <h2 class="text-3xl font-black text-gray-900 mb-4">Knowledge Check</h2>
+                        <p class="text-gray-600 font-medium max-w-md mx-auto mb-8">Test what you've learned in this section to ensure you're ready to move forward.</p>
                         @if($enrolled && $lesson->quiz)
                             <a href="{{ route('quizzes.show', [$course, $lesson, $lesson->quiz]) }}" class="inline-block px-8 py-4 bg-white text-indigo-900 font-black rounded-xl hover:scale-105 transition shadow-xl">
                                 Start Assessment
@@ -71,12 +71,12 @@
                         @endif
                     </div>
                 @else
-                    <div class="text-center p-8">
-                        <div class="w-20 h-20 bg-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                            <svg class="w-10 h-10 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                        <div class="text-center p-8">
+                        <div class="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                            <svg class="w-8 h-8 text-gray-600" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16v2H4V4zm0 6h16v2H4v-2zm0 6h16v2H4v-2z"/></svg>
                         </div>
-                        <h2 class="text-2xl font-bold text-white">Text Lesson</h2>
-                        <p class="text-slate-400">Scroll down to read the content.</p>
+                        <h2 class="text-2xl font-bold text-gray-900">Text Lesson</h2>
+                        <p class="text-gray-600">Scroll down to read the content.</p>
                     </div>
                 @endif
             </div>
@@ -88,15 +88,15 @@
                     {{-- Title & Actions --}}
                     <div class="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-10">
                         <div>
-                            <h1 class="text-3xl sm:text-4xl font-black text-white mb-2 leading-tight">{{ $lesson->title }}</h1>
-                            <p class="text-slate-400 font-medium">Lesson {{ $currentIndex }} of {{ $totalLessons }} @if($lesson->duration_minutes) • {{ $lesson->duration_minutes }} mins @endif</p>
+                            <h1 class="text-3xl sm:text-4xl font-black text-gray-900 mb-2 leading-tight">{{ $lesson->title }}</h1>
+                            <p class="text-gray-600 font-medium">Lesson {{ $currentIndex }} of {{ $totalLessons }} @if($lesson->duration_minutes) • {{ $lesson->duration_minutes }} mins @endif</p>
                         </div>
                         
                         <div class="flex-shrink-0 flex items-center gap-3">
                             @if($enrolled && !$enrolled->isLessonCompleted($lesson))
                                 <form action="{{ route('lessons.complete', [$course, $lesson]) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="group relative px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-white font-bold rounded-xl shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2 overflow-hidden">
+                                    <button type="submit" class="group relative px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg shadow-sm transition-all flex items-center gap-2 overflow-hidden">
                                         <div class="absolute inset-0 w-full h-full bg-white/20 transform -skew-x-12 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
                                         <svg class="w-5 h-5 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                         <span class="relative z-10">Mark Complete</span>
@@ -112,8 +112,8 @@
                     </div>
 
                     {{-- Tabs --}}
-                    <div class="flex gap-8 border-b border-slate-800 mb-8 overflow-x-auto hide-scrollbar">
-                        <button @click="activeTab = 'overview'" :class="{'border-sky-500 text-white': activeTab === 'overview', 'border-transparent text-slate-500 hover:text-slate-300': activeTab !== 'overview'}" class="pb-4 font-bold text-lg border-b-2 transition whitespace-nowrap">Overview</button>
+                        <div class="flex gap-8 border-b border-gray-200 mb-8 overflow-x-auto hide-scrollbar">
+                        <button @click="activeTab = 'overview'" :class="{'border-violet-500 text-gray-900': activeTab === 'overview', 'border-transparent text-gray-600 hover:text-gray-700': activeTab !== 'overview'}" class="pb-4 font-bold text-lg border-b-2 transition whitespace-nowrap">Overview</button>
                         @if($lesson->type === 'text')
                             <button @click="activeTab = 'content'" :class="{'border-sky-500 text-white': activeTab === 'content', 'border-transparent text-slate-500 hover:text-slate-300': activeTab !== 'content'}" class="pb-4 font-bold text-lg border-b-2 transition whitespace-nowrap">Content</button>
                         @endif
@@ -126,19 +126,19 @@
                         <div x-show="activeTab === 'overview'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0">
                             @if($lesson->description)
                                 <div class="glass-panel p-6 sm:p-8 rounded-2xl mb-8">
-                                    <h3 class="font-bold text-white mb-4 flex items-center gap-2">
-                                        <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <h3 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                        <svg class="w-5 h-5 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                         About this lesson
                                     </h3>
-                                    <p class="text-slate-300 leading-relaxed font-medium">{{ $lesson->description }}</p>
+                                    <p class="text-gray-700 leading-relaxed font-medium">{{ $lesson->description }}</p>
                                 </div>
                             @endif
 
                             {{-- Navigation Buttons --}}
-                            <div class="flex justify-between items-center gap-4 pt-8 border-t border-slate-800">
+                            <div class="flex justify-between items-center gap-4 pt-8 border-t border-gray-200">
                                 @if($previousLesson)
-                                    <a href="{{ route('lessons.show', [$course, $previousLesson]) }}" class="flex items-center gap-2 text-slate-400 hover:text-white font-bold transition group">
-                                        <div class="w-10 h-10 rounded-full glass-panel flex items-center justify-center group-hover:bg-slate-800 transition">
+                                    <a href="{{ route('lessons.show', [$course, $previousLesson]) }}" class="flex items-center gap-2 text-gray-600 hover:text-gray-900 font-semibold transition group">
+                                        <div class="w-10 h-10 rounded-full glass-panel flex items-center justify-center group-hover:bg-gray-100 transition">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                                         </div>
                                         <span class="hidden sm:inline">Previous</span>
@@ -146,9 +146,9 @@
                                 @else <div></div> @endif
 
                                 @if($nextLesson)
-                                    <a href="{{ route('lessons.show', [$course, $nextLesson]) }}" class="flex items-center gap-2 text-white font-bold transition group">
+                                    <a href="{{ route('lessons.show', [$course, $nextLesson]) }}" class="flex items-center gap-2 text-gray-900 font-semibold transition group">
                                         <span class="hidden sm:inline">Next Lesson</span>
-                                        <div class="w-10 h-10 rounded-full bg-sky-500 flex items-center justify-center group-hover:bg-sky-400 shadow-lg shadow-sky-500/20 transition transform group-hover:scale-105">
+                                        <div class="w-10 h-10 rounded-full bg-violet-600 flex items-center justify-center group-hover:bg-violet-700 shadow-sm transition transform group-hover:scale-105">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                                         </div>
                                     </a>
@@ -163,8 +163,8 @@
 
                         {{-- Content (For Text lessons) --}}
                         @if($lesson->type === 'text')
-                            <div x-show="activeTab === 'content'" style="display: none;" class="glass-panel rounded-2xl p-6 sm:p-10 shadow-xl">
-                                <div class="prose prose-invert prose-sky max-w-none prose-lg font-medium">
+                            <div x-show="activeTab === 'content'" style="display: none;" class="glass-panel rounded-2xl p-6 sm:p-10 shadow-sm">
+                                <div class="prose max-w-none prose-lg text-gray-700 font-medium">
                                     {!! nl2br(e($lesson->content)) !!}
                                 </div>
                             </div>
@@ -172,10 +172,10 @@
 
                         {{-- Q&A Mock --}}
                         <div x-show="activeTab === 'qa'" style="display: none;" class="text-center py-12">
-                            <svg class="w-16 h-16 text-slate-700 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                            <h3 class="text-xl font-bold text-white mb-2">No Questions Yet</h3>
-                            <p class="text-slate-400 mb-6">Be the first to ask a question about this lesson.</p>
-                            <button class="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl transition border border-slate-700">Ask a Question</button>
+                            <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">No Questions Yet</h3>
+                            <p class="text-gray-600 mb-6">Be the first to ask a question about this lesson.</p>
+                            <button class="px-6 py-3 bg-white border border-gray-200 text-gray-800 font-semibold rounded-lg transition">Ask a Question</button>
                         </div>
                     </div>
                 </div>
@@ -183,26 +183,26 @@
         </div>
 
         {{-- Expandable Sidebar Navigation --}}
-        <div x-show="sidebarOpen" style="display: none;" 
+            <div x-show="sidebarOpen" style="display: none;" 
              x-transition:enter="transition ease-out duration-300" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" 
              x-transition:leave="transition ease-in duration-300" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full"
-             class="fixed lg:relative top-0 right-0 h-screen w-80 sm:w-96 glass-panel border-l border-white/10 z-50 flex flex-col flex-shrink-0 shadow-2xl overflow-hidden">
+             class="fixed lg:relative top-0 right-0 h-screen w-80 sm:w-96 glass-panel border-l border-gray-100 z-50 flex flex-col flex-shrink-0 shadow-sm overflow-hidden">
             
-            <div class="p-6 border-b border-white/5 flex justify-between items-center bg-slate-900/50">
-                <h3 class="font-black text-white text-lg">Course Content</h3>
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-white">
+                <h3 class="font-black text-gray-900 text-lg">Course Content</h3>
                 <button @click="sidebarOpen = false" class="lg:hidden text-slate-400 hover:text-white">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
 
             @if($enrolled)
-                <div class="px-6 py-4 bg-slate-900/30 border-b border-white/5">
-                    <div class="flex justify-between text-xs font-bold text-slate-400 mb-2">
+                <div class="px-6 py-4 bg-white border-b border-gray-100">
+                    <div class="flex justify-between text-xs font-semibold text-gray-500 mb-2">
                         <span>Progress</span>
-                        <span class="text-sky-400">{{ $enrolled->progress_percent }}%</span>
+                        <span class="text-violet-600">{{ $enrolled->progress_percent }}%</span>
                     </div>
-                    <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                        <div class="bg-gradient-to-r from-sky-500 to-indigo-500 h-1.5 rounded-full" style="width: {{ $enrolled->progress_percent }}%"></div>
+                    <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                        <div class="bg-violet-600 h-1.5 rounded-full" style="width: {{ $enrolled->progress_percent }}%"></div>
                     </div>
                 </div>
             @endif

@@ -11,11 +11,11 @@
 
         {{-- ── Page title ─────────────────────────────── --}}
         <div class="mb-10">
-            <h2 class="font-display text-[#F0EDE6] leading-none"
+            <h2 class="font-display text-[#0F172A] leading-none"
                 style="font-size: clamp(2.8rem, 4vw, 4rem);">
                 WELCOME<br>BACK.
             </h2>
-            <p class="font-mono text-[13px] text-[#555] mt-4">
+            <p class="font-mono text-[13px] text-slate-500 mt-4">
                 Sign in to continue your learning journey
             </p>
         </div>
@@ -138,7 +138,7 @@
                        name="remember"
                        class="ls-checkbox" />
                 <label for="remember_me"
-                       class="font-mono text-[11px] uppercase tracking-[0.15em] text-[#555] cursor-pointer select-none">
+                       class="font-mono text-[11px] uppercase tracking-[0.15em] text-slate-500 cursor-pointer select-none">
                     Remember me
                 </label>
             </div>
@@ -163,11 +163,11 @@
         </form>
 
         {{-- ── Register link ───────────────────────────── --}}
-        <div class="mt-8 pt-6 border-t border-[#1E1E1E]">
-            <p class="font-mono text-[11px] uppercase tracking-[0.15em] text-[#555] text-center">
+        <div class="mt-8 pt-6 border-t border-slate-200">
+            <p class="font-mono text-[11px] uppercase tracking-[0.15em] text-slate-500 text-center">
                 Don't have an account?
                 <a href="{{ route('register') }}"
-                   class="text-[#2255FF] hover:text-[#F0EDE6] transition-colors duration-150 ml-2">
+                   class="text-[#2255FF] hover:text-[#0F172A] transition-colors duration-150 ml-2">
                     Create one →
                 </a>
             </p>

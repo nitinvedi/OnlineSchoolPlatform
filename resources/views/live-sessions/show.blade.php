@@ -1,9 +1,9 @@
 <x-app-layout>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
-        .control-room { background-color: #020617; min-height: calc(100vh - 65px); color: #f8fafc; }
-        .jitsi-container { box-shadow: 0 0 100px rgba(14, 165, 233, 0.1); }
-        .mesh-lobby { background-color: #0f172a; background-image: radial-gradient(at 0% 0%, hsla(215,100%,20%,1) 0px, transparent 50%), radial-gradient(at 100% 0%, hsla(200,100%,15%,1) 0px, transparent 50%); }
+        .control-room { background-color: #F8FAFC; min-height: calc(100vh - 65px); color: #0F172A; }
+        .jitsi-container { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); }
+        .mesh-lobby { background-color: #F1F5F9; background-image: radial-gradient(at 0% 0%, hsla(215,100%,95%,1) 0px, transparent 50%), radial-gradient(at 100% 0%, hsla(200,100%,90%,1) 0px, transparent 50%); }
     </style>
 
     <div class="control-room -mt-8 pt-8 flex flex-col" x-data="{
@@ -19,14 +19,14 @@
     }">
         
         {{-- Header Bar --}}
-        <div class="px-6 py-4 bg-slate-900/80 backdrop-blur-md border-b border-white/5 flex items-center justify-between z-10">
+        <div class="px-6 py-4 bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center justify-between z-10">
             <div class="flex items-center gap-4">
-                <a href="{{ route('courses.show', $course) }}" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-slate-400 hover:bg-white/10 hover:text-white transition">
+                <a href="{{ route('courses.show', $course) }}" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-slate-500 hover:bg-white/10 hover:text-[#0F172A] transition">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                 </a>
                 <div>
-                    <h1 class="text-lg font-bold text-white">{{ $liveSession->title }}</h1>
-                    <p class="text-sm font-medium text-slate-400">{{ $course->title }}</p>
+                    <h1 class="text-lg font-bold text-[#0F172A]">{{ $liveSession->title }}</h1>
+                    <p class="text-sm font-medium text-slate-500">{{ $course->title }}</p>
                 </div>
             </div>
 
@@ -46,7 +46,7 @@
                         <span>24</span>
                     </div>
                 @else
-                    <span class="px-3 py-1.5 text-sm font-bold uppercase tracking-widest rounded-lg bg-white/5 text-slate-400 border border-white/10">
+                    <span class="px-3 py-1.5 text-sm font-bold uppercase tracking-widest rounded-lg bg-white/5 text-slate-500 border border-white/10">
                         {{ ucfirst($liveSession->status) }}
                     </span>
                 @endif
@@ -55,7 +55,7 @@
                     @if($liveSession->isLive())
                         <form action="{{ route('instructor.live-sessions.end', $liveSession) }}" method="POST">
                             @csrf
-                            <button type="submit" class="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white text-sm font-bold rounded-lg transition shadow-lg shadow-rose-600/20">
+                            <button type="submit" class="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-[#0F172A] text-sm font-bold rounded-lg transition shadow-lg shadow-rose-600/20">
                                 End Broadcast
                             </button>
                         </form>
@@ -72,7 +72,7 @@
                     
                     <div class="relative w-32 h-32 mb-8" x-data="{ seconds: 0 }" x-init="setInterval(() => seconds++, 1000)">
                         <div class="absolute inset-0 bg-sky-500 rounded-full blur-3xl opacity-20"></div>
-                        <div class="relative w-full h-full bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-full flex items-center justify-center shadow-2xl">
+                        <div class="relative w-full h-full bg-white/50 backdrop-blur-xl border border-slate-200 rounded-full flex items-center justify-center shadow-2xl">
                             <svg class="w-12 h-12 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         </div>
                         <svg class="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 100 100">
@@ -81,18 +81,18 @@
                         </svg>
                     </div>
 
-                    <h2 class="text-4xl sm:text-5xl font-black text-white mb-4 tracking-tight">The broadcast will begin shortly</h2>
-                    <p class="text-xl text-slate-400 font-medium mb-12 max-w-2xl">
+                    <h2 class="text-4xl sm:text-5xl font-black text-[#0F172A] mb-4 tracking-tight">The broadcast will begin shortly</h2>
+                    <p class="text-xl text-slate-500 font-medium mb-12 max-w-2xl">
                         Scheduled for <span class="text-sky-400">{{ $liveSession->scheduled_at->format('l, F j \a\t g:i A') }}</span>
                     </p>
 
                     @if(auth()->id() === $liveSession->instructor_id || auth()->user()->isAdmin())
-                        <div class="bg-slate-900/50 backdrop-blur-md border border-white/10 p-8 rounded-2xl max-w-md w-full">
-                            <h3 class="font-bold text-white mb-2">Host Controls</h3>
-                            <p class="text-sm text-slate-400 mb-6">You are the instructor. You can start the broadcast whenever you're ready.</p>
+                        <div class="bg-white/50 backdrop-blur-md border border-slate-200 p-8 rounded-2xl max-w-md w-full">
+                            <h3 class="font-bold text-[#0F172A] mb-2">Host Controls</h3>
+                            <p class="text-sm text-slate-500 mb-6">You are the instructor. You can start the broadcast whenever you're ready.</p>
                             <form action="{{ route('instructor.live-sessions.start', $liveSession) }}" method="POST">
                                 @csrf
-                                <button type="submit" class="w-full px-8 py-4 bg-sky-500 text-white font-black rounded-xl hover:bg-sky-400 transition shadow-lg shadow-sky-500/30 flex items-center justify-center gap-2 group">
+                                <button type="submit" class="w-full px-8 py-4 bg-sky-500 text-[#0F172A] font-black rounded-xl hover:bg-sky-400 transition shadow-lg shadow-sky-500/30 flex items-center justify-center gap-2 group">
                                     <svg class="w-6 h-6 transform group-hover:scale-110 transition" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4l12 6-12 6z"></path></svg>
                                     Go Live Now
                                 </button>
@@ -108,12 +108,12 @@
 
             @elseif($liveSession->isEnded())
                 {{-- ENDED VIEW --}}
-                <div class="absolute inset-0 bg-slate-900 flex flex-col items-center justify-center p-6 text-center z-20">
+                <div class="absolute inset-0 bg-slate-100 flex flex-col items-center justify-center p-6 text-center z-20">
                     <div class="w-24 h-24 bg-slate-800 rounded-full flex items-center justify-center mb-6">
                         <svg class="w-10 h-10 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                     </div>
-                    <h2 class="text-3xl font-black text-white mb-2">Broadcast Ended</h2>
-                    <p class="text-slate-400 font-medium mb-8">This live session has concluded. Thank you for joining.</p>
+                    <h2 class="text-3xl font-black text-[#0F172A] mb-2">Broadcast Ended</h2>
+                    <p class="text-slate-500 font-medium mb-8">This live session has concluded. Thank you for joining.</p>
                     <a href="{{ route('courses.show', $course) }}" class="px-8 py-3 bg-white text-slate-900 font-bold rounded-xl hover:bg-slate-200 transition">
                         Return to Course
                     </a>
@@ -139,28 +139,28 @@
 
                     {{-- Host Spotlight / Info Sidebar (Hidden on mobile) --}}
                     <div class="hidden lg:flex w-80 flex-col gap-4">
-                        <div class="bg-slate-900/80 backdrop-blur-md border border-white/5 rounded-2xl p-6">
-                            <h3 class="font-bold text-white mb-4 text-sm uppercase tracking-widest text-slate-400">About Host</h3>
+                        <div class="bg-white/80 backdrop-blur-md border border-slate-200 rounded-2xl p-6">
+                            <h3 class="font-bold text-[#0F172A] mb-4 text-sm uppercase tracking-widest text-slate-500">About Host</h3>
                             <div class="flex items-center gap-4 mb-4">
                                 <div class="w-12 h-12 rounded-full overflow-hidden border border-white/10">
                                     <img src="{{ $course->instructor->avatar_url ? Storage::url($course->instructor->avatar_url) : 'https://ui-avatars.com/api/?name='.urlencode($course->instructor->name).'&background=0ea5e9&color=fff' }}" class="w-full h-full object-cover">
                                 </div>
                                 <div>
-                                    <p class="font-bold text-white">{{ $course->instructor->name }}</p>
+                                    <p class="font-bold text-[#0F172A]">{{ $course->instructor->name }}</p>
                                     <p class="text-xs text-sky-400">Instructor</p>
                                 </div>
                             </div>
-                            <p class="text-sm text-slate-400 leading-relaxed line-clamp-3 mb-4">
+                            <p class="text-sm text-slate-500 leading-relaxed line-clamp-3 mb-4">
                                 {{ $course->instructor->bio ?? 'Lead instructor for this course. Bringing years of industry experience directly to you.' }}
                             </p>
-                            <button class="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-sm font-bold rounded-lg transition">
+                            <button class="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-[#0F172A] text-sm font-bold rounded-lg transition">
                                 View Profile
                             </button>
                         </div>
 
-                        <div class="bg-slate-900/80 backdrop-blur-md border border-white/5 rounded-2xl p-6 flex-1 flex flex-col">
+                        <div class="bg-white/80 backdrop-blur-md border border-slate-200 rounded-2xl p-6 flex-1 flex flex-col">
                             <div class="flex justify-between items-center mb-4">
-                                <h3 class="font-bold text-white text-sm uppercase tracking-widest text-slate-400">Resources</h3>
+                                <h3 class="font-bold text-[#0F172A] text-sm uppercase tracking-widest text-slate-500">Resources</h3>
                             </div>
                             <div class="flex-1 flex flex-col items-center justify-center text-center">
                                 <svg class="w-10 h-10 text-slate-700 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>

@@ -34,15 +34,15 @@
 
             <aside class="checkout-summary">
                 <div class="flex gap-4 items-center">
-                    <div class="w-20 h-20 bg-[#0A0A0A] border border-[#1E1E1E] rounded-md"></div>
+                    <div class="w-20 h-20 bg-gray-100 border border-gray-200 rounded-md"></div>
                     <div>
                         <div class="text-[14px] font-bold">Course Title</div>
-                        <div class="text-[12px] text-[#555]">Instructor Name</div>
+                        <div class="text-[12px] text-gray-600">Instructor Name</div>
                     </div>
                 </div>
 
                 <div class="mt-6">
-                    <div class="flex justify-between text-[#555]"><span>SUBTOTAL</span><span>$49</span></div>
+                    <div class="flex justify-between text-gray-600"><span>SUBTOTAL</span><span>$49</span></div>
                     <div class="flex justify-between text-[#555]"><span>DISCOUNT</span><span>—</span></div>
                     <div class="flex justify-between text-[#555]"><span>TAX</span><span>$0</span></div>
                     <div class="flex justify-between mt-4 text-[24px] font-display"><span>TOTAL</span><span>$49</span></div>

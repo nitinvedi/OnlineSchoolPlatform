@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div x-data="catalogData()" class="min-h-screen bg-[#0A0A0A]">
+    <div x-data="catalogData()" class="min-h-screen bg-[#F8FAFC]">
         <!-- PAGE HEADER -->
         <div class="catalog-header max-w-none">
             <div class="w-full max-w-7xl mx-auto flex items-center justify-between gap-12 px-4 sm:px-8">
@@ -12,7 +12,7 @@
                 <!-- Right: Search Bar -->
                 <form action="{{ route('courses.index') }}" method="GET" class="flex-1 max-w-[480px]">
                     <div class="relative flex items-center">
-                        <svg class="absolute left-3 w-5 h-5 text-[#333]" fill="currentColor" viewBox="0 0 20 20">
+                        <svg class="absolute left-3 w-5 h-5 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
                         </svg>
                         <input type="text" name="search" value="{{ request('search') }}" 
@@ -20,7 +20,7 @@
                             class="catalog-search pl-9 pr-4">
                         @if(request('search'))
                             <button type="button" @click="document.querySelector('input[name=search]').value=''; $el.parentElement.parentElement.submit();" 
-                                class="absolute right-3 text-[#555] hover:text-[#F0EDE6] transition-colors">
+                                class="absolute right-3 text-slate-500 hover:text-[#0F172A] transition-colors">
                                 ✕
                             </button>
                         @endif
@@ -30,16 +30,16 @@
         </div>
 
         <!-- Border divider under header -->
-        <div class="w-full h-px bg-[#1E1E1E]"></div>
+        <div class="w-full h-px bg-gray-200"></div>
 
         <!-- MAIN CONTENT AREA -->
         <div class="flex relative max-w-7xl mx-auto w-full px-4 sm:px-8 py-12 gap-8">
             <!-- FILTER SIDEBAR (Desktop) -->
             <aside class="filter-sidebar">
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-[10px] font-sans text-[#555] uppercase tracking-widest">FILTERS</h2>
+                    <h2 class="text-[10px] font-sans text-slate-500 uppercase tracking-widest">FILTERS</h2>
                     @if(request('category') || request('search') || request('sort'))
-                        <a href="{{ route('courses.index') }}" class="text-[10px] font-sans text-[#2255FF] cursor-pointer hover:text-[#F0EDE6] transition-colors">
+                        <a href="{{ route('courses.index') }}" class="text-[10px] font-sans text-[#2255FF] cursor-pointer hover:text-[#0F172A] transition-colors">
                             CLEAR ALL
                         </a>
                     @endif
@@ -151,7 +151,7 @@
 
                 <!-- SORT DROPDOWN & CONTROLS -->
                 <div class="flex items-center justify-between mb-8 gap-4">
-                    <div class="text-[11px] font-sans text-[#555] uppercase tracking-widest">
+                    <div class="text-[11px] font-sans text-slate-500 uppercase tracking-widest">
                         {{ $courses->total() }} RESULTS
                     </div>
                     <div class="ml-auto relative" x-data="{ sortOpen: false }">
@@ -254,7 +254,7 @@
                                 </div>
 
                                 <!-- Price Row -->
-                                <div class="flex items-center gap-2 mt-auto pt-3 border-t border-[#1E1E1E]">
+                                <div class="flex items-center gap-2 mt-auto pt-3 border-t border-slate-200">
                                     @if($course->price == 0)
                                         <span class="course-card-free">FREE</span>
                                     @else
@@ -270,7 +270,7 @@
                             <div class="empty-state-icon mb-6">∅</div>
                             <h2 class="empty-state-title mb-4">NO COURSES FOUND</h2>
                             <p class="empty-state-subtitle mb-8">Try adjusting your filters</p>
-                            <a href="{{ route('courses.index') }}" class="text-[#2255FF] text-[11px] font-sans uppercase tracking-widest hover:text-[#F0EDE6] transition-colors">
+                            <a href="{{ route('courses.index') }}" class="text-[#2255FF] text-[11px] font-sans uppercase tracking-widest hover:text-[#0F172A] transition-colors">
                                 CLEAR FILTERS →
                             </a>
                         </div>
@@ -317,7 +317,7 @@
             <div class="filter-drawer-content">
                 <button @click="filterDrawerOpen = false" class="filter-drawer-close">✕</button>
                 <div class="p-6">
-                    <h2 class="text-[10px] font-sans text-[#F0EDE6] uppercase tracking-widest mb-6">FILTERS</h2>
+                    <h2 class="text-[10px] font-sans text-[#0F172A] uppercase tracking-widest mb-6">FILTERS</h2>
                     
                     <!-- Category Filter Mobile -->
                     <div class="filter-group">

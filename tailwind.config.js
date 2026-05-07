@@ -30,7 +30,7 @@ export default {
                     900: '#112d7c',
                 },
                 dark: {
-                    bg: '#0A0A0A',
+                    bg: '#0a0a0a',
                     surface: '#111111',
                     card: '#111111',
                     border: 'rgba(255, 255, 255, 0.08)',

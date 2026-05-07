@@ -1,7 +1,7 @@
 <x-app-layout>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <div class="min-h-screen bg-[#111] text-white">
+    <div class="min-h-screen bg-[#F8FAFC] text-[#0F172A]">
         <div class="max-w-[1600px] mx-auto px-6 py-6">
 
             {{-- Header --}}
@@ -9,21 +9,21 @@
 
                 <div>
                     <h1 class="text-3xl font-semibold tracking-tight">
-                        Good evening, {{ auth()->user()->name }} 👋
+                        Good evening, {{ auth()->user()->name }}
                     </h1>
 
-                    <p class="text-slate-400 mt-2 text-sm">
+                    <p class="text-sm text-gray-600 mt-2">
                         Here's what's happening with your courses today.
                     </p>
                 </div>
 
                 <div class="flex items-center gap-3">
 
-                    <a href="{{ route('instructor.courses.create') }}" class="h-11 px-5 rounded-xl bg-violet-600 hover:bg-violet-500 transition text-sm font-medium flex items-center">
+                    <a href="{{ route('instructor.courses.create') }}" class="h-11 px-5 rounded-xl bg-violet-600 hover:bg-violet-500 transition text-sm font-medium flex items-center text-white">
                         Create Course
                     </a>
 
-                    <a href="{{ route('instructor.live-sessions.create') }}" class="h-11 px-5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition text-sm font-medium flex items-center">
+                    <a href="{{ route('instructor.live-sessions.create') }}" class="h-11 px-5 rounded-lg border border-gray-100 bg-white hover:bg-gray-50 transition text-sm font-medium flex items-center text-gray-700">
                         Schedule Live
                     </a>
 
@@ -35,7 +35,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
 
                 {{-- Revenue Card --}}
-                <div class="lg:col-span-8 bg-transparent border border-white/10 rounded-3xl p-6">
+                <div class="lg:col-span-8 bg-white shadow-sm border border-slate-200 rounded-3xl p-6">
 
                     <div class="flex items-center justify-between mb-8">
 
@@ -44,12 +44,12 @@
                                 Revenue Overview
                             </h2>
 
-                            <p class="text-sm text-slate-400 mt-1">
+                            <p class="text-sm text-gray-600 mt-1">
                                 Revenue and student growth over time
                             </p>
                         </div>
 
-                        <select class="bg-white/5 border border-white/10 rounded-xl h-10 px-4 text-sm outline-none">
+                        <select class="bg-slate-100 border border-slate-200 border border-slate-200 rounded-xl h-10 px-4 text-sm outline-none">
                             <option>Last 6 Months</option>
                             <option>Last Year</option>
                         </select>
@@ -59,8 +59,8 @@
                     {{-- Stats --}}
                     <div class="grid grid-cols-3 gap-4 mb-8">
 
-                        <div class="bg-white/[0.03] border border-white/5 rounded-2xl p-5">
-                            <p class="text-sm text-slate-400 mb-2">
+                        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
+                            <p class="text-sm text-gray-600 mb-2">
                                 Revenue
                             </p>
 
@@ -69,8 +69,8 @@
                             </h3>
                         </div>
 
-                        <div class="bg-white/[0.03] border border-white/5 rounded-2xl p-5">
-                            <p class="text-sm text-slate-400 mb-2">
+                        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
+                            <p class="text-sm text-gray-600 mb-2">
                                 Students
                             </p>
 
@@ -79,8 +79,8 @@
                             </h3>
                         </div>
 
-                        <div class="bg-white/[0.03] border border-white/5 rounded-2xl p-5">
-                            <p class="text-sm text-slate-400 mb-2">
+                        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
+                            <p class="text-sm text-gray-600 mb-2">
                                 Published Courses
                             </p>
 
@@ -102,7 +102,7 @@
                 <div class="lg:col-span-4 space-y-6">
 
                     {{-- Tasks --}}
-                    <div class="bg-transparent border border-white/10 rounded-3xl p-6">
+                    <div class="bg-white shadow-sm border border-slate-200 rounded-3xl p-6">
 
                         <div class="flex items-center justify-between mb-6">
 
@@ -111,7 +111,7 @@
                                     Pending Tasks
                                 </h2>
 
-                                <p class="text-sm text-slate-400 mt-1">
+                                <p class="text-sm text-gray-600 mt-1">
                                     Things that need attention
                                 </p>
                             </div>
@@ -123,7 +123,7 @@
                         <div class="space-y-4">
 
                             @if($drafts->count() > 0)
-                                <div class="p-4 rounded-2xl bg-white/[0.03] border border-white/5">
+                                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
 
                                     <div class="flex items-start justify-between gap-4">
 
@@ -132,7 +132,7 @@
                                                 Course Drafts
                                             </p>
 
-                                            <p class="text-sm text-slate-400">
+                                            <p class="text-sm text-gray-600">
                                                 {{ $drafts->count() }} drafts are waiting to be published.
                                             </p>
                                         </div>
@@ -146,7 +146,7 @@
                                 </div>
                             @endif
 
-                            <div class="p-4 rounded-2xl bg-white/[0.03] border border-white/5">
+                            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
 
                                 <div class="flex items-start justify-between gap-4">
 
@@ -155,7 +155,7 @@
                                             Student Questions
                                         </p>
 
-                                        <p class="text-sm text-slate-400">
+                                        <p class="text-sm text-gray-600">
                                             3 unanswered questions from students.
                                         </p>
                                     </div>
@@ -174,7 +174,7 @@
 
                     {{-- Top Course --}}
                     @if($topCourse)
-                        <div class="bg-transparent border border-white/10 rounded-3xl overflow-hidden">
+                        <div class="bg-white shadow-sm border border-slate-200 rounded-3xl overflow-hidden">
 
                             <img
                                 src="{{ $topCourse->thumbnail_src ?? 'https://ui-avatars.com/api/?name='.urlencode($topCourse->title).'&background=111827&color=fff&size=800' }}"
@@ -183,7 +183,7 @@
 
                             <div class="p-6">
 
-                                <div class="inline-flex items-center px-3 py-1 rounded-full bg-violet-500/10 text-violet-400 text-xs font-medium mb-4">
+                                        <div class="inline-flex items-center px-3 py-1 rounded-full bg-violet-50 text-violet-700 text-xs font-medium mb-4">
                                     Top Performing Course
                                 </div>
 
@@ -191,10 +191,10 @@
                                     {{ $topCourse->title }}
                                 </h3>
 
-                                <div class="flex items-center gap-4 text-sm text-slate-400">
+                                <div class="flex items-center gap-4 text-sm text-gray-600">
 
                                     <div class="flex items-center gap-2">
-                                        <span>👨‍🎓</span>
+                                        <svg class="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zm-7 9a7 7 0 0114 0H5z"/></svg>
                                         <span>{{ number_format($topCourse->student_count) }} students</span>
                                     </div>
 
@@ -213,7 +213,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
 
                 {{-- Live Sessions --}}
-                <div class="bg-transparent border border-white/10 rounded-3xl p-6">
+                <div class="bg-white shadow-sm border border-slate-200 rounded-3xl p-6">
 
                     <div class="flex items-center justify-between mb-8">
 
@@ -222,13 +222,13 @@
                                 Live Sessions
                             </h2>
 
-                            <p class="text-sm text-slate-400 mt-1">
+                            <p class="text-sm text-gray-600 mt-1">
                                 Manage your upcoming sessions
                             </p>
                         </div>
 
-                        <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center">
-                            📹
+                        <div class="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="currentColor"><path d="M23 7l-7 5v-4L23 7zM1 6h14v12H1z"/></svg>
                         </div>
 
                     </div>
@@ -242,9 +242,9 @@
 
                     @if($liveSession)
 
-                        <div class="p-5 rounded-2xl bg-white/[0.03] border border-white/5 mb-6">
+                        <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 mb-6">
 
-                            <p class="text-sm text-slate-400 mb-2">
+                            <p class="text-sm text-gray-600 mb-2">
                                 Upcoming Session
                             </p>
 
@@ -252,16 +252,16 @@
                                 {{ $liveSession->topic }}
                             </h3>
 
-                            <div class="flex items-center gap-2 text-sm text-violet-400">
-                                <span class="w-2 h-2 rounded-full bg-violet-400 animate-pulse"></span>
+                            <div class="flex items-center gap-2 text-sm text-violet-600">
+                                <span class="w-2 h-2 rounded-full bg-violet-600 animate-pulse"></span>
                                 {{ $liveSession->scheduled_at->diffForHumans() }}
                             </div>
 
                         </div>
 
                         <a
-                            href="{{ route('instructor.live-sessions.show', $liveSession) }}"
-                            class="h-11 rounded-xl bg-violet-600 hover:bg-violet-500 transition flex items-center justify-center text-sm font-medium"
+                            href="{{ route('live-sessions.show', $liveSession) }}"
+                            class="h-11 rounded-lg bg-violet-600 hover:bg-violet-700 transition flex items-center justify-center text-sm font-semibold text-white"
                         >
                             {{ $liveSession->status === 'live' ? 'Manage Session' : 'Open Session Room' }}
                         </a>
@@ -270,16 +270,16 @@
 
                         <div class="flex flex-col h-full justify-between">
 
-                            <p class="text-slate-400 text-sm mb-6">
+                            <p class="text-gray-600 text-sm mb-6">
                                 You don't have any upcoming live sessions.
                             </p>
 
-                            <a
-                                href="{{ route('instructor.live-sessions.create') }}"
-                                class="h-11 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition flex items-center justify-center text-sm font-medium"
-                            >
-                                Schedule Session
-                            </a>
+                                <a
+                                    href="{{ route('instructor.live-sessions.create') }}"
+                                    class="h-11 rounded-lg border border-gray-100 bg-white hover:bg-gray-50 transition flex items-center justify-center text-sm font-medium text-gray-700"
+                                >
+                                    Schedule Session
+                                </a>
 
                         </div>
 
@@ -288,7 +288,7 @@
                 </div>
 
                 {{-- Reviews --}}
-                <div class="bg-transparent border border-white/10 rounded-3xl p-6">
+                <div class="bg-white shadow-sm border border-slate-200 rounded-3xl p-6">
 
                     <div class="flex items-center justify-between mb-8">
 
@@ -297,7 +297,7 @@
                                 Student Reviews
                             </h2>
 
-                            <p class="text-sm text-slate-400 mt-1">
+                            <p class="text-sm text-slate-500 mt-1">
                                 Recent feedback from students
                             </p>
                         </div>
@@ -308,7 +308,7 @@
 
                         @forelse($reviews as $review)
 
-                            <div class="p-5 rounded-2xl bg-white/[0.03] border border-white/5">
+                            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200">
 
                                 <div class="flex items-center justify-between mb-3">
 
@@ -328,7 +328,7 @@
 
                                 </div>
 
-                                <p class="text-sm text-slate-400 leading-relaxed">
+                                <p class="text-sm text-slate-500 leading-relaxed">
                                     "{{ $review->review ?? 'Great course experience.' }}"
                                 </p>
 
@@ -347,7 +347,7 @@
                 </div>
 
                 {{-- Engagement --}}
-                <div class="bg-transparent border border-white/10 rounded-3xl p-6">
+                <div class="bg-white shadow-sm border border-slate-200 rounded-3xl p-6">
 
                     <div class="mb-8">
 
@@ -355,7 +355,7 @@
                             Student Engagement
                         </h2>
 
-                        <p class="text-sm text-slate-400 mt-1">
+                        <p class="text-sm text-slate-500 mt-1">
                             Weekly learning activity
                         </p>
 
@@ -403,7 +403,7 @@
 
                         </div>
 
-                        <div class="h-2 rounded-full bg-white/5 overflow-hidden">
+                        <div class="h-2 rounded-full bg-slate-100 border border-slate-200 overflow-hidden">
                             <div class="h-full w-[84%] bg-violet-500 rounded-full"></div>
                         </div>
 
@@ -414,17 +414,17 @@
             </div>
 
             {{-- Courses Table --}}
-            <div class="bg-transparent border border-white/10 rounded-3xl overflow-hidden">
+            <div class="bg-white shadow-sm border border-slate-200 rounded-3xl overflow-hidden">
 
                 {{-- Table Header --}}
-                <div class="flex items-center justify-between px-6 py-5 border-b border-white/5">
+                <div class="flex items-center justify-between px-6 py-5 border-b border-slate-200">
 
                     <div>
                         <h2 class="text-xl font-semibold">
                             Courses
                         </h2>
 
-                        <p class="text-sm text-slate-400 mt-1">
+                        <p class="text-sm text-slate-500 mt-1">
                             Manage and monitor your courses
                         </p>
                     </div>
@@ -443,7 +443,7 @@
 
                     <table class="w-full">
 
-                        <thead class="border-b border-white/5">
+                        <thead class="border-b border-slate-200">
 
                             <tr class="text-left text-sm text-slate-500">
 
@@ -462,13 +462,13 @@
                             {{-- Drafts --}}
                             @foreach($drafts as $draft)
 
-                                <tr class="border-b border-white/[0.03] hover:bg-white/[0.02] transition">
+                                <tr class="border-b border-slate-200 hover:bg-white/[0.02] transition">
 
                                     <td class="px-6 py-5">
 
                                         <div class="flex items-center gap-4">
 
-                                            <div class="w-12 h-12 rounded-xl border border-dashed border-violet-500/30 bg-white/[0.03] flex items-center justify-center">
+                                            <div class="w-12 h-12 rounded-xl border border-dashed border-violet-500/30 bg-slate-100 border border-slate-200 flex items-center justify-center">
                                                 ✏️
                                             </div>
 
@@ -514,7 +514,7 @@
                             {{-- Published Courses --}}
                             @foreach($courses as $course)
 
-                                <tr class="border-b border-white/[0.03] hover:bg-white/[0.02] transition">
+                                <tr class="border-b border-slate-200 hover:bg-white/[0.02] transition">
 
                                     <td class="px-6 py-5">
 
@@ -580,7 +580,7 @@
                 {{-- Pagination --}}
                 @if($courses->hasPages())
 
-                    <div class="px-6 py-5 border-t border-white/5">
+                    <div class="px-6 py-5 border-t border-slate-200">
                         {{ $courses->links() }}
                     </div>
 
@@ -631,11 +631,13 @@
                         },
 
                         tooltip: {
-                            backgroundColor: '#111827',
-                            borderColor: 'rgba(255,255,255,0.08)',
+                            backgroundColor: '#FFFFFF',
+                            borderColor: '#E2E8F0',
                             borderWidth: 1,
                             padding: 12,
                             displayColors: false,
+                            titleColor: '#0F172A',
+                            bodyColor: '#64748B',
                         }
 
                     },
