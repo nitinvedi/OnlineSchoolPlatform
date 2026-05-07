@@ -18,16 +18,33 @@ class Course extends Model
         'overview',
         'category_id',
         'instructor_id',
-        'status',
         'thumbnail_url',
         'published_at',
         'student_count',
         'rating',
+        'price',
+        'is_free',
+        'learning_outcomes',
+        'prerequisites',
+        'difficulty_level',
+        'is_bestseller',
+        'sale_ends_at',
+        'articles_count',
+        'resources_count',
+        'status',
+        'level',
+        'language',
     ];
 
     protected $casts = [
         'published_at' => 'datetime',
+        'sale_ends_at' => 'datetime',
         'rating'       => 'float',
+        'price'        => 'decimal:2',
+        'learning_outcomes' => 'array',
+        'prerequisites' => 'array',
+        'is_bestseller' => 'boolean',
+        'is_free' => 'boolean',
     ];
 
     public function category(): BelongsTo
@@ -68,6 +85,31 @@ class Course extends Model
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
+    }
+
+    public function wishlists(): HasMany
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
+    /**
+     * Check if course is currently on sale
+     */
+    public function isOnSale(): bool
+    {
+        return $this->sale_ends_at && $this->sale_ends_at->isFuture();
+    }
+
+    /**
+     * Get sale time remaining in human readable format
+     */
+    public function getSaleTimeRemaining(): ?string
+    {
+        if (!$this->isOnSale()) {
+            return null;
+        }
+        
+        return $this->sale_ends_at->diffForHumans();
     }
 
     /**

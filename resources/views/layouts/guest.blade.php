@@ -16,7 +16,7 @@
         /* ── Reset & base ───────────────────────────────── */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { cursor: none; }
-        .font-display { font-family: 'Bebas Neue', 'Impact', sans-serif; }
+        .font-display { font-family: 'Bebas Neue', 'Impact', sans-serif; letter-spacing: 0.05em; }
         .font-mono    { font-family: 'JetBrains Mono', monospace; }
 
         /* ── Custom cursor ──────────────────────────────── */
@@ -199,9 +199,259 @@
         }
         .ls-checkbox:focus { border-color: #2255FF; outline: none; }
 
+        /* ── Password strength bar — enhanced ────────────── */
+        .strength-bar-container {
+            display: flex; align-items: center; gap: 8px;
+            margin-top: 8px;
+        }
+        .strength-bar { 
+            display: flex; gap: 2px; height: 2px; flex: 1; 
+        }
+        .strength-seg {
+            flex: 1; height: 100%; background: #1E1E1E;
+            transition: background .3s cubic-bezier(.16,1,.3,1);
+            border-radius: 1px;
+        }
+        .strength-seg.weak   { background: #FF3B30; box-shadow: 0 0 6px rgba(255,59,48,0.4); }
+        .strength-seg.fair   { background: #F5A623; box-shadow: 0 0 6px rgba(245,166,35,0.4); }
+        .strength-seg.good   { background: #1DB954; box-shadow: 0 0 6px rgba(29,185,84,0.4); }
+        .strength-seg.strong { background: #1DB954; box-shadow: 0 0 6px rgba(29,185,84,0.4); }
+
+        .strength-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.1em;
+            color: #555; width: 50px; text-align: right;
+            transition: color .3s ease;
+        }
+        .strength-label.weak   { color: #FF3B30; }
+        .strength-label.fair   { color: #F5A623; }
+        .strength-label.good   { color: #1DB954; }
+        .strength-label.strong { color: #1DB954; }
+
+        /* ── Success state animations ──────────────────────── */
+        .success-checkmark {
+            position: relative; width: 60px; height: 60px;
+            margin: 0 auto 20px;
+        }
+        .success-checkmark .check-icon {
+            width: 60px; height: 60px;
+            position: relative; border-radius: 50%;
+            box-sizing: content-box;
+            border: 4px solid #1DB954;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .success-checkmark .icon-line {
+            height: 5px; background-color: #1DB954;
+            display: block; border-radius: 2px;
+            position: absolute; z-index: 10;
+        }
+        .success-checkmark .icon-line.line-tip {
+            top: 27px; left: 14px; width: 17px;
+            transform: scaleX(0); animation: icon-line-tip .75s cubic-bezier(.16,1,.3,1) forwards; animation-delay: .5s;
+        }
+        .success-checkmark .icon-line.line-long {
+            top: 41px; right: 8px; width: 29px;
+            transform: scaleX(0); animation: icon-line-long .75s cubic-bezier(.16,1,.3,1) forwards; animation-delay: .7s;
+        }
+
+        @keyframes icon-line-tip {
+            0% { width: 0; left: 1px; opacity: 0; }
+            50% { width: 0; left: 0; opacity: 1; }
+            100% { width: 17px; left: 0; opacity: 1; }
+        }
+        @keyframes icon-line-long {
+            0% { width: 0; right: 46px; opacity: 0; }
+            50% { width: 0; right: 0; opacity: 1; }
+            100% { width: 29px; right: 8px; opacity: 1; }
+        }
+
+        /* ── Onboarding wizard styles ──────────────────────── */
+        .wizard-container {
+            position: fixed; inset: 0; background: #0A0A0A;
+            z-index: 9999; display: flex; flex-direction: column;
+        }
+        .wizard-progress-bar {
+            height: 1px; background: #1E1E1E;
+            position: relative; width: 100%;
+        }
+        .wizard-progress-fill {
+            height: 100%; background: #2255FF;
+            transition: width .3s cubic-bezier(.16,1,.3,1);
+        }
+        .wizard-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 32px; border-bottom: 1px solid #1E1E1E;
+        }
+        .wizard-step-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px; text-transform: uppercase;
+            letter-spacing: 0.25em; color: #555;
+        }
+        .wizard-content {
+            flex: 1; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            padding: 64px 32px; overflow-y: auto;
+        }
+        .wizard-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            color: #F0EDE6; text-align: center; margin-bottom: 40px;
+        }
+        .wizard-tag-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px; max-width: 600px; width: 100%;
+        }
+        .wizard-tag {
+            padding: 12px 16px; border: 1px solid #1E1E1E;
+            background: transparent; color: #F0EDE6;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px; text-transform: uppercase;
+            letter-spacing: 0.1em; cursor: pointer;
+            transition: all .2s ease;
+            border-radius: 0;
+        }
+        .wizard-tag:hover { border-color: #F0EDE6; }
+        .wizard-tag.selected {
+            border-color: #2255FF; background: rgba(34, 85, 255, 0.1);
+            color: #2255FF;
+        }
+        .wizard-tag.selected::after {
+            content: '✓'; display: inline-block; margin-left: 8px;
+        }
+        .wizard-level-cards {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px; max-width: 600px; width: 100%;
+        }
+        .wizard-level-card {
+            height: 200px; border: 1px solid #1E1E1E;
+            background: #111; padding: 24px; cursor: pointer;
+            transition: all .2s ease; display: flex;
+            flex-direction: column; justify-content: space-between;
+        }
+        .wizard-level-card:hover { border-color: #F0EDE6; }
+        .wizard-level-card.selected {
+            border-color: #2255FF; background: rgba(34, 85, 255, 0.08);
+        }
+        .wizard-level-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 24px; color: #F0EDE6;
+        }
+        .wizard-level-desc {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px; color: #555; text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+        .wizard-slider-container {
+            max-width: 400px; width: 100%;
+        }
+        .wizard-slider-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px; text-transform: uppercase;
+            letter-spacing: 0.2em; color: #555; margin-bottom: 16px;
+        }
+        .wizard-slider {
+            width: 100%; height: 4px; border-radius: 0;
+            background: #1E1E1E; outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .wizard-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px; height: 20px;
+            border-radius: 0; background: #2255FF;
+            cursor: pointer; transition: background .2s ease;
+        }
+        .wizard-slider::-moz-range-thumb {
+            width: 20px; height: 20px;
+            border-radius: 0; background: #2255FF;
+            cursor: pointer; border: none;
+        }
+        .wizard-slider::-webkit-slider-thumb:hover { background: #1f4ce2; }
+        .wizard-slider-value {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem; color: #F0EDE6;
+            text-align: center; margin-top: 16px;
+        }
+        .wizard-nav {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 20px 32px; border-top: 1px solid #1E1E1E;
+        }
+        .wizard-nav-btn {
+            padding: 12px 24px; font-family: 'JetBrains Mono', monospace;
+            font-size: 11px; text-transform: uppercase;
+            letter-spacing: 0.2em; border: none; cursor: pointer;
+            transition: all .2s ease; border-radius: 0;
+        }
+        .wizard-nav-btn.back {
+            background: transparent; color: #333;
+            border: 1px solid #1E1E1E;
+        }
+        .wizard-nav-btn.back:hover { border-color: #F0EDE6; color: #F0EDE6; }
+        .wizard-nav-btn.next { background: #2255FF; color: white; }
+        .wizard-nav-btn.next:hover { background: #1f4ce2; }
+        .wizard-skip {
+            position: absolute; top: 20px; right: 32px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px; text-transform: uppercase;
+            letter-spacing: 0.2em; color: #333;
+            cursor: pointer; border: none; background: transparent;
+            transition: color .2s ease;
+        }
+        .wizard-skip:hover { color: #555; }
+
+        /* ── Form field animation ──────────────────────────── */
+        .field-error-slide {
+            animation: error-slide-down .2s cubic-bezier(.36,.07,.19,.97) forwards;
+        }
+        @keyframes error-slide-down {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── Link underline animation ──────────────────────── */
+        .link-underline {
+            position: relative; text-decoration: none; color: #2255FF;
+            transition: color .2s ease;
+        }
+        .link-underline::after {
+            content: ''; position: absolute; bottom: -2px;
+            left: 0; width: 0; height: 1px; background: #2255FF;
+            transition: width .3s cubic-bezier(.16,1,.3,1);
+        }
+        .link-underline:hover::after { width: 100%; }
+
+        /* ── Input field enhancements ──────────────────────── */
+        .ls-input-wrapper {
+            position: relative;
+        }
+        .ls-input-wrapper.has-icon input {
+            padding-right: 44px;
+        }
+        .ls-input[type="email"],
+        .ls-input[type="password"],
+        .ls-input[type="text"] {
+            height: 48px;
+        }
+
+        /* ── Button size enhancements ──────────────────────── */
+        .ls-btn-primary {
+            height: 52px;
+            font-size: 12px;
+        }
+
         @media (max-width: 767px) {
             body { cursor: auto; }
             #cursor-dot, #cursor-ring { display: none; }
+            
+            .wizard-content { padding: 32px 20px; }
+            .wizard-header { padding: 12px 16px; }
+            .wizard-nav { padding: 16px; }
+            .wizard-skip { top: 16px; right: 16px; }
+            .wizard-title { font-size: clamp(1.8rem, 4vw, 2.5rem); margin-bottom: 24px; }
+            .wizard-tag-grid { grid-template-columns: repeat(2, 1fr); }
+            .wizard-level-cards { grid-template-columns: 1fr; }
         }
     </style>
 </head>

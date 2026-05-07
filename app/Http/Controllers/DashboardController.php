@@ -4,7 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use App\Models\Enrollment;
+use App\Models\Lesson;
+use App\Models\Quiz;
+use App\Models\Certificate;
+use App\Models\LiveSession;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -26,23 +31,40 @@ class DashboardController extends Controller
     private function studentDashboard()
     {
         $userId = auth()->id();
+        
+        // Basic enrollments for pagination
         $enrollments = Enrollment::where('user_id', $userId)
-            ->with(['course.instructor', 'course.category'])
+            ->with(['course.instructor', 'course.category', 'course.lessons'])
             ->orderByDesc('updated_at')
             ->paginate(6);
 
+        // Filter enrollments by status
+        $enrollmentsInProgress = Enrollment::where('user_id', $userId)
+            ->whereNull('completed_at')
+            ->with(['course.instructor', 'course.category'])
+            ->get();
+            
+        $enrollmentsCompleted = Enrollment::where('user_id', $userId)
+            ->whereNotNull('completed_at')
+            ->with(['course.instructor', 'course.category'])
+            ->get();
+
+        // Calculate stats
         $stats = [
-            'enrolledCourses' => Enrollment::where('user_id', $userId)->count(),
-            'completedCourses' => Enrollment::where('user_id', $userId)->whereNotNull('completed_at')->count(),
-            'learningHours' => 45,
+            'enrolledCourses' => $enrollments->total(),
+            'completedCourses' => $enrollmentsCompleted->count(),
+            'learningHours' => $this->calculateLearningHours($userId),
+            'streak' => $this->calculateStreak($userId),
         ];
 
+        // Jump back in (continue learning)
         $jumpBackIn = Enrollment::where('user_id', $userId)
             ->with(['course.lessons' => function($q) { $q->orderBy('order'); }, 'completedLessons'])
             ->whereNull('completed_at')
             ->orderByDesc('updated_at')
             ->first();
 
+        // Recommended courses
         $enrolledCategoryIds = Enrollment::where('user_id', $userId)
             ->join('courses', 'enrollments.course_id', '=', 'courses.id')
             ->pluck('courses.category_id')
@@ -55,7 +77,7 @@ class DashboardController extends Controller
             ->where('status', 'published')
             ->with('instructor', 'category')
             ->inRandomOrder()
-            ->take(4)
+            ->take(3)
             ->get();
 
         if ($recommendations->isEmpty()) {
@@ -63,11 +85,132 @@ class DashboardController extends Controller
                 ->where('status', 'published')
                 ->with('instructor', 'category')
                 ->orderByDesc('student_count')
-                ->take(4)
+                ->take(3)
                 ->get();
         }
 
-        return view('dashboard.student', compact('enrollments', 'stats', 'jumpBackIn', 'recommendations'));
+        // Upcoming deadlines (quizzes and live sessions)
+        $enrolledCourseIds = Enrollment::where('user_id', $userId)->pluck('course_id');
+        
+        $upcomingQuizzes = Quiz::whereHas('lesson.course', function($q) use ($enrolledCourseIds) {
+            $q->whereIn('id', $enrolledCourseIds);
+        })
+        ->with(['lesson.course'])
+        ->get();
+
+        $upcomingLiveSessions = LiveSession::whereIn('course_id', $enrolledCourseIds)
+            ->with('course')
+            ->whereIn('status', ['scheduled', 'live'])
+            ->orderBy('scheduled_at')
+            ->take(3)
+            ->get();
+
+        $upcomingDeadlines = collect()
+            ->merge($upcomingLiveSessions->map(fn($s) => [
+                'type' => 'live_session',
+                'title' => $s->topic ?? 'Live Session',
+                'course' => $s->course->title,
+                'date' => $s->scheduled_at,
+                'status' => $s->status,
+                'id' => $s->id,
+            ]))
+            ->sortBy('date')
+            ->take(5);
+
+        // Certificates
+        $certificates = Certificate::where('user_id', $userId)
+            ->with('course')
+            ->orderByDesc('issued_at')
+            ->take(3)
+            ->get();
+
+        // Weekly activity chart
+        $weeklyActivity = $this->getWeeklyActivityData($userId);
+
+        // Badges
+        $badges = auth()->user()->userBadges()
+            ->with('badge')
+            ->orderByDesc('earned_at')
+            ->take(6)
+            ->get();
+
+        return view('dashboard.student', compact(
+            'enrollments',
+            'enrollmentsInProgress',
+            'enrollmentsCompleted',
+            'stats',
+            'jumpBackIn',
+            'recommendations',
+            'upcomingDeadlines',
+            'certificates',
+            'weeklyActivity',
+            'badges'
+        ));
+    }
+
+    /**
+     * Calculate total learning hours from lesson durations
+     */
+    private function calculateLearningHours($userId)
+    {
+        return Enrollment::where('user_id', $userId)
+            ->with(['completedLessons' => function($q) {
+                $q->select('lessons.id', 'lessons.duration_minutes');
+            }])
+            ->get()
+            ->flatMap(fn($e) => $e->completedLessons)
+            ->sum('duration_minutes') / 60;
+    }
+
+    /**
+     * Calculate current learning streak (consecutive days with activity)
+     */
+    private function calculateStreak($userId)
+    {
+        $streak = 0;
+        $currentDate = now()->startOfDay();
+        
+        while (true) {
+            $hasActivity = Enrollment::where('user_id', $userId)
+                ->whereDate('updated_at', $currentDate)
+                ->exists();
+                
+            if (!$hasActivity) {
+                break;
+            }
+            
+            $streak++;
+            $currentDate->subDay();
+        }
+        
+        return $streak;
+    }
+
+    /**
+     * Get weekly activity data (lessons completed per day for the last 7 days)
+     */
+    private function getWeeklyActivityData($userId)
+    {
+        $days = [];
+        
+        for ($i = 6; $i >= 0; $i--) {
+            $date = now()->subDays($i)->startOfDay();
+            $dayName = $date->format('D');
+            
+            $completedCount = DB::table('enrollment_lesson')
+                ->join('enrollments', 'enrollment_lesson.enrollment_id', '=', 'enrollments.id')
+                ->where('enrollments.user_id', $userId)
+                ->whereDate('enrollment_lesson.created_at', $date)
+                ->count();
+            
+            $days[] = [
+                'day' => $dayName,
+                'date' => $date->format('M d'),
+                'lessons' => $completedCount,
+            ];
+        }
+        
+        return $days;
     }
 
     private function instructorDashboard()

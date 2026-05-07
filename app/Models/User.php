@@ -100,4 +100,26 @@ class User extends Authenticatable
     {
         return $this->hasMany(Payment::class);
     }
+
+    public function badges()
+    {
+        return $this->belongsToMany(Badge::class, 'user_badges', 'user_id', 'badge_id')
+            ->withPivot('earned_at')
+            ->withTimestamps();
+    }
+
+    public function userBadges(): HasMany
+    {
+        return $this->hasMany(UserBadge::class);
+    }
+
+    public function wishlists(): HasMany
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
+    public function wishlistedCourses()
+    {
+        return $this->belongsToMany(Course::class, 'wishlists');
+    }
 }

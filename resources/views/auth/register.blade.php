@@ -1,114 +1,207 @@
 <x-guest-layout>
-    <div x-data="{ submitting: false, password: '', get strength() { 
-        let val = 0; 
-        if(this.password.length > 5) val += 1; 
-        if(this.password.length > 7) val += 1; 
-        if(/[A-Z]/.test(this.password)) val += 1; 
-        if(/[0-9]/.test(this.password)) val += 1; 
-        if(/[^A-Za-z0-9]/.test(this.password)) val += 1; 
-        return Math.min(val, 4); 
-    }}" class="w-full">
+    <div x-data="{ 
+        submitting: false, 
+        password: '', 
+        showPassword: false,
+        showPasswordConfirm: false,
+        get strength() { 
+            let val = 0; 
+            if(this.password.length > 7) val += 1; 
+            if(this.password.length > 10) val += 1; 
+            if(/[A-Z]/.test(this.password)) val += 1; 
+            if(/[0-9]/.test(this.password)) val += 1; 
+            if(/[^A-Za-z0-9]/.test(this.password)) val += 1; 
+            return Math.min(val, 4); 
+        }
+    }" class="w-full">
         
+        {{-- ── Page title ─────────────────────────────── --}}
         <div class="mb-12">
-            <h2 class="text-4xl font-display font-black text-white mb-4 tracking-tighter leading-tight">Join LiveSchool</h2>
-            <p class="text-slate-500 font-medium text-lg">Start your journey with world-class education.</p>
+            <h2 class="font-display text-[#F0EDE6] leading-none" style="font-size: clamp(2.8rem, 4vw, 4rem);">
+                JOIN<br>LIVESCHOOL.
+            </h2>
+            <p class="font-mono text-[13px] text-[#555] mt-4">
+                Start your journey with world-class education.
+            </p>
         </div>
+
+        {{-- ── Global errors ──────────────────────────── --}}
+        @if ($errors->any())
+            <div class="mb-6 border border-[#FF3B30] bg-[#FF3B30]/8 px-4 py-3 field-error-slide">
+                <p class="font-mono text-[11px] uppercase tracking-[0.2em] text-[#FF3B30]">
+                    Please fix the errors below
+                </p>
+            </div>
+        @endif
 
         <form method="POST" action="{{ route('register') }}" @submit="submitting = true" class="space-y-6">
             @csrf
 
-            <!-- Name -->
-            <div class="space-y-2">
-                <label for="name" class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Full Name</label>
-                <div class="relative group">
-                    <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus 
-                           class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white placeholder-slate-600 focus:outline-none focus:border-brand-500/50 focus:ring-4 focus:ring-brand-500/10 transition-all duration-300"
-                           placeholder="John Doe">
-                    @if($errors->has('name'))
-                        <p class="mt-2 text-xs font-bold text-rose-500 ml-1">{{ $errors->first('name') }}</p>
-                    @endif
-                </div>
+            {{-- ── Name ───────────────────────────────── --}}
+            <div>
+                <label for="name" class="ls-label">Full Name</label>
+                <input 
+                    id="name" 
+                    type="text" 
+                    name="name" 
+                    value="{{ old('name') }}" 
+                    required 
+                    autofocus
+                    class="ls-input {{ $errors->has('name') ? 'error' : '' }}"
+                    placeholder="John Doe"
+                />
+                @error('name')
+                    <span class="ls-error field-error-slide">{{ $message }}</span>
+                @enderror
             </div>
 
-            <!-- Email Address -->
-            <div class="space-y-2">
-                <label for="email" class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Email address</label>
-                <div class="relative group">
-                    <input id="email" type="email" name="email" value="{{ old('email') }}" required 
-                           class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white placeholder-slate-600 focus:outline-none focus:border-brand-500/50 focus:ring-4 focus:ring-brand-500/10 transition-all duration-300"
-                           placeholder="name@company.com">
-                    @if($errors->has('email'))
-                        <p class="mt-2 text-xs font-bold text-rose-500 ml-1">{{ $errors->first('email') }}</p>
-                    @endif
-                </div>
+            {{-- ── Email ──────────────────────────────– --}}
+            <div>
+                <label for="email" class="ls-label">Email Address</label>
+                <input 
+                    id="email" 
+                    type="email" 
+                    name="email" 
+                    value="{{ old('email') }}" 
+                    required
+                    class="ls-input {{ $errors->has('email') ? 'error' : '' }}"
+                    placeholder="name@company.com"
+                />
+                @error('email')
+                    <span class="ls-error field-error-slide">{{ $message }}</span>
+                @enderror
             </div>
 
-            <!-- Role -->
-            <div class="space-y-2">
-                <label for="role" class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">I want to</label>
-                <div class="relative group">
-                    <select id="role" name="role" required
-                            class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white appearance-none focus:outline-none focus:border-brand-500/50 focus:ring-4 focus:ring-brand-500/10 transition-all duration-300">
-                        <option value="student" {{ old('role') === 'student' ? 'selected' : '' }} class="bg-dark-bg text-white">Learn (Student)</option>
-                        <option value="instructor" {{ old('role') === 'instructor' ? 'selected' : '' }} class="bg-dark-bg text-white">Teach (Instructor)</option>
-                    </select>
-                    <div class="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
-                    </div>
-                </div>
+            {{-- ── Role ───────────────────────────────– --}}
+            <div>
+                <label for="role" class="ls-label">I want to</label>
+                <select 
+                    id="role" 
+                    name="role" 
+                    required
+                    class="ls-input {{ $errors->has('role') ? 'error' : '' }}"
+                >
+                    <option value="">Select a role...</option>
+                    <option value="student" {{ old('role') === 'student' ? 'selected' : '' }}>Learn (Student)</option>
+                    <option value="instructor" {{ old('role') === 'instructor' ? 'selected' : '' }}>Teach (Instructor)</option>
+                </select>
+                @error('role')
+                    <span class="ls-error field-error-slide">{{ $message }}</span>
+                @enderror
             </div>
 
-            <!-- Password -->
-            <div class="space-y-2">
-                <label for="password" class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Password</label>
-                <div class="relative group">
-                    <input id="password" type="password" name="password" required x-model="password"
-                           class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white placeholder-slate-600 focus:outline-none focus:border-brand-500/50 focus:ring-4 focus:ring-brand-500/10 transition-all duration-300"
-                           placeholder="••••••••">
-                    @if($errors->has('password'))
-                        <p class="mt-2 text-xs font-bold text-rose-500 ml-1">{{ $errors->first('password') }}</p>
-                    @endif
+            {{-- ── Password ───────────────────────────– --}}
+            <div>
+                <label for="password" class="ls-label">Password</label>
+                <div class="ls-input-wrapper has-icon">
+                    <input 
+                        id="password" 
+                        :type="showPassword ? 'text' : 'password'" 
+                        name="password" 
+                        required 
+                        x-model="password"
+                        class="ls-input {{ $errors->has('password') ? 'error' : '' }}"
+                        placeholder="••••••••"
+                    />
+                    {{-- Eye toggle --}}
+                    <button type="button"
+                            class="eye-btn"
+                            @click="showPassword = !showPassword"
+                            :aria-label="showPassword ? 'Hide password' : 'Show password'">
+                        {{-- Eye open --}}
+                        <svg x-show="!showPassword" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                        {{-- Eye closed --}}
+                        <svg x-show="showPassword" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                        </svg>
+                    </button>
                 </div>
                 
-                <!-- Strength Meter -->
-                <div class="flex gap-1.5 h-1 px-1 mt-3" x-show="password.length > 0">
-                    <div class="flex-1 rounded-full transition-all duration-500" :class="strength >= 1 ? 'bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)]' : 'bg-white/5'"></div>
-                    <div class="flex-1 rounded-full transition-all duration-500" :class="strength >= 2 ? 'bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]' : 'bg-white/5'"></div>
-                    <div class="flex-1 rounded-full transition-all duration-500" :class="strength >= 3 ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 'bg-white/5'"></div>
-                    <div class="flex-1 rounded-full transition-all duration-500" :class="strength >= 4 ? 'bg-brand-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]' : 'bg-white/5'"></div>
+                {{-- Strength meter --}}
+                <div x-show="password.length > 0" class="strength-bar-container mt-3">
+                    <div class="strength-bar">
+                        <div class="strength-seg" :class="strength >= 1 ? 'weak' : ''"></div>
+                        <div class="strength-seg" :class="strength >= 2 ? 'fair' : ''"></div>
+                        <div class="strength-seg" :class="strength >= 3 ? 'good' : ''"></div>
+                        <div class="strength-seg" :class="strength >= 4 ? 'strong' : ''"></div>
+                    </div>
+                    <span class="strength-label"
+                          :class="strength === 1 ? 'weak' : strength === 2 ? 'fair' : strength === 3 ? 'good' : strength === 4 ? 'strong' : ''"
+                          x-text="strength === 1 ? 'WEAK' : strength === 2 ? 'FAIR' : strength === 3 ? 'GOOD' : strength === 4 ? 'STRONG' : ''">
+                    </span>
+                </div>
+                
+                @error('password')
+                    <span class="ls-error field-error-slide">{{ $message }}</span>
+                @enderror
+            </div>
+
+            {{-- ── Confirm Password ───────────────────– --}}
+            <div>
+                <label for="password_confirmation" class="ls-label">Confirm Password</label>
+                <div class="ls-input-wrapper has-icon">
+                    <input 
+                        id="password_confirmation" 
+                        :type="showPasswordConfirm ? 'text' : 'password'" 
+                        name="password_confirmation" 
+                        required
+                        class="ls-input"
+                        placeholder="••••••••"
+                    />
+                    {{-- Eye toggle --}}
+                    <button type="button"
+                            class="eye-btn"
+                            @click="showPasswordConfirm = !showPasswordConfirm"
+                            :aria-label="showPasswordConfirm ? 'Hide password' : 'Show password'">
+                        {{-- Eye open --}}
+                        <svg x-show="!showPasswordConfirm" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                        {{-- Eye closed --}}
+                        <svg x-show="showPasswordConfirm" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
 
-            <!-- Confirm Password -->
-            <div class="space-y-2">
-                <label for="password_confirmation" class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Confirm Password</label>
-                <div class="relative group">
-                    <input id="password_confirmation" type="password" name="password_confirmation" required 
-                           class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white placeholder-slate-600 focus:outline-none focus:border-brand-500/50 focus:ring-4 focus:ring-brand-500/10 transition-all duration-300"
-                           placeholder="••••••••">
-                </div>
-            </div>
-
-            <!-- Submit Button -->
-            <button type="submit" class="btn-primary w-full py-4 text-sm relative group overflow-hidden mt-4">
-                <span x-show="!submitting" class="relative z-10 flex items-center justify-center gap-2">
-                    Create Account
-                    <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                </span>
-                <span x-show="submitting" style="display: none;" class="relative z-10 flex items-center justify-center">
-                    <svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            {{-- ── Submit button ──────────────────────– --}}
+            <button type="submit" 
+                    class="ls-btn-primary"
+                    :disabled="submitting"
+                    :class="submitting ? 'opacity-50 cursor-not-allowed' : ''">
+                <span x-show="!submitting">Create Account →</span>
+                <span x-show="submitting" class="flex items-center justify-center gap-2">
+                    <svg class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
                     </svg>
-                    Creating account...
+                    Creating...
                 </span>
             </button>
         </form>
 
-        <div class="mt-12 pt-12 border-t border-white/5 text-center">
-            <p class="text-sm font-bold text-slate-500">
-                Already have an account? 
-                <a href="{{ route('login') }}" class="text-brand-500 hover:text-brand-400 transition-colors ml-2">Sign in here</a>
+        {{-- ── Sign in link ────────────────────────────– --}}
+        <div class="mt-10 pt-8 border-t border-[#1E1E1E]">
+            <p class="font-mono text-[11px] uppercase tracking-[0.15em] text-[#555] text-center">
+                Already have an account?
+                <a href="{{ route('login') }}" class="link-underline">
+                    Sign in →
+                </a>
+            </p>
+        </div>
+
+        {{-- ── Terms note ──────────────────────────────– --}}
+        <div class="mt-6 text-center">
+            <p class="font-mono text-[10px] text-[#333] leading-relaxed">
+                By creating an account, you agree to our
+                <a href="#" class="link-underline">Terms of Service</a>
+                and
+                <a href="#" class="link-underline">Privacy Policy</a>
             </p>
         </div>
     </div>

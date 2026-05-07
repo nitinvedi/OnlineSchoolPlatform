@@ -37,8 +37,8 @@
         body.cursor-hover #cursor-ring { width: 56px; height: 56px; opacity: 0.6; }
 
         /* ── Fonts fallback ────────────────────────────── */
-        .font-display { font-family: 'Bebas Neue', 'Impact', sans-serif; }
-        .font-mono    { font-family: 'JetBrains Mono', monospace; }
+        .font-display { font-family: 'Bebas Neue', 'Impact', sans-serif; letter-spacing: -0.03em; line-height: 0.9; }
+        .font-mono    { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
 
         /* ── Noise grain overlay ───────────────────────── */
         body::before {
@@ -59,7 +59,7 @@
         @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
         /* ── Scroll reveal ─────────────────────────────── */
-        .reveal-hidden { opacity: 0; transform: translateY(44px); }
+        .reveal-hidden { opacity: 0; transform: translateY(40px); }
         .reveal { opacity: 1; transform: translateY(0); transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
 
         /* ── Hero bounce arrow ─────────────────────────── */
@@ -190,7 +190,7 @@
     <nav x-data="{ scrolled: false, open: false, active: 'catalog' }"
          @scroll.window="scrolled = window.pageYOffset > 40"
          x-on:section-change.window="active = $event.detail"
-         :class="scrolled ? 'bg-[#0A0A0A]/92 backdrop-blur-xl border-b border-[#1E1E1E]' : 'bg-transparent'"
+         :class="scrolled ? 'bg-[#0A0A0A] border-b border-[#1E1E1E]' : 'bg-transparent'"
          class="fixed inset-x-0 top-0 z-50 transition-all duration-500">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
@@ -238,7 +238,7 @@
              x-transition:leave-start="opacity-100 translate-y-0"
              x-transition:leave-end="opacity-0 -translate-y-2"
              @click.outside="open = false"
-             class="lg:hidden border-t border-[#1E1E1E] bg-[#0A0A0A]/98 backdrop-blur-xl">
+             class="lg:hidden border-t border-[#1E1E1E] bg-[#0A0A0A]">
             <div class="px-6 pb-8 pt-5 space-y-5 font-mono text-[11px] uppercase tracking-[0.2em]">
                 <a href="#programs"   @click="open=false;active='catalog'"    class="block text-[#555] hover:text-[#F0EDE6] py-2 transition-colors">Catalog</a>
                 <a href="#features"   @click="open=false;active='features'"   class="block text-[#555] hover:text-[#F0EDE6] py-2 transition-colors">Features</a>
@@ -260,9 +260,9 @@
 
             {{-- Ambient blobs --}}
             <div class="absolute inset-0 pointer-events-none overflow-hidden">
-                <div class="absolute -left-32 top-20 h-96 w-96 rounded-full bg-[#2255FF]/10 blur-[120px]"></div>
-                <div class="absolute right-0 bottom-20 h-80 w-80 rounded-full bg-[#2255FF]/8 blur-[100px]"></div>
-                <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full bg-[#2255FF]/4 blur-[160px]"></div>
+                <div class="absolute -left-32 top-20 h-96 w-96 rounded-none bg-[#2255FF]/10 blur-[120px]"></div>
+                <div class="absolute right-0 bottom-20 h-80 w-80 rounded-none bg-[#2255FF]/8 blur-[100px]"></div>
+                <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-none bg-[#2255FF]/4 blur-[160px]"></div>
             </div>
 
             {{-- Vertical decorative text --}}
@@ -469,7 +469,7 @@
                                         <span class="font-mono text-[11px] text-[#F0EDE6]">{{ $rating }}</span>
                                         <span class="font-mono text-[10px] text-[#333]">({{ $students }})</span>
                                     </div>
-                                    <span class="font-display text-lg text-[#F0EDE6]">{{ $priceLabel }}</span>
+                                    <span class="font-mono text-[11px] uppercase tracking-[0.2em] text-[#F0EDE6] tabular-nums">{{ $priceLabel }}</span>
                                 </div>
                             </article>
                         @empty
@@ -500,10 +500,10 @@
                                 {{ $i < 2 ? 'border-b md:border-b-0 md:border-r border-[#1E1E1E]' : '' }}"
                          data-reveal>
                         <div class="flex items-end gap-1">
-                            <span class="font-display text-[#2255FF] leading-none"
+                                <span class="font-mono text-[#2255FF] leading-none tabular-nums"
                                   style="font-size: clamp(3rem, 7vw, 5.5rem);"
                                   data-count="{{ $stat['count'] }}">0</span>
-                            <span class="font-display text-[#2255FF] text-3xl mb-2">{{ $stat['suffix'] }}</span>
+                                <span class="font-mono text-[#2255FF] text-3xl mb-2 tabular-nums">{{ $stat['suffix'] }}</span>
                         </div>
                         <p class="font-mono text-[11px] uppercase tracking-[0.35em] text-[#F0EDE6] mt-3">{{ $stat['label'] }}</p>
                         <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#333] mt-1">{{ $stat['sublabel'] }}</p>

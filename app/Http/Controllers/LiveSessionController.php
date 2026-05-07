@@ -23,7 +23,14 @@ class LiveSessionController extends Controller
                 ->with('course')
                 ->orderBy('scheduled_at')
                 ->get();
+        } elseif ($user->isAdmin()) {
+            // If admin, show all upcoming sessions
+            $sessions = LiveSession::whereIn('status', ['scheduled', 'live'])
+                ->with('course.instructor')
+                ->orderBy('scheduled_at')
+                ->get();
         } else {
+            // For students, show sessions from enrolled courses
             $enrolledCourseIds = $user->enrollments()->pluck('course_id');
             $sessions = LiveSession::whereIn('course_id', $enrolledCourseIds)
                 ->whereIn('status', ['scheduled', 'live'])

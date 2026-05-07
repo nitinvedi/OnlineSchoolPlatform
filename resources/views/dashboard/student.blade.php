@@ -1,243 +1,897 @@
 <x-app-layout>
+
     @php
         $hour = date('H');
         $greeting = 'Good evening';
-        if ($hour < 12) $greeting = 'Good morning';
-        elseif ($hour < 17) $greeting = 'Good afternoon';
-        
+        if ($hour < 12) {
+            $greeting = 'Good morning';
+        } elseif ($hour < 17) {
+            $greeting = 'Good afternoon';
+        }
+
         $quotes = [
-            "Learning is a treasure that will follow its owner everywhere.",
-            "The beautiful thing about learning is that no one can take it away from you.",
-            "Education is the passport to the future.",
-            "Develop a passion for learning. If you do, you will never cease to grow."
+            "Learning compounds over time.",
+            "Small progress every day adds up.",
+            "Consistency creates mastery.",
+            "Focus on progress, not perfection."
         ];
         $quote = $quotes[array_rand($quotes)];
+        
+        $todayDate = now()->format('l, F j, Y');
     @endphp
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {{-- Dynamic Hero Greeting --}}
-        <div class="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
-            <div>
-                <h1 class="text-4xl md:text-6xl font-display font-black text-white tracking-tighter leading-tight">
-                    {{ $greeting }}, <span class="text-brand-500">{{ explode(' ', auth()->user()->name)[0] }}</span>
-                </h1>
-                <p class="mt-4 text-slate-500 font-medium text-lg max-w-2xl italic opacity-80">"{{ $quote }}"</p>
-            </div>
-            <div class="flex items-center gap-4">
-                <a href="{{ route('courses.index') }}" class="btn-primary">Explore Courses</a>
-            </div>
-        </div>
+    <div class="min-h-screen bg-[#0f172a] text-white">
 
-        {{-- Bento Grid Layout --}}
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 mb-16">
-            
-            {{-- "Jump Back In" Hero Card --}}
-            <div class="md:col-span-8 bg-dark-card rounded-[3rem] p-2 border border-white/5 overflow-hidden relative group h-[400px]">
-                @if($jumpBackIn)
-                    @php
-                        $nextLesson = null;
-                        foreach($jumpBackIn->course->lessons as $lesson) {
-                            if (!$jumpBackIn->completedLessons->contains('id', $lesson->id)) { $nextLesson = $lesson; break; }
-                        }
-                    @endphp
-                    <div class="absolute inset-0 z-10 bg-gradient-to-t from-dark-bg/90 via-dark-bg/40 to-transparent"></div>
-                    <img src="{{ $jumpBackIn->course->thumbnail_src ?? 'https://ui-avatars.com/api/?name='.urlencode($jumpBackIn->course->title).'&background=121217&color=fff&size=800' }}" 
-                         class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-60">
-                    
-                    <div class="relative z-20 p-10 h-full flex flex-col justify-end">
-                        <div class="max-w-xl">
-                            <span class="inline-block px-4 py-1.5 bg-brand-500 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-lg shadow-lg mb-6">Continue Learning</span>
-                            <h2 class="text-4xl font-display font-black text-white mb-4 tracking-tighter leading-tight">{{ $jumpBackIn->course->title }}</h2>
-                            <p class="text-slate-300 font-medium mb-8 opacity-80">{{ $nextLesson ? 'Up next: ' . $nextLesson->title : 'Course completed! Review the materials.' }}</p>
-                            
-                            <div class="flex items-center gap-8">
-                                <a href="{{ $nextLesson ? route('lessons.show', [$jumpBackIn->course, $nextLesson]) : route('courses.show', $jumpBackIn->course) }}" 
-                                   class="w-16 h-16 rounded-2xl bg-white text-brand-500 flex items-center justify-center shadow-2xl hover:scale-110 transition-transform duration-300">
-                                    <svg class="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                                </a>
-                                <div class="flex-1">
-                                    <div class="flex justify-between items-center mb-2">
-                                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Course Progress</span>
-                                        <span class="text-sm font-black text-white">{{ $jumpBackIn->progress_percent }}%</span>
-                                    </div>
-                                    <div class="h-2 bg-white/10 rounded-full overflow-hidden">
-                                        <div class="h-full bg-brand-500 rounded-full transition-all duration-1000" style="width: {{ $jumpBackIn->progress_percent }}%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        <div class="max-w-[1500px] mx-auto px-6 py-8">
+
+            {{-- Welcome Header --}}
+            <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-10">
+
+                <div>
+
+                    <h1 class="text-4xl lg:text-5xl font-semibold tracking-tight leading-tight">
+                        {{ $greeting }},
+                        <span class="text-violet-400">
+                            {{ explode(' ', auth()->user()->name)[0] }}
+                        </span>
+                    </h1>
+
+                    <div class="flex items-center gap-4 mt-4 text-slate-400">
+                        <p class="text-base">{{ $todayDate }}</p>
+                        <span class="text-2xl">🔥 {{ $stats['streak'] }}-day streak</span>
                     </div>
-                @else
-                    <div class="p-12 h-full flex flex-col justify-center items-center text-center bg-dark-surface/50">
-                        <div class="w-20 h-20 bg-white/5 rounded-[2rem] flex items-center justify-center border border-white/10 mb-8">
-                            <svg class="w-10 h-10 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                        </div>
-                        <h2 class="text-3xl font-display font-black text-white mb-4">Start Your Journey</h2>
-                        <p class="text-slate-500 font-medium max-w-md mb-10 leading-relaxed">Enroll in your first course to begin mastering premium industry-standard skills.</p>
-                        <a href="{{ route('courses.index') }}" class="btn-primary">Browse Catalog</a>
-                    </div>
-                @endif
+
+                    <p class="text-slate-400 mt-4 text-base max-w-2xl">
+                        {{ $quote }}
+                    </p>
+
+                </div>
+
+                <div class="flex items-center gap-3">
+
+                    <a
+                        href="{{ route('courses.index') }}"
+                        class="h-11 px-5 rounded-xl bg-violet-600 hover:bg-violet-500 transition flex items-center justify-center text-sm font-medium"
+                    >
+                        Explore Courses
+                    </a>
+
+                </div>
+
             </div>
 
-            {{-- Stats Cards --}}
-            <div class="md:col-span-4 grid grid-rows-2 gap-8">
-                {{-- Progress Ring Card --}}
-                <div class="bg-dark-card rounded-[2.5rem] p-10 border border-white/5 flex items-center justify-between relative overflow-hidden group">
-                    <div class="absolute inset-0 bg-gradient-to-br from-brand-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <div class="relative z-10">
-                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Completed</p>
-                        <h3 class="text-5xl font-display font-black text-white">{{ $stats['completedCourses'] }}<span class="text-xl text-slate-600 ml-1">/{{ $stats['enrolledCourses'] }}</span></h3>
-                    </div>
-                    <div class="relative w-24 h-24 z-10">
+            {{-- Main Grid --}}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+
+                {{-- Continue Learning --}}
+                <div class="lg:col-span-8">
+
+                    @if($jumpBackIn)
+
                         @php
-                            $percentage = $stats['enrolledCourses'] > 0 ? round(($stats['completedCourses'] / $stats['enrolledCourses']) * 100) : 0;
-                            $circumference = 2 * pi() * 36;
-                            $offset = $circumference - ($percentage / 100) * $circumference;
+                            $nextLesson = null;
+
+                            foreach($jumpBackIn->course->lessons as $lesson) {
+                                if (!$jumpBackIn->completedLessons->contains('id', $lesson->id)) {
+                                    $nextLesson = $lesson;
+                                    break;
+                                }
+                            }
                         @endphp
-                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 80 80">
-                            <circle cx="40" cy="40" r="36" fill="transparent" stroke="rgba(255,255,255,0.05)" stroke-width="8"></circle>
-                            <circle cx="40" cy="40" r="36" fill="transparent" stroke="currentColor" stroke-width="8" stroke-dasharray="{{ $circumference }}" stroke-dashoffset="{{ $offset }}" class="text-brand-500 transition-all duration-1000 ease-out"></circle>
-                        </svg>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <span class="text-xs font-black text-white">{{ $percentage }}%</span>
-                        </div>
-                    </div>
-                </div>
 
-                {{-- Streak Card --}}
-                <div class="bg-brand-500 rounded-[2.5rem] p-10 shadow-2xl text-white relative overflow-hidden group">
-                    <svg class="absolute -right-10 -bottom-10 w-48 h-48 text-white/10 group-hover:scale-110 transition-transform duration-700" fill="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                    <div class="relative z-10">
-                        <p class="text-[10px] font-black text-brand-50 uppercase tracking-[0.2em] mb-4 opacity-80">Daily Streak</p>
-                        <div class="flex items-baseline gap-2">
-                            <h3 class="text-6xl font-display font-black">5</h3>
-                            <span class="text-lg font-black uppercase opacity-60">Days</span>
-                        </div>
-                        <p class="text-sm font-bold mt-4 opacity-90">Keep the momentum going! 🔥</p>
-                    </div>
-                </div>
-            </div>
+                        <div class="relative overflow-hidden rounded-3xl border border-white/10 bg-[#111827]/80 backdrop-blur-xl min-h-[420px]">
 
-        </div>
+                            {{-- Background --}}
+                            <img
+                                src="{{ $jumpBackIn->course->thumbnail_src ?? 'https://ui-avatars.com/api/?name='.urlencode($jumpBackIn->course->title).'&background=111827&color=fff&size=1200' }}"
+                                class="absolute inset-0 w-full h-full object-cover opacity-30"
+                            >
 
-        {{-- Row 2: Live Sessions & Activity --}}
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 mb-16">
-            
-            {{-- Upcoming Live Sessions --}}
-            <div class="lg:col-span-2">
-                <div class="flex items-center justify-between mb-10">
-                    <h3 class="text-2xl font-display font-black text-white">Live Masterclasses</h3>
-                    <a href="{{ route('live-sessions.index') }}" class="text-[10px] font-black text-brand-500 uppercase tracking-widest hover:text-brand-400 transition-colors">View Schedule &rarr;</a>
-                </div>
-                
-                @php
-                    $enrolledCourseIds = auth()->user()->enrollments()->pluck('course_id');
-                    $upcomingSessions = \App\Models\LiveSession::whereIn('course_id', $enrolledCourseIds)
-                        ->with('course')
-                        ->whereIn('status', ['scheduled', 'live'])
-                        ->orderBy('scheduled_at')
-                        ->take(2)
-                        ->get();
-                @endphp
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-[#0f172a]/70 to-transparent"></div>
 
-                <div class="space-y-6">
-                    @forelse($upcomingSessions as $session)
-                        <div class="flex bg-dark-card rounded-[2.5rem] border border-white/5 overflow-hidden group hover:border-brand-500/50 transition-all duration-500">
-                            <div class="w-16 bg-white/5 flex flex-col items-center justify-center border-r border-white/5">
-                                <span class="transform -rotate-90 text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] whitespace-nowrap">Session</span>
-                            </div>
-                            
-                            <div class="flex-1 p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-                                <div>
-                                    <div class="flex items-center gap-3 mb-3">
-                                        @if($session->status === 'live')
-                                            <span class="px-3 py-1 bg-rose-500 text-white text-[10px] font-black uppercase tracking-widest rounded-lg animate-pulse">Live Now</span>
-                                        @else
-                                            <span class="text-[10px] font-black text-brand-500 uppercase tracking-widest">{{ $session->scheduled_at->format('M d, Y') }} • {{ $session->scheduled_at->format('h:i A') }}</span>
-                                        @endif
+                            {{-- Content --}}
+                            <div class="relative z-10 h-full flex flex-col justify-end p-8 lg:p-10">
+
+                                <div class="max-w-2xl">
+
+                                    <div class="inline-flex items-center px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300 text-xs font-medium mb-6">
+                                        Continue Learning
                                     </div>
-                                    <h4 class="text-xl font-bold text-white mb-1">{{ $session->topic }}</h4>
-                                    <p class="text-sm text-slate-500 font-medium opacity-80">{{ $session->course->title }}</p>
-                                </div>
-                                
-                                <a href="{{ route('live-sessions.show', $session) }}" class="btn-primary py-3 px-8 text-xs whitespace-nowrap">
-                                    Join Now
-                                </a>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="bg-dark-surface/30 border-2 border-dashed border-white/5 rounded-[2.5rem] p-16 text-center">
-                            <p class="text-slate-500 font-bold uppercase tracking-widest text-[10px]">No upcoming live sessions</p>
-                        </div>
-                    @endforelse
-                </div>
-            </div>
 
-            {{-- Recent Activity --}}
-            <div class="bg-dark-card rounded-[3rem] p-10 border border-white/5">
-                <h3 class="text-2xl font-display font-black text-white mb-10">Activity</h3>
-                <div class="space-y-10 relative before:absolute before:left-[17px] before:top-2 before:bottom-2 before:w-px before:bg-white/5">
-                    @foreach($enrollments->take(3) as $enrollment)
-                        <div class="relative pl-12">
-                            <div class="absolute left-0 top-0 w-9 h-9 rounded-2xl bg-dark-surface border border-white/5 flex items-center justify-center z-10 group">
-                                <div class="w-2 h-2 rounded-full {{ $enrollment->completed_at ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 'bg-brand-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]' }}"></div>
+                                    <h2 class="text-4xl font-semibold tracking-tight leading-tight mb-4">
+                                        {{ $jumpBackIn->course->title }}
+                                    </h2>
+
+                                    <p class="text-slate-300 mb-8 text-base leading-relaxed">
+                                        {{ $nextLesson ? 'Up next: ' . $nextLesson->title : 'You’ve completed this course. Review lessons anytime.' }}
+                                    </p>
+
+                                    <div class="flex flex-col sm:flex-row sm:items-center gap-6">
+
+                                        <a
+                                            href="{{ $nextLesson ? route('lessons.show', [$jumpBackIn->course, $nextLesson]) : route('courses.show', $jumpBackIn->course) }}"
+                                            class="h-12 px-6 rounded-xl bg-white text-slate-900 hover:bg-slate-100 transition flex items-center gap-2 text-sm font-medium w-fit"
+                                        >
+                                            ▶ Continue
+                                        </a>
+
+                                        <div class="flex-1 max-w-md">
+
+                                            <div class="flex items-center justify-between mb-2">
+
+                                                <span class="text-sm text-slate-400">
+                                                    Progress
+                                                </span>
+
+                                                <span class="text-sm font-medium">
+                                                    {{ $jumpBackIn->progress_percent }}%
+                                                </span>
+
+                                            </div>
+
+                                            <div class="h-2 rounded-full bg-white/10 overflow-hidden">
+
+                                                <div
+                                                    class="h-full bg-violet-500 rounded-full transition-all duration-700"
+                                                    style="width: {{ $jumpBackIn->progress_percent }}%"
+                                                ></div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
                             </div>
+
+                        </div>
+
+                    @else
+
+                        <div class="rounded-3xl border border-white/10 bg-[#111827]/80 backdrop-blur-xl min-h-[420px] flex flex-col items-center justify-center text-center p-10">
+
+                            <div class="w-20 h-20 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center mb-8 text-4xl">
+                                📚
+                            </div>
+
+                            <h2 class="text-3xl font-semibold mb-4">
+                                Start Learning
+                            </h2>
+
+                            <p class="text-slate-400 max-w-lg leading-relaxed mb-8">
+                                Explore courses and begin building skills through hands-on learning.
+                            </p>
+
+                            <a
+                                href="{{ route('courses.index') }}"
+                                class="h-11 px-5 rounded-xl bg-violet-600 hover:bg-violet-500 transition flex items-center justify-center text-sm font-medium"
+                            >
+                                Browse Courses
+                            </a>
+
+                        </div>
+
+                    @endif
+
+                </div>
+
+                {{-- Side Stats --}}
+                <div class="lg:col-span-4 space-y-6">
+
+                    {{-- Completion Card --}}
+                    <div class="rounded-3xl border border-white/10 bg-[#111827]/80 backdrop-blur-xl p-6">
+
+                        <div class="flex items-center justify-between">
+
                             <div>
-                                <p class="text-xs font-black text-white uppercase tracking-widest mb-1">{{ $enrollment->completed_at ? 'Course Finished' : 'Continued Learning' }}</p>
-                                <p class="text-sm text-slate-400 font-medium line-clamp-1 mb-2">{{ $enrollment->course->title }}</p>
-                                <p class="text-[10px] font-black text-slate-600 uppercase tracking-widest">{{ $enrollment->updated_at->diffForHumans() }}</p>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
 
-        {{-- Your Courses Grid --}}
-        <div>
-            <div class="flex items-center justify-between mb-10">
-                <h3 class="text-2xl font-display font-black text-white">Your Workspace</h3>
-                <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">{{ $enrollments->count() }} Active Enrollments</span>
+                                <p class="text-sm text-slate-400 mb-3">
+                                    Course Completion
+                                </p>
+
+                                <div class="flex items-end gap-2">
+
+                                    <h3 class="text-5xl font-semibold tracking-tight">
+                                        {{ $stats['completedCourses'] }}
+                                    </h3>
+
+                                    <span class="text-slate-500 mb-2">
+                                        / {{ $stats['enrolledCourses'] }}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                            <div class="relative w-24 h-24">
+
+                                @php
+                                    $percentage = $stats['enrolledCourses'] > 0
+                                        ? round(($stats['completedCourses'] / $stats['enrolledCourses']) * 100)
+                                        : 0;
+
+                                    $circumference = 2 * pi() * 36;
+
+                                    $offset = $circumference - ($percentage / 100) * $circumference;
+                                @endphp
+
+                                <svg
+                                    class="w-full h-full -rotate-90"
+                                    viewBox="0 0 80 80"
+                                >
+
+                                    <circle
+                                        cx="40"
+                                        cy="40"
+                                        r="36"
+                                        fill="transparent"
+                                        stroke="rgba(255,255,255,0.08)"
+                                        stroke-width="7"
+                                    ></circle>
+
+                                    <circle
+                                        cx="40"
+                                        cy="40"
+                                        r="36"
+                                        fill="transparent"
+                                        stroke="#8b5cf6"
+                                        stroke-width="7"
+                                        stroke-dasharray="{{ $circumference }}"
+                                        stroke-dashoffset="{{ $offset }}"
+                                        stroke-linecap="round"
+                                    ></circle>
+
+                                </svg>
+
+                                <div class="absolute inset-0 flex items-center justify-center">
+
+                                    <span class="text-sm font-medium">
+                                        {{ $percentage }}%
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {{-- Streak --}}
+                    <div class="rounded-3xl border border-white/10 bg-[#111827]/80 backdrop-blur-xl p-6">
+
+                        <p class="text-sm text-slate-400 mb-4">This Month</p>
+
+                        <div class="space-y-4">
+
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm font-medium">Learning Hours</span>
+                                    <span class="text-lg font-bold text-violet-400">{{ round($stats['learningHours'], 1) }}h</span>
+                                </div>
+                                <div class="h-2 rounded-full bg-white/10 overflow-hidden">
+                                    <div class="h-full bg-blue-500 rounded-full" style="width: {{ min(round(($stats['learningHours'] / 100) * 100), 100) }}%"></div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm font-medium">Streak</span>
+                                    <span class="text-lg font-bold text-orange-400">{{ $stats['streak'] }} days 🔥</span>
+                                </div>
+                                <div class="h-2 rounded-full bg-white/10 overflow-hidden">
+                                    <div class="h-full bg-orange-500 rounded-full" style="width: {{ min(($stats['streak'] / 30) * 100, 100) }}%"></div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
-            
-            @if($enrollments->count() > 0)
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    @foreach($enrollments as $enrollment)
-                        <a href="{{ route('courses.show', $enrollment->course) }}" class="bg-dark-card border border-white/5 rounded-[2.5rem] p-8 hover:border-brand-500/50 transition-all duration-500 group relative">
-                            <div class="flex gap-6 items-start mb-8">
-                                <div class="w-20 h-20 rounded-2xl overflow-hidden flex-shrink-0 border border-white/5">
-                                    <img src="{{ $enrollment->course->thumbnail_src ?? 'https://ui-avatars.com/api/?name='.urlencode($enrollment->course->title).'&background=121217&color=fff&size=200' }}" 
-                                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80">
+
+            {{-- Progress Overview & Live Sessions --}}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+
+                {{-- Weekly Activity Chart --}}
+                <div class="lg:col-span-8 rounded-3xl border border-white/10 bg-[#111827]/80 backdrop-blur-xl p-8">
+
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-semibold">Weekly Progress</h3>
+                        <p class="text-sm text-slate-400 mt-1">Lessons completed per day</p>
+                    </div>
+
+                    <div class="flex items-end justify-between gap-3 h-48">
+
+                        @foreach($weeklyActivity as $day)
+                            <div class="flex-1 flex flex-col items-center gap-2">
+                                <div class="w-full max-w-12 bg-gradient-to-t from-violet-500 to-violet-400 rounded-t-lg transition-all hover:from-violet-600 hover:to-violet-500"
+                                    style="height: {{ $day['lessons'] > 0 ? ($day['lessons'] * 40) : 8 }}px">
                                 </div>
-                                <div class="flex-1 min-w-0">
-                                    <h4 class="font-bold text-white text-lg line-clamp-2 leading-tight mb-2 group-hover:text-brand-500 transition-colors">{{ $enrollment->course->title }}</h4>
-                                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">{{ $enrollment->course->instructor->name }}</p>
-                                </div>
+                                <span class="text-xs text-slate-400">{{ $day['day'] }}</span>
                             </div>
-                            
-                            <div class="pt-6 border-t border-white/5">
-                                <div class="flex justify-between items-center mb-3">
-                                    <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Progress</span>
-                                    <span class="text-xs font-black text-white">{{ $enrollment->progress_percent ?? 0 }}%</span>
+                        @endforeach
+
+                    </div>
+
+                </div>
+
+                {{-- Upcoming Live Sessions --}}
+                <div class="lg:col-span-4 rounded-3xl border border-white/10 bg-[#111827]/80 backdrop-blur-xl p-8">
+
+                    <div class="mb-8">
+
+                        <h3 class="text-2xl font-semibold">Live Sessions</h3>
+
+                        <p class="text-sm text-slate-400 mt-1">Join your upcoming classes</p>
+
+                    </div>
+
+                    @php
+                        $enrolledCourseIds = auth()->user()->enrollments()->pluck('course_id');
+                        $upcomingSessions = \App\Models\LiveSession::whereIn('course_id', $enrolledCourseIds)
+                            ->with('course')
+                            ->whereIn('status', ['scheduled', 'live'])
+                            ->orderBy('scheduled_at')
+                            ->take(2)
+                            ->get();
+                    @endphp
+
+                    <div class="space-y-3">
+
+                        @forelse($upcomingSessions as $session)
+
+                            <div class="p-4 rounded-2xl border border-white/5 bg-white/[0.03] hover:bg-white/[0.05] transition">
+
+                                <div class="flex items-start justify-between gap-3 mb-2">
+
+                                    @if($session->status === 'live')
+                                        <span class="px-2 py-1 rounded-full bg-red-500 text-white text-xs font-medium">Live</span>
+                                    @else
+                                        <span class="text-xs text-violet-400 font-medium">
+                                            {{ $session->scheduled_at->format('M d • h:i A') }}
+                                        </span>
+                                    @endif
+
                                 </div>
-                                <div class="h-1.5 bg-white/5 rounded-full overflow-hidden">
-                                    <div class="h-full bg-brand-500 rounded-full transition-all duration-1000" style="width: {{ $enrollment->progress_percent ?? 0 }}%"></div>
-                                </div>
+
+                                <h4 class="text-sm font-medium mb-1 line-clamp-1">
+                                    {{ $session->topic ?? $session->title }}
+                                </h4>
+
+                                <p class="text-xs text-slate-400 mb-3 line-clamp-1">
+                                    {{ $session->course->title }}
+                                </p>
+
+                                <a
+                                    href="{{ route('live-sessions.show', $session) }}"
+                                    class="text-xs text-violet-400 hover:text-violet-300 font-medium transition"
+                                >
+                                    Join →
+                                </a>
+
                             </div>
-                        </a>
-                    @endforeach
+
+                        @empty
+
+                            <div class="h-32 rounded-2xl border border-dashed border-white/10 flex items-center justify-center text-slate-500 text-sm text-center p-4">
+                                No upcoming live sessions
+                            </div>
+
+                        @endforelse
+
+                    </div>
+
                 </div>
-                <div class="mt-12">
-                    {{ $enrollments->links() }}
+
+            </div>
+
+            {{-- Achievements & Certificates --}}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+
+                {{-- Achievements/Badges --}}
+                <div class="lg:col-span-6 rounded-3xl border border-white/10 bg-[#111827]/80 backdrop-blur-xl p-8">
+
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-semibold">Achievements</h3>
+                        <p class="text-sm text-slate-400 mt-1">Badges you've earned on your learning journey</p>
+                    </div>
+
+                    @if($badges->count() > 0)
+
+                        <div class="grid grid-cols-3 gap-4">
+
+                            @foreach($badges as $userBadge)
+
+                                <div class="flex flex-col items-center text-center p-4 rounded-2xl border border-white/5 bg-white/[0.03] hover:bg-white/[0.05] transition">
+
+                                    <div class="text-4xl mb-2">
+                                        {{ $userBadge->badge->icon_url ?? '🏆' }}
+                                    </div>
+
+                                    <h4 class="text-xs font-bold mb-1">{{ $userBadge->badge->name }}</h4>
+
+                                    <p class="text-[10px] text-slate-400 line-clamp-2">
+                                        {{ $userBadge->badge->description }}
+                                    </p>
+
+                                    <p class="text-[10px] text-violet-400 mt-2">
+                                        {{ $userBadge->earned_at->format('M d') }}
+                                    </p>
+
+                                </div>
+
+                            @endforeach
+
+                        </div>
+
+                    @else
+
+                        <div class="text-center py-12">
+                            <div class="text-4xl mb-4">🔓</div>
+                            <p class="text-slate-400 text-sm">Complete courses, build streaks, and earn badges!</p>
+                        </div>
+
+                    @endif
+
                 </div>
-            @else
-                <div class="bg-dark-card border border-white/5 rounded-[3rem] p-20 text-center">
-                    <h4 class="text-2xl font-display font-black text-white mb-4">Your Library is Empty</h4>
-                    <p class="text-slate-500 font-medium mb-10">Start your first course today and build your professional portfolio.</p>
-                    <a href="{{ route('courses.index') }}" class="btn-primary">Browse Catalog</a>
+
+                {{-- Recent Certificates --}}
+                <div class="lg:col-span-6 rounded-3xl border border-white/10 bg-[#111827]/80 backdrop-blur-xl p-8">
+
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-semibold">Certificates</h3>
+                        <p class="text-sm text-slate-400 mt-1">Your earned certificates</p>
+                    </div>
+
+                    @if($certificates->count() > 0)
+
+                        <div class="space-y-4">
+
+                            @foreach($certificates as $cert)
+
+                                <div class="p-4 rounded-2xl border border-white/5 bg-white/[0.03] hover:bg-white/[0.05] transition flex items-center justify-between gap-4">
+
+                                    <div class="flex items-center gap-4 flex-1 min-w-0">
+
+                                        <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-lg flex-shrink-0">
+                                            📜
+                                        </div>
+
+                                        <div class="min-w-0">
+                                            <h4 class="font-medium line-clamp-1">{{ $cert->course->title }}</h4>
+                                            <p class="text-xs text-slate-400">{{ $cert->issued_at->format('M d, Y') }}</p>
+                                        </div>
+
+                                    </div>
+
+                                    <a
+                                        href="{{ route('certificates.download', $cert) }}"
+                                        class="px-3 py-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-xs font-medium transition flex-shrink-0"
+                                    >
+                                        Download
+                                    </a>
+
+                                </div>
+
+                            @endforeach
+
+                        </div>
+
+                    @else
+
+                        <div class="text-center py-12">
+                            <div class="text-4xl mb-4">📜</div>
+                            <p class="text-slate-400 text-sm">Complete courses to earn certificates</p>
+                        </div>
+
+                    @endif
+
                 </div>
+
+            </div>
+
+            {{-- Upcoming Deadlines --}}
+            @if($upcomingDeadlines->count() > 0)
+
+                <div class="rounded-3xl border border-white/10 bg-[#111827]/80 backdrop-blur-xl p-8 mb-8">
+
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-semibold">Upcoming Deadlines</h3>
+                        <p class="text-sm text-slate-400 mt-1">Stay on top of your commitments</p>
+                    </div>
+
+                    <div class="space-y-3">
+
+                        @foreach($upcomingDeadlines as $deadline)
+
+                            <div class="p-4 rounded-2xl border border-white/5 bg-white/[0.03] hover:bg-white/[0.05] transition">
+
+                                <div class="flex items-start justify-between gap-4">
+
+                                    <div>
+
+                                        <div class="flex items-center gap-2 mb-1">
+
+                                            @if($deadline['status'] === 'live')
+                                                <span class="px-2 py-1 rounded-full bg-red-500 text-white text-xs font-bold">LIVE NOW</span>
+                                            @else
+                                                <span class="text-xs text-amber-400 font-medium">
+                                                    {{ $deadline['date']->diffForHumans() }}
+                                                </span>
+                                            @endif
+
+                                        </div>
+
+                                        <h4 class="font-medium">{{ $deadline['title'] }}</h4>
+
+                                        <p class="text-sm text-slate-400">{{ $deadline['course'] }}</p>
+
+                                    </div>
+
+                                    @if($deadline['type'] === 'live_session')
+                                        <a
+                                            href="{{ route('live-sessions.show', $deadline['id']) }}"
+                                            class="px-4 py-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-sm font-medium transition flex-shrink-0"
+                                        >
+                                            Join
+                                        </a>
+                                    @endif
+
+                                </div>
+
+                            </div>
+
+                        @endforeach
+
+                    </div>
+
+                </div>
+
             @endif
+
+            {{-- My Courses Section --}}
+            <div>
+
+                <div class="flex items-center justify-between mb-8">
+
+                    <div>
+                        <h3 class="text-2xl font-semibold">Your Courses</h3>
+                        <p class="text-sm text-slate-400 mt-1">Continue learning from where you left off</p>
+                    </div>
+
+                    <span class="text-sm text-slate-500">
+                        {{ $enrollments->total() }} enrolled
+                    </span>
+
+                </div>
+
+                {{-- Filter Tabs --}}
+                @if($enrollments->total() > 0)
+
+                    <div x-data="{ activeFilter: 'all' }" class="mb-8">
+
+                        <div class="flex gap-2 border-b border-white/10 pb-4">
+
+                            <button
+                                @click="activeFilter = 'all'"
+                                :class="{ 'text-violet-400 border-b-2 border-violet-500': activeFilter === 'all', 'text-slate-400': activeFilter !== 'all' }"
+                                class="px-4 py-2 text-sm font-medium transition border-b-2 border-transparent"
+                            >
+                                All ({{ $enrollments->total() }})
+                            </button>
+
+                            <button
+                                @click="activeFilter = 'inprogress'"
+                                :class="{ 'text-violet-400 border-b-2 border-violet-500': activeFilter === 'inprogress', 'text-slate-400': activeFilter !== 'inprogress' }"
+                                class="px-4 py-2 text-sm font-medium transition border-b-2 border-transparent"
+                            >
+                                In Progress ({{ $enrollmentsInProgress->count() }})
+                            </button>
+
+                            <button
+                                @click="activeFilter = 'completed'"
+                                :class="{ 'text-violet-400 border-b-2 border-violet-500': activeFilter === 'completed', 'text-slate-400': activeFilter !== 'completed' }"
+                                class="px-4 py-2 text-sm font-medium transition border-b-2 border-transparent"
+                            >
+                                Completed ({{ $enrollmentsCompleted->count() }})
+                            </button>
+
+                        </div>
+
+                        {{-- All Courses --}}
+                        <div x-show="activeFilter === 'all'" class="mt-8">
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+                                @foreach($enrollments as $enrollment)
+
+                                    <a
+                                        href="{{ route('courses.show', $enrollment->course) }}"
+                                        class="rounded-3xl border border-white/10 bg-[#111827]/80 backdrop-blur-xl overflow-hidden hover:border-violet-500/30 transition group"
+                                    >
+
+                                        <div class="aspect-[16/9] overflow-hidden relative">
+
+                                            <img
+                                                src="{{ $enrollment->course->thumbnail_src ?? 'https://ui-avatars.com/api/?name='.urlencode($enrollment->course->title).'&background=111827&color=fff&size=800' }}"
+                                                class="w-full h-full object-cover group-hover:scale-105 transition duration-700"
+                                            >
+
+                                            @if($enrollment->completed_at)
+                                                <div class="absolute inset-0 bg-emerald-500/20 flex items-center justify-center">
+                                                    <span class="text-3xl">✓</span>
+                                                </div>
+                                            @endif
+
+                                        </div>
+
+                                        <div class="p-6">
+
+                                            <h4 class="text-xl font-medium leading-tight mb-3 group-hover:text-violet-400 transition line-clamp-2">
+                                                {{ $enrollment->course->title }}
+                                            </h4>
+
+                                            <p class="text-sm text-slate-400 mb-4">
+                                                {{ $enrollment->course->instructor->name }}
+                                            </p>
+
+                                            <div class="mb-4">
+
+                                                <div class="flex items-center justify-between mb-2">
+                                                    <span class="text-sm text-slate-400">Progress</span>
+                                                    <span class="text-sm font-medium">{{ $enrollment->progress_percent ?? 0 }}%</span>
+                                                </div>
+
+                                                <div class="h-2 rounded-full bg-white/10 overflow-hidden">
+                                                    <div
+                                                        class="h-full bg-violet-500 rounded-full transition-all duration-700"
+                                                        style="width: {{ $enrollment->progress_percent ?? 0 }}%"
+                                                    ></div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="flex items-center justify-between text-xs text-slate-400">
+                                                <span>{{ $enrollment->updated_at->diffForHumans() }}</span>
+                                                @if($enrollment->completed_at)
+                                                    <span class="text-emerald-400">Completed</span>
+                                                @endif
+                                            </div>
+
+                                        </div>
+
+                                    </a>
+
+                                @endforeach
+
+                            </div>
+
+                        </div>
+
+                        {{-- In Progress --}}
+                        <div x-show="activeFilter === 'inprogress'" class="mt-8">
+
+                            @if($enrollmentsInProgress->count() > 0)
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+                                    @foreach($enrollmentsInProgress as $enrollment)
+
+                                        <a
+                                            href="{{ route('courses.show', $enrollment->course) }}"
+                                            class="rounded-3xl border border-white/10 bg-[#111827]/80 backdrop-blur-xl overflow-hidden hover:border-violet-500/30 transition group"
+                                        >
+
+                                            <div class="aspect-[16/9] overflow-hidden">
+                                                <img
+                                                    src="{{ $enrollment->course->thumbnail_src ?? 'https://ui-avatars.com/api/?name='.urlencode($enrollment->course->title).'&background=111827&color=fff&size=800' }}"
+                                                    class="w-full h-full object-cover group-hover:scale-105 transition duration-700"
+                                                >
+                                            </div>
+
+                                            <div class="p-6">
+
+                                                <h4 class="text-xl font-medium leading-tight mb-3 group-hover:text-violet-400 transition line-clamp-2">
+                                                    {{ $enrollment->course->title }}
+                                                </h4>
+
+                                                <p class="text-sm text-slate-400 mb-4">
+                                                    {{ $enrollment->course->instructor->name }}
+                                                </p>
+
+                                                <div class="mb-4">
+
+                                                    <div class="flex items-center justify-between mb-2">
+                                                        <span class="text-sm text-slate-400">Progress</span>
+                                                        <span class="text-sm font-medium">{{ $enrollment->progress_percent ?? 0 }}%</span>
+                                                    </div>
+
+                                                    <div class="h-2 rounded-full bg-white/10 overflow-hidden">
+                                                        <div
+                                                            class="h-full bg-violet-500 rounded-full transition-all duration-700"
+                                                            style="width: {{ $enrollment->progress_percent ?? 0 }}%"
+                                                        ></div>
+                                                    </div>
+
+                                                </div>
+
+                                                <span class="text-xs text-slate-400">
+                                                    Last accessed {{ $enrollment->updated_at->diffForHumans() }}
+                                                </span>
+
+                                            </div>
+
+                                        </a>
+
+                                    @endforeach
+
+                                </div>
+
+                            @else
+
+                                <div class="text-center py-12">
+                                    <p class="text-slate-400">No courses in progress</p>
+                                </div>
+
+                            @endif
+
+                        </div>
+
+                        {{-- Completed --}}
+                        <div x-show="activeFilter === 'completed'" class="mt-8">
+
+                            @if($enrollmentsCompleted->count() > 0)
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+                                    @foreach($enrollmentsCompleted as $enrollment)
+
+                                        <a
+                                            href="{{ route('courses.show', $enrollment->course) }}"
+                                            class="rounded-3xl border border-white/10 bg-[#111827]/80 backdrop-blur-xl overflow-hidden hover:border-violet-500/30 transition group"
+                                        >
+
+                                            <div class="aspect-[16/9] overflow-hidden relative">
+                                                <img
+                                                    src="{{ $enrollment->course->thumbnail_src ?? 'https://ui-avatars.com/api/?name='.urlencode($enrollment->course->title).'&background=111827&color=fff&size=800' }}"
+                                                    class="w-full h-full object-cover group-hover:scale-105 transition duration-700"
+                                                >
+                                                <div class="absolute inset-0 bg-emerald-500/20 flex items-center justify-center">
+                                                    <span class="text-3xl">✓</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="p-6">
+
+                                                <h4 class="text-xl font-medium leading-tight mb-3 group-hover:text-violet-400 transition line-clamp-2">
+                                                    {{ $enrollment->course->title }}
+                                                </h4>
+
+                                                <p class="text-sm text-slate-400 mb-4">
+                                                    {{ $enrollment->course->instructor->name }}
+                                                </p>
+
+                                                <div class="mb-4">
+                                                    <div class="h-2 rounded-full bg-white/10 overflow-hidden">
+                                                        <div class="h-full bg-emerald-500 rounded-full w-full"></div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="flex items-center justify-between text-xs">
+                                                    <span class="text-slate-400">Completed</span>
+                                                    <span class="text-emerald-400 font-medium">100%</span>
+                                                </div>
+
+                                            </div>
+
+                                        </a>
+
+                                    @endforeach
+
+                                </div>
+
+                            @else
+
+                                <div class="text-center py-12">
+                                    <p class="text-slate-400">No completed courses yet</p>
+                                </div>
+
+                            @endif
+
+                        </div>
+
+                    </div>
+
+                    <div class="mt-10">
+                        {{ $enrollments->links() }}
+                    </div>
+
+                @else
+
+                    <div class="rounded-3xl border border-white/10 bg-[#111827]/80 backdrop-blur-xl p-20 text-center">
+
+                        <h3 class="text-3xl font-semibold mb-4">
+                            No courses yet
+                        </h3>
+
+                        <p class="text-slate-400 mb-8 max-w-xl mx-auto">
+                            Start exploring courses and build your learning path.
+                        </p>
+
+                        <a
+                            href="{{ route('courses.index') }}"
+                            class="h-11 px-5 rounded-xl bg-violet-600 hover:bg-violet-500 transition inline-flex items-center justify-center text-sm font-medium"
+                        >
+                            Explore Courses
+                        </a>
+
+                    </div>
+
+                @endif
+
+            </div>
+
+            {{-- Recommended For You --}}
+            @if($recommendations->count() > 0)
+
+                <div class="mt-12">
+
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-semibold">Recommended For You</h3>
+                        <p class="text-sm text-slate-400 mt-1">Courses tailored to your interests</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+                        @foreach($recommendations as $course)
+
+                            <a
+                                href="{{ route('courses.show', $course) }}"
+                                class="rounded-3xl border border-white/10 bg-[#111827]/80 backdrop-blur-xl overflow-hidden hover:border-violet-500/30 transition group"
+                            >
+
+                                <div class="aspect-[16/9] overflow-hidden">
+                                    <img
+                                        src="{{ $course->thumbnail_src ?? 'https://ui-avatars.com/api/?name='.urlencode($course->title).'&background=111827&color=fff&size=800' }}"
+                                        class="w-full h-full object-cover group-hover:scale-105 transition duration-700"
+                                    >
+                                </div>
+
+                                <div class="p-6">
+
+                                    @if($course->category)
+                                        <div class="inline-block px-2 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300 text-[10px] font-bold mb-3">
+                                            {{ $course->category->name }}
+                                        </div>
+                                    @endif
+
+                                    <h4 class="text-xl font-medium leading-tight mb-3 group-hover:text-violet-400 transition line-clamp-2">
+                                        {{ $course->title }}
+                                    </h4>
+
+                                    <p class="text-sm text-slate-400">
+                                        {{ $course->instructor->name }}
+                                    </p>
+
+                                </div>
+
+                            </a>
+
+                        @endforeach
+
+                    </div>
+
+                </div>
+
+            @endif
+
         </div>
 
     </div>
+
 </x-app-layout>

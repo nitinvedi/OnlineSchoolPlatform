@@ -12,9 +12,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Demo pages for pricing and checkout UI
+Route::get('/pricing', function () { return view('pricing'); })->name('pricing');
+Route::get('/checkout', function () { return view('checkout'); })->name('checkout');
+Route::get('/payments/failed', function () { return view('payments.failed'); })->name('payments.failed');
+Route::get('/account/billing', function () { return view('account.billing'); })->middleware('auth')->name('account.billing');
+
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
+Route::get('/courses/suggestions', [CourseController::class, 'suggestions'])->name('courses.suggestions');
 Route::get('/courses/{course}', [CourseController::class, 'show'])->name('courses.show');
 Route::post('/courses/{course}/enroll', [CourseController::class, 'enroll'])->middleware('auth')->name('courses.enroll');
+Route::post('/courses/{course}/wishlist', [CourseController::class, 'toggleWishlist'])->middleware('auth')->name('courses.wishlist.toggle');
 
 // Payment routes
 Route::middleware(['auth', 'verified'])->group(function () {

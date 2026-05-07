@@ -6,10 +6,130 @@
     <title>{{ config('app.name', 'Laravel') }} Admin</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('admin-head')
+    <style>
+        [data-admin-shell] {
+            color: #F0EDE6;
+        }
+
+        [data-admin-shell] .admin-card {
+            background: #111111;
+            border: 1px solid #1E1E1E;
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+        }
+
+        [data-admin-shell] .admin-panel {
+            background: #0D0D0D;
+            border: 1px solid #1E1E1E;
+        }
+
+        [data-admin-shell] .admin-rule {
+            border-color: #1E1E1E;
+        }
+
+        [data-admin-shell] .admin-input,
+        [data-admin-shell] .admin-select,
+        [data-admin-shell] .admin-textarea {
+            background: #0D0D0D;
+            border: 1px solid #1E1E1E;
+            color: #F0EDE6;
+        }
+
+        [data-admin-shell] .admin-input:focus,
+        [data-admin-shell] .admin-select:focus,
+        [data-admin-shell] .admin-textarea:focus {
+            border-color: #2255FF;
+            box-shadow: 0 0 0 1px #2255FF;
+            outline: none;
+        }
+
+        [data-admin-shell] .admin-chip {
+            border: 1px solid #1E1E1E;
+            background: #111111;
+        }
+
+        [data-admin-shell] .admin-table thead th {
+            color: #555555;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-size: 10px;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        [data-admin-shell] .admin-table tbody tr:hover {
+            background: #0F0F0F;
+        }
+
+        [data-admin-shell] .admin-checkbox {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 0;
+            border: 1px solid #555555;
+            background: #0D0D0D;
+            position: relative;
+        }
+
+        [data-admin-shell] .admin-checkbox:checked {
+            background: #2255FF;
+            border-color: #2255FF;
+        }
+
+        [data-admin-shell] .admin-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            color: #ffffff;
+            font-size: 11px;
+            line-height: 1;
+            font-weight: 700;
+        }
+
+        [data-admin-shell] .admin-toggle {
+            appearance: none;
+            width: 54px;
+            height: 28px;
+            border-radius: 0.35rem;
+            background: #1E1E1E;
+            position: relative;
+            transition: background-color 150ms ease;
+        }
+
+        [data-admin-shell] .admin-toggle::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border-radius: 0.2rem;
+            background: #F0EDE6;
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            transition: transform 150ms ease;
+        }
+
+        [data-admin-shell] .admin-toggle:checked {
+            background: #2255FF;
+        }
+
+        [data-admin-shell] .admin-toggle:checked::after {
+            transform: translateX(26px);
+        }
+
+        [data-admin-shell] .admin-mono {
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        [data-admin-shell] .admin-display {
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 0.06em;
+        }
+    </style>
 </head>
-<body class="bg-gray-50 font-sans antialiased">
+<body class="bg-[#080808] font-sans antialiased">
     <div class="flex h-screen">
         <!-- Sidebar -->
         <div class="w-64 bg-white shadow-lg">

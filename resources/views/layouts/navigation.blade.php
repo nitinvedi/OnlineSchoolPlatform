@@ -5,7 +5,7 @@
             <div class="flex items-center gap-12">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 group">
+                    <a href="{{ Auth::check() ? route('dashboard') : '/' }}" class="flex items-center gap-3 group">
                         <div class="w-10 h-10 bg-brand-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-brand-500/20 group-hover:scale-110 transition-all duration-300">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                         </div>
@@ -15,14 +15,19 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden md:flex items-center gap-8">
+                    @auth
                     <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'text-brand-500 font-bold' : 'text-slate-500 dark:text-slate-400 font-medium' }} hover:text-brand-500 transition-colors text-sm uppercase tracking-widest">Dashboard</a>
+                    @endauth
                     <a href="{{ route('courses.index') }}" class="{{ request()->routeIs('courses.*') ? 'text-brand-500 font-bold' : 'text-slate-500 dark:text-slate-400 font-medium' }} hover:text-brand-500 transition-colors text-sm uppercase tracking-widest">Courses</a>
+                    @auth
                     <a href="{{ route('live-sessions.index') }}" class="{{ request()->routeIs('live-sessions.*') ? 'text-brand-500 font-bold' : 'text-slate-500 dark:text-slate-400 font-medium' }} hover:text-brand-500 transition-colors text-sm uppercase tracking-widest">Live Classes</a>
+                    @endauth
                 </div>
             </div>
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center">
+                @auth
                 <x-dropdown align="right" width="64">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-4 py-2 bg-slate-100 dark:bg-dark-card border border-slate-200 dark:border-dark-border text-sm font-bold rounded-2xl text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-dark-surface focus:outline-none transition-all duration-300">
@@ -56,6 +61,11 @@
                         </div>
                     </x-slot>
                 </x-dropdown>
+                @else
+                <a href="{{ route('login') }}" class="inline-flex items-center px-4 py-2 bg-slate-100 dark:bg-dark-card border border-slate-200 dark:border-dark-border text-sm font-bold rounded-2xl text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-dark-surface focus:outline-none transition-all duration-300">
+                    Login
+                </a>
+                @endauth
             </div>
 
             <!-- Hamburger -->
@@ -73,10 +83,15 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden border-t dark:border-dark-border bg-white dark:bg-dark-bg">
         <div class="p-4 space-y-2">
+            @auth
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="rounded-xl">Dashboard</x-responsive-nav-link>
+            @endauth
             <x-responsive-nav-link :href="route('courses.index')" :active="request()->routeIs('courses.*')" class="rounded-xl">Courses</x-responsive-nav-link>
+            @auth
             <x-responsive-nav-link :href="route('live-sessions.index')" :active="request()->routeIs('live-sessions.*')" class="rounded-xl">Live Classes</x-responsive-nav-link>
+            @endauth
         </div>
+        @auth
         <div class="p-4 border-t dark:border-dark-border">
             <div class="flex items-center gap-3 px-3 mb-4">
                 <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=3b67f5&color=fff&rounded=true&size=40" class="w-10 h-10 rounded-xl">
@@ -91,5 +106,10 @@
                 <x-responsive-nav-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();" class="text-red-500 rounded-xl">Log Out</x-responsive-nav-link>
             </form>
         </div>
+        @else
+        <div class="p-4 border-t dark:border-dark-border">
+            <a href="{{ route('login') }}" class="block px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-dark-surface">Login</a>
+        </div>
+        @endauth
     </div>
 </nav>
