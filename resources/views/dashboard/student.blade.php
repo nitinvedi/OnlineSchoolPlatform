@@ -79,7 +79,7 @@
                             }
                         @endphp
 
-                        <div class="relative overflow-hidden rounded-3xl border border-white/10 bg-transparent min-h-[420px]">
+                        <div class="relative overflow-hidden rounded-3xl bg-transparent min-h-[420px]">
 
                             {{-- Background --}}
                             <img
@@ -150,7 +150,7 @@
 
                     @else
 
-                        <div class="rounded-3xl border border-white/10 bg-transparent min-h-[420px] flex flex-col items-center justify-center text-center p-10">
+                        <div class="rounded-3xl bg-transparent min-h-[420px] flex flex-col items-center justify-center text-center p-10">
 
                             <div class="w-20 h-20 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center mb-8 text-4xl">
                                 📚
@@ -181,7 +181,7 @@
                 <div class="lg:col-span-4 space-y-6">
 
                     {{-- Completion Card --}}
-                    <div class="rounded-3xl border border-white/10 bg-transparent p-6">
+                    <div class="rounded-3xl bg-transparent p-6">
 
                         <div class="flex items-center justify-between">
 
@@ -260,7 +260,7 @@
                     </div>
 
                     {{-- Streak --}}
-                    <div class="rounded-3xl border border-white/10 bg-transparent p-6">
+                    <div class="rounded-3xl bg-transparent p-6">
 
                         <p class="text-sm text-slate-400 mb-4">This Month</p>
 
@@ -298,7 +298,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
 
                 {{-- Weekly Activity Chart --}}
-                <div class="lg:col-span-8 rounded-3xl border border-white/10 bg-transparent p-8">
+                <div class="lg:col-span-8 rounded-3xl bg-transparent p-8">
 
                     <div class="mb-8">
                         <h3 class="text-2xl font-semibold">Weekly Progress</h3>
@@ -321,7 +321,7 @@
                 </div>
 
                 {{-- Upcoming Live Sessions --}}
-                <div class="lg:col-span-4 rounded-3xl border border-white/10 bg-transparent p-8">
+                <div class="lg:col-span-4 rounded-3xl bg-transparent p-8">
 
                     <div class="mb-8">
 
@@ -394,7 +394,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
 
                 {{-- Achievements/Badges --}}
-                <div class="lg:col-span-6 rounded-3xl border border-white/10 bg-transparent p-8">
+                <div class="lg:col-span-6 rounded-3xl bg-transparent p-8">
 
                     <div class="mb-8">
                         <h3 class="text-2xl font-semibold">Achievements</h3>
@@ -441,7 +441,7 @@
                 </div>
 
                 {{-- Recent Certificates --}}
-                <div class="lg:col-span-6 rounded-3xl border border-white/10 bg-transparent p-8">
+                <div class="lg:col-span-6 rounded-3xl bg-transparent p-8">
 
                     <div class="mb-8">
                         <h3 class="text-2xl font-semibold">Certificates</h3>
@@ -498,7 +498,7 @@
             {{-- Upcoming Deadlines --}}
             @if($upcomingDeadlines->count() > 0)
 
-                <div class="rounded-3xl border border-white/10 bg-transparent p-8 mb-8">
+                <div class="rounded-3xl bg-transparent p-8 mb-8">
 
                     <div class="mb-8">
                         <h3 class="text-2xl font-semibold">Upcoming Deadlines</h3>
@@ -612,7 +612,7 @@
 
                                     <a
                                         href="{{ route('courses.show', $enrollment->course) }}"
-                                        class="rounded-3xl border border-white/10 bg-transparent overflow-hidden hover:border-violet-500/30 transition group"
+                                        class="rounded-3xl bg-transparent overflow-hidden hover:border-violet-500/30 transition group"
                                     >
 
                                         <div class="aspect-[16/9] overflow-hidden relative">
@@ -684,7 +684,7 @@
 
                                         <a
                                             href="{{ route('courses.show', $enrollment->course) }}"
-                                            class="rounded-3xl border border-white/10 bg-transparent overflow-hidden hover:border-violet-500/30 transition group"
+                                            class="rounded-3xl bg-transparent overflow-hidden hover:border-violet-500/30 transition group"
                                         >
 
                                             <div class="aspect-[16/9] overflow-hidden">
@@ -753,7 +753,7 @@
 
                                         <a
                                             href="{{ route('courses.show', $enrollment->course) }}"
-                                            class="rounded-3xl border border-white/10 bg-transparent overflow-hidden hover:border-violet-500/30 transition group"
+                                            class="rounded-3xl bg-transparent overflow-hidden hover:border-violet-500/30 transition group"
                                         >
 
                                             <div class="aspect-[16/9] overflow-hidden relative">
@@ -813,7 +813,7 @@
 
                 @else
 
-                    <div class="rounded-3xl border border-white/10 bg-transparent p-20 text-center">
+                    <div class="rounded-3xl bg-transparent p-20 text-center">
 
                         <h3 class="text-3xl font-semibold mb-4">
                             No courses yet
@@ -852,7 +852,7 @@
 
                             <a
                                 href="{{ route('courses.show', $course) }}"
-                                class="rounded-3xl border border-white/10 bg-transparent overflow-hidden hover:border-violet-500/30 transition group"
+                                class="rounded-3xl bg-transparent overflow-hidden hover:border-violet-500/30 transition group"
                             >
 
                                 <div class="aspect-[16/9] overflow-hidden">
