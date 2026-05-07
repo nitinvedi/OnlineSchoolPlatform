@@ -20,7 +20,7 @@
         $todayDate = now()->format('l, F j, Y');
     @endphp
 
-    <div class="min-h-screen bg-[#0f172a] text-white">
+    <div class="min-h-screen bg-[#111] text-white">
 
         <div class="max-w-[1500px] mx-auto px-6 py-8">
 

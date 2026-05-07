@@ -1,7 +1,7 @@
 <x-app-layout>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <div class="min-h-screen bg-[#0f172a] text-white">
+    <div class="min-h-screen bg-[#111] text-white">
         <div class="max-w-[1600px] mx-auto px-6 py-6">
 
             {{-- Header --}}
