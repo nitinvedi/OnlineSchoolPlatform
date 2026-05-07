@@ -18,7 +18,7 @@
                 <!-- Page Heading -->
                 @isset($header)
                     <header class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
-                        <div class="glass-effect rounded-[2rem] py-8 px-10">
+                        <div class="rounded-[2rem] py-8 px-10 bg-slate-900 dark:bg-slate-950 border border-slate-800 dark:border-slate-700">
                             {{ $header }}
                         </div>
                     </header>
