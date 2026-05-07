@@ -19,13 +19,13 @@
 
                 <div class="flex items-center gap-3">
 
-                    <button class="h-11 px-5 rounded-xl bg-violet-600 hover:bg-violet-500 transition text-sm font-medium">
+                    <a href="{{ route('instructor.courses.create') }}" class="h-11 px-5 rounded-xl bg-violet-600 hover:bg-violet-500 transition text-sm font-medium flex items-center">
                         Create Course
-                    </button>
+                    </a>
 
-                    <button class="h-11 px-5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition text-sm font-medium">
+                    <a href="{{ route('instructor.live-sessions.create') }}" class="h-11 px-5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition text-sm font-medium flex items-center">
                         Schedule Live
-                    </button>
+                    </a>
 
                 </div>
 
