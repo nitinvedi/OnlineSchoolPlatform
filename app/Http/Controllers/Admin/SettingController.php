@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Schema;
 
 class SettingController extends Controller
 {
@@ -18,10 +19,17 @@ class SettingController extends Controller
                 'live_sessions' => true,
                 'certificates' => true,
             ],
-            'coupons' => [] // Mock
         ];
 
-        return view('admin.settings.index', compact('settings'));
+        // Fetch real coupons if table exists
+        $coupons = [];
+        if (Schema::hasTable('coupons')) {
+            $coupons = \App\Models\Coupon::where('expires_at', '>', now())
+                ->orWhereNull('expires_at')
+                ->get();
+        }
+
+        return view('admin.settings.index', compact('settings', 'coupons'));
     }
 
     public function update(Request $request)

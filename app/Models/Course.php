@@ -92,6 +92,31 @@ class Course extends Model
         return $this->hasMany(Wishlist::class);
     }
 
+    public function assignments(): HasMany
+    {
+        return $this->hasMany(Assignment::class)->orderBy('order');
+    }
+
+    public function announcements(): HasMany
+    {
+        return $this->hasMany(Announcement::class)->latest();
+    }
+
+    public function discussions(): HasMany
+    {
+        return $this->hasMany(Discussion::class);
+    }
+
+    public function reviewSubmissions(): HasMany
+    {
+        return $this->hasMany(ReviewSubmission::class);
+    }
+
+    public function gradebooks(): HasMany
+    {
+        return $this->hasMany(Gradebook::class);
+    }
+
     /**
      * Check if course is currently on sale
      */

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCourseRequest;
+use Illuminate\Support\Facades\Log;
 use App\Http\Requests\UpdateCourseRequest;
 use App\Models\Category;
 use App\Models\Course;
@@ -45,6 +46,9 @@ class CourseManagementController extends Controller
     public function store(StoreCourseRequest $request)
     {
         Gate::authorize('create', Course::class);
+
+        // DEBUG: log incoming request for diagnosis of missing description
+        Log::debug('Course store payload:', $request->only(['title','description','overview','category_id','status']));
 
         $slug = $this->generateUniqueSlug($request->title);
 

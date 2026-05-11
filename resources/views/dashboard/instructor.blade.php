@@ -152,17 +152,23 @@
 
                                     <div>
                                         <p class="font-medium mb-1">
-                                            Student Questions
+                                            Pending Work
                                         </p>
 
                                         <p class="text-sm text-gray-600">
-                                            3 unanswered questions from students.
+                                            @if(isset($pendingWork) && $pendingWork > 0)
+                                                {{ $pendingWork }} item{{ $pendingWork !== 1 ? 's' : '' }} awaiting your attention
+                                            @else
+                                                No pending items
+                                            @endif
                                         </p>
                                     </div>
 
-                                    <span class="text-xs text-violet-400 font-medium">
-                                        New
-                                    </span>
+                                    @if(isset($pendingWork) && $pendingWork > 0)
+                                        <span class="text-xs text-violet-400 font-medium">
+                                            {{ $pendingWork }}
+                                        </span>
+                                    @endif
 
                                 </div>
 

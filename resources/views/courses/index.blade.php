@@ -200,13 +200,6 @@
                                 </div>
                             </div>
 
-                            <!-- Bestseller Badge (Top-Right) -->
-                            @if(rand(0, 1))
-                                <div class="absolute top-3 right-12 z-10">
-                                    <div class="course-card-bestseller">BESTSELLER</div>
-                                </div>
-                            @endif
-
                             <!-- Wishlist Heart (Top-Right) -->
                             <button type="button" class="course-card-wishlist"
                                 @click="toggleWishlist($event, {{ $course->id }})"
@@ -240,12 +233,21 @@
 
                                 <!-- Rating -->
                                 <div class="course-card-rating mb-3">
+                                    @php
+                                        $courseRating = $course->rating ?? 0;
+                                        $ratingCount = $course->reviews_count ?? 0;
+                                        $ratingStars = max(0, min(5, round($courseRating)));
+                                    @endphp
                                     @for($i = 0; $i < 5; $i++)
-                                        <svg class="w-3 h-3 fill-[#2255FF]" viewBox="0 0 20 20">
+                                        <svg class="w-3 h-3 {{ $i < $ratingStars ? 'fill-[#2255FF]' : 'fill-gray-300' }}" viewBox="0 0 20 20">
                                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                         </svg>
                                     @endfor
-                                    <span class="ml-1">{{ number_format($course->rating ?? 4.5, 1) }} ({{ rand(100, 500) }})</span>
+                                    @if($courseRating > 0 && $ratingCount > 0)
+                                        <span class="ml-1">{{ number_format($courseRating, 1) }} ({{ number_format($ratingCount) }} reviews)</span>
+                                    @else
+                                        <span class="ml-1 text-gray-500">No ratings yet</span>
+                                    @endif
                                 </div>
 
                                 <!-- Meta Row -->

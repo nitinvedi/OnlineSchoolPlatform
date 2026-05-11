@@ -122,4 +122,44 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Course::class, 'wishlists');
     }
+
+    public function assignmentSubmissions(): HasMany
+    {
+        return $this->hasMany(AssignmentSubmission::class);
+    }
+
+    public function discussions(): HasMany
+    {
+        return $this->hasMany(Discussion::class);
+    }
+
+    public function discussionReplies(): HasMany
+    {
+        return $this->hasMany(DiscussionReply::class);
+    }
+
+    public function announcements(): HasMany
+    {
+        return $this->hasMany(Announcement::class);
+    }
+
+    public function reviewSubmissions(): HasMany
+    {
+        return $this->hasMany(ReviewSubmission::class);
+    }
+
+    public function attendances(): HasMany
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    public function participations(): HasMany
+    {
+        return $this->hasMany(Participation::class);
+    }
+
+    public function gradesGiven()
+    {
+        return $this->hasMany(Grade::class, 'graded_by');
+    }
 }

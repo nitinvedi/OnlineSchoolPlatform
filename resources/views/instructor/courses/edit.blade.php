@@ -50,6 +50,8 @@
                         <span class="font-bold text-emerald-800">{{ session('success') }}</span>
                     </div>
                 </div>
+                {{-- Floating toast (ensures visibility even when page doesn't scroll) --}}
+                <div id="floating-success" data-message="{{ session('success') }}" class="hidden"></div>
             @endif
 
             @if($errors->any())
@@ -277,6 +279,31 @@
         document.getElementById('update-course-form').addEventListener('submit', function () {
             document.getElementById('description').value = quill.root.innerHTML;
         });
+
+        // Floating toast for session success (ensures visibility)
+        (function () {
+            const holder = document.getElementById('floating-success');
+            if (!holder) return;
+            const msg = holder.dataset.message;
+            if (!msg) return;
+
+            const toast = document.createElement('div');
+            toast.className = 'fixed right-6 top-6 z-50 max-w-sm w-full p-4 bg-emerald-600 text-white rounded-lg shadow-lg flex items-start gap-3';
+            toast.style.boxShadow = '0 10px 30px rgba(2,6,23,0.2)';
+            toast.innerHTML = `
+                <div class="flex-shrink-0 mt-1"> 
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <div class="flex-1 text-sm font-semibold">${msg}</div>
+                <button aria-label="Dismiss" class="ml-3 opacity-80 hover:opacity-100">✕</button>
+            `;
+
+            const btn = toast.querySelector('button');
+            btn.addEventListener('click', () => toast.remove());
+
+            document.body.appendChild(toast);
+            setTimeout(() => { try { toast.remove(); } catch (e){} }, 6000);
+        })();
 
         function previewThumbnail(input) {
             if (input.files && input.files[0]) {

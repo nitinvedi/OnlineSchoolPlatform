@@ -95,58 +95,115 @@
         /* ── Input styles (global for slot forms) ───────── */
         .ls-input {
             width: 100%;
-            background: #F8FAFC;
-            border: 1px solid #1E1E1E;
-            color: #F0EDE6;
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            color: #0f172a;
             padding: 14px 16px;
             font-family: 'JetBrains Mono', monospace;
             font-size: 13px;
             outline: none;
-            transition: border-color .15s ease;
-            border-radius: 0;
+            transition: border-color .15s ease, box-shadow .15s ease;
+            border-radius: 6px;
             -webkit-appearance: none;
         }
-        .ls-input:focus       { border-color: #2255FF; }
-        .ls-input::placeholder{ color: #94A3B8; }
-        .ls-input.error       { border-color: #FF3B30; }
+        .ls-input:focus {
+            border-color: #2255FF;
+            box-shadow: 0 0 0 3px rgba(34, 85, 255, 0.1);
+        }
+        .ls-input::placeholder { color: #9ca3af; }
+        .ls-input.error {
+            border-color: #FF3B30;
+            box-shadow: 0 0 0 3px rgba(255, 59, 48, 0.1);
+        }
         .ls-label {
             display: block;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 10px; text-transform: uppercase;
-            letter-spacing: .15em; color: #64748B;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .15em;
+            color: #374151;
             margin-bottom: 8px;
+            font-weight: 600;
         }
         .ls-error {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 10px; color: #FF3B30;
-            margin-top: 6px; display: block;
+            font-size: 11px;
+            color: #FF3B30;
+            margin-top: 6px;
+            display: block;
+            font-weight: 500;
         }
         .ls-btn-primary {
-            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-            width: 100%; padding: 16px 24px;
-            background: #2255FF; color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 16px 24px;
+            background: #2255FF;
+            color: #ffffff;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 11px; text-transform: uppercase; letter-spacing: .25em;
-            border: none; cursor: pointer;
-            transition: none;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .25em;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all .2s ease;
         }
-        .ls-btn-primary:hover { background: #F0EDE6; color: #0A0A0A; }
-        .ls-btn-primary:disabled { opacity: .45; cursor: not-allowed; }
+        .ls-btn-primary:hover {
+            background: #1f4ce2;
+            box-shadow: 0 4px 12px rgba(34, 85, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        .ls-btn-primary:active {
+            transform: translateY(0);
+        }
+        .ls-btn-primary:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+            transform: none;
+        }
         .ls-btn-ghost {
-            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-            width: 100%; padding: 14px 24px;
-            background: transparent; color: #64748B;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 14px 24px;
+            background: transparent;
+            color: #374151;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 11px; text-transform: uppercase; letter-spacing: .2em;
-            border: 1px solid #1E1E1E; cursor: pointer;
-            transition: border-color .15s ease, color .15s ease;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .2em;
+            border: 1px solid #d1d5db;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all .15s ease;
         }
-        .ls-btn-ghost:hover { border-color: #F0EDE6; color: #F0EDE6; }
+        .ls-btn-ghost:hover {
+            border-color: #2255FF;
+            color: #2255FF;
+            background: rgba(34, 85, 255, 0.05);
+        }
 
         /* ── Password strength bar ──────────────────────── */
-        .strength-bar { display: flex; gap: 3px; height: 2px; margin-top: 8px; }
+        .strength-bar {
+            display: flex;
+            gap: 4px;
+            height: 4px;
+            margin-top: 8px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
         .strength-seg {
-            flex: 1; height: 100%; background: #1E1E1E;
+            flex: 1;
+            height: 100%;
+            background: #e5e7eb;
+            border-radius: 2px;
             transition: background .3s ease;
         }
         .strength-seg.weak   { background: #FF3B30; }
@@ -156,23 +213,37 @@
 
         /* ── Show/hide eye icon ─────────────────────────── */
         .eye-btn {
-            position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-            background: none; border: none; cursor: pointer;
-            color: #94A3B8; padding: 4px;
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #6b7280;
+            padding: 4px;
             transition: color .15s ease;
         }
-        .eye-btn:hover { color: #F0EDE6; }
+        .eye-btn:hover { color: #1f2937; }
 
         /* ── Divider ────────────────────────────────────── */
         .or-divider {
-            display: flex; align-items: center; gap: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 10px; text-transform: uppercase;
-            letter-spacing: .2em; color: #94A3B8;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .2em;
+            color: #6b7280;
+            font-weight: 500;
         }
         .or-divider::before,
         .or-divider::after {
-            content: ''; flex: 1; height: 1px; background: #1E1E1E;
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e5e7eb;
         }
 
         /* ── Vertical decorative type ───────────────────── */
@@ -186,18 +257,32 @@
 
         /* ── Checkbox ───────────────────────────────────── */
         .ls-checkbox {
-            width: 16px; height: 16px; min-width: 16px;
-            background: #111; border: 1px solid #1E1E1E;
-            appearance: none; cursor: pointer;
-            border-radius: 0;
-            transition: border-color .15s ease, background .15s ease;
+            width: 16px;
+            height: 16px;
+            min-width: 16px;
+            background: #ffffff;
+            border: 1.5px solid #d1d5db;
+            appearance: none;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all .15s ease;
+        }
+        .ls-checkbox:hover {
+            border-color: #9ca3af;
         }
         .ls-checkbox:checked {
-            background: #2255FF; border-color: #2255FF;
+            background: #2255FF;
+            border-color: #2255FF;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='2' d='M3 8l3.5 3.5L13 4'/%3E%3C/svg%3E");
-            background-size: 12px; background-repeat: no-repeat; background-position: center;
+            background-size: 12px;
+            background-repeat: no-repeat;
+            background-position: center;
         }
-        .ls-checkbox:focus { border-color: #2255FF; outline: none; }
+        .ls-checkbox:focus {
+            border-color: #2255FF;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(34, 85, 255, 0.1);
+        }
 
         /* ── Password strength bar — enhanced ────────────── */
         .strength-bar-container {
@@ -219,9 +304,13 @@
 
         .strength-label {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 9px; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 0.1em;
-            color: #64748B; width: 50px; text-align: right;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #6b7280;
+            width: 50px;
+            text-align: right;
             transition: color .3s ease;
         }
         .strength-label.weak   { color: #FF3B30; }

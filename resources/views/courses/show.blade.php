@@ -9,7 +9,7 @@
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
                 <div class="absolute inset-0 flex items-center justify-center text-gray-500 bg-black">
-                    <p class="font-bold uppercase tracking-widest text-sm">Course Trailer Placeholder</p>
+                    <p class="font-bold uppercase tracking-widest text-sm">{{ $course->video_url ? 'Video Available' : 'No preview video' }}</p>
                 </div>
             </div>
         </div>
@@ -70,9 +70,9 @@
                             <span class="text-gray-500">·</span>
                             <span class="text-gray-500">({{ number_format($course->reviews_count ?? 2341) }} REVIEWS)</span>
                             <span class="text-gray-500">·</span>
-                            <span class="text-gray-500">{{ number_format($course->student_count ?? 12450) }} STUDENTS</span>
+                            <span class="text-gray-500">{{ number_format($course->student_count ?? 0) }} STUDENTS</span>
                             <span class="text-gray-500">·</span>
-                            <span class="text-gray-400">UPDATED JAN 2025</span>
+                            <span class="text-gray-400">{{ $course->updated_at ? $course->updated_at->format('M Y') : 'Recently updated' }}</span>
                         </div>
 
                         {{-- Instructor Mini --}}
@@ -239,17 +239,25 @@
                         </div>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                            @for($i = 0; $i < 6; $i++)
-                                <div class="flex items-start gap-3">
-                                    <span class="text-[#2255FF] font-bold text-xl mt-0.5 flex-shrink-0">→</span>
-                                    <p class="text-[13px] font-sans text-[#0F172A] leading-relaxed">Advanced techniques and professional workflow patterns used in modern high-end software development.</p>
+                            @if($course->learning_outcomes && is_array(json_decode($course->learning_outcomes, true)))
+                                @foreach(json_decode($course->learning_outcomes, true) as $outcome)
+                                    <div class="flex items-start gap-3">
+                                        <span class="text-[#2255FF] font-bold text-xl mt-0.5 flex-shrink-0">→</span>
+                                        <p class="text-[13px] font-sans text-[#0F172A] leading-relaxed">{{ $outcome }}</p>
+                                    </div>
+                                @endforeach
+                            @else
+                                <div class="col-span-2 text-gray-500 italic text-sm">
+                                    Learning outcomes not yet defined for this course.
                                 </div>
-                            @endfor
+                            @endif
                         </div>
                         
-                        <button class="px-6 py-3 border border-slate-200 text-[#0F172A] font-bold text-xs uppercase tracking-widest hover:bg-gray-100 transition-colors mx-auto block">
-                            Show More
-                        </button>
+                        @if($course->learning_outcomes && is_array(json_decode($course->learning_outcomes, true)) && count(json_decode($course->learning_outcomes, true)) > 6)
+                            <button class="px-6 py-3 border border-slate-200 text-[#0F172A] font-bold text-xs uppercase tracking-widest hover:bg-gray-100 transition-colors mx-auto block">
+                                Show More
+                            </button>
+                        @endif
                     </div>
                 </div>
 

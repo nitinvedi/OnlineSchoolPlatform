@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class LiveSession extends Model
@@ -48,6 +49,16 @@ class LiveSession extends Model
     public function instructor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'instructor_id');
+    }
+
+    public function attendances(): HasMany
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    public function participations(): HasMany
+    {
+        return $this->hasMany(Participation::class);
     }
 
     // Scopes

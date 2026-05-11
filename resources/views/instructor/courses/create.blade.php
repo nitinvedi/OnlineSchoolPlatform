@@ -27,7 +27,7 @@
             <div class="bg-white rounded-xl shadow-sm p-8">
                 {{-- IMPORTANT: enctype for file upload --}}
                 <form action="{{ route('instructor.courses.store') }}" method="POST"
-                      enctype="multipart/form-data" class="space-y-6">
+                    enctype="multipart/form-data" class="space-y-6" id="create-course-form">
                     @csrf
 
                     {{-- Title --}}
@@ -159,8 +159,23 @@
         }
 
         // On form submit, copy Quill HTML into the hidden input
-        document.querySelector('form').addEventListener('submit', function () {
-            document.getElementById('description').value = quill.root.innerHTML;
+        const courseForm = document.getElementById('create-course-form');
+        courseForm.addEventListener('submit', function (e) {
+            // Copy Quill content to hidden input before submission
+            const quillContent = quill.root.innerHTML;
+            
+            // Check if description is empty (only whitespace/empty tags)
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = quillContent;
+            const plainText = tempDiv.textContent || tempDiv.innerText || '';
+            
+            if (!plainText.trim()) {
+                e.preventDefault();
+                alert('Please enter a description for your course.');
+                return false;
+            }
+            
+            document.getElementById('description').value = quillContent;
         });
 
         // ── Slug Preview ──

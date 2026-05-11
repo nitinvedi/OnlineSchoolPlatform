@@ -17,7 +17,7 @@ A comprehensive learning management system built with Laravel 12, featuring cour
 
 - **Backend**: Laravel 12 (PHP 8.2+)
 - **Frontend**: Blade templates, Tailwind CSS, Alpine.js
-- **Database**: MySQL
+- **Database**: SQLite
 - **Payments**: Stripe
 - **Video**: Jitsi Meet
 - **PDF**: DomPDF
@@ -29,7 +29,7 @@ A comprehensive learning management system built with Laravel 12, featuring cour
 - PHP 8.2+
 - Composer
 - Node.js & npm
-- MySQL
+- SQLite
 - Git
 
 ### Setup
@@ -52,12 +52,7 @@ A comprehensive learning management system built with Laravel 12, featuring cour
    ```
 6. Set up database in `.env`:
    ```env
-   DB_CONNECTION=mysql
-   DB_HOST=127.0.0.1
-   DB_PORT=3306
-   DB_DATABASE=online_school
-   DB_USERNAME=root
-   DB_PASSWORD=
+   DB_CONNECTION=sqlite
    ```
 7. Run migrations:
    ```bash
@@ -99,9 +94,9 @@ Visit `http://127.0.0.1:8000` to access the application.
      ```
    - **Publish Directory**: `public`
 
-5. **Create MySQL Database**:
-   - New → Database → MySQL
-   - Copy the connection details
+5. **Create SQLite Database File**:
+   - Ensure `database/database.sqlite` exists
+   - If needed, create an empty `database.sqlite` file inside the `database` folder
 
 6. **Environment Variables**:
    ```env
@@ -109,12 +104,7 @@ Visit `http://127.0.0.1:8000` to access the application.
    APP_DEBUG=false
    APP_URL=https://your-service.onrender.com
 
-   DB_CONNECTION=mysql
-   DB_HOST=<render-mysql-host>
-   DB_PORT=<render-mysql-port>
-   DB_DATABASE=<render-mysql-database>
-   DB_USERNAME=<render-mysql-user>
-   DB_PASSWORD=<render-mysql-password>
+   DB_CONNECTION=sqlite
 
    FILESYSTEM_DISK=public
    MAIL_MAILER=log

@@ -8,8 +8,78 @@ use App\Http\Controllers\LessonController;
 use App\Http\Controllers\LessonManagementController;
 use Illuminate\Support\Facades\Route;
 
+// Frontend Improvements Demo Page
+Route::get('/demo/improvements', function () {
+    return view('improvements-demo');
+})->name('improvements.demo');
+
 Route::get('/', function () {
-    return view('welcome');
+    // Prepare homepage data
+    $topCourses = \App\Models\Course::where('status', 'published')
+        ->with('instructor', 'category')
+        ->orderByDesc('student_count')
+        ->take(6)
+        ->get();
+
+    // Trusted company logos - configurable list
+    $trustedLogos = ['Google', 'Meta', 'Amazon', 'Apple', 'Netflix', 'Stripe', 'Figma'];
+
+    // Testimonials - can be pulled from database if you create a Testimonial model
+    $testimonials = [
+        [
+            'quote'   => 'LiveSchool helped me ship my first SaaS product while learning design, strategy, and mentorship in one program.',
+            'name'    => 'Maya Patel',
+            'role'    => 'Product Designer',
+            'company' => 'Spark Labs',
+            'rating'  => 5,
+            'initial' => 'M',
+        ],
+        [
+            'quote'   => 'The live sessions and project review loop made every lesson feel immediately useful and applicable.',
+            'name'    => 'Damien Li',
+            'role'    => 'Growth Lead',
+            'company' => 'Nova Growth',
+            'rating'  => 4.8,
+            'initial' => 'D',
+        ],
+        [
+            'quote'   => 'A premium learning experience with the right balance of direction and creative freedom for every level.',
+            'name'    => 'Arielle Moore',
+            'role'    => 'Creative Strategist',
+            'company' => 'Pulse Studio',
+            'rating'  => 4.9,
+            'initial' => 'A',
+        ],
+    ];
+
+    // Instructors - can be pulled from database
+    $instructors = \App\Models\User::where('role', 'instructor')
+        ->with('courses')
+        ->withCount('courses')
+        ->orderByDesc('courses_count')
+        ->take(3)
+        ->get()
+        ->map(function($instructor) {
+            return [
+                'name' => $instructor->name,
+                'expertise' => $instructor->bio ?? 'Expert Instructor',
+                'courses' => $instructor->courses_count ?? 0,
+                'followers' => number_format(rand(5000, 50000)),
+                'rating' => number_format(rand(45, 50) / 10, 1),
+                'initial' => substr($instructor->name, 0, 1),
+            ];
+        });
+
+    // FAQ items - can be pulled from database if you create a FAQ model
+    $faqItems = [
+        ['q' => 'Is there a free trial?',          'a' => 'Yes — every course has free preview lessons. No credit card required to explore.'],
+        ['q' => 'What if I want a refund?',        'a' => 'We offer a 30-day no-questions-asked money-back guarantee on all paid enrollments.'],
+        ['q' => 'Do I get a certificate?',         'a' => 'Yes. Every completed course earns a verifiable certificate you can share on LinkedIn.'],
+        ['q' => 'Can I learn at my own pace?',     'a' => 'Absolutely. All lessons are on-demand. Live sessions are recorded for async access.'],
+        ['q' => 'Are live sessions mandatory?',    'a' => 'No — live sessions are optional but highly recommended for feedback and community.'],
+    ];
+
+    return view('welcome', compact('topCourses', 'trustedLogos', 'testimonials', 'instructors', 'faqItems'));
 });
 
 // Demo pages for pricing and checkout UI
@@ -40,6 +110,65 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/courses/{course}/lessons/{lesson}/quiz/{quiz}', [\App\Http\Controllers\QuizController::class, 'show'])->name('quizzes.show');
     Route::post('/courses/{course}/lessons/{lesson}/quiz/{quiz}/submit', [\App\Http\Controllers\QuizController::class, 'submit'])->name('quizzes.submit');
     Route::get('/courses/{course}/lessons/{lesson}/quiz/{quiz}/result/{attempt}', [\App\Http\Controllers\QuizController::class, 'result'])->name('quizzes.result');
+
+    // Assignment routes (student & instructor)
+    Route::get('/courses/{course}/assignments', [\App\Http\Controllers\AssignmentController::class, 'index'])->name('courses.assignments.index');
+    Route::get('/courses/{course}/assignments/create', [\App\Http\Controllers\AssignmentController::class, 'create'])->name('courses.assignments.create');
+    Route::post('/courses/{course}/assignments', [\App\Http\Controllers\AssignmentController::class, 'store'])->name('courses.assignments.store');
+    Route::get('/courses/{course}/assignments/{assignment}', [\App\Http\Controllers\AssignmentController::class, 'show'])->name('courses.assignments.show');
+    Route::get('/courses/{course}/assignments/{assignment}/edit', [\App\Http\Controllers\AssignmentController::class, 'edit'])->name('courses.assignments.edit');
+    Route::put('/courses/{course}/assignments/{assignment}', [\App\Http\Controllers\AssignmentController::class, 'update'])->name('courses.assignments.update');
+    Route::delete('/courses/{course}/assignments/{assignment}', [\App\Http\Controllers\AssignmentController::class, 'delete'])->name('courses.assignments.delete');
+
+    // Assignment submission routes
+    Route::post('/courses/{course}/assignments/{assignment}/submit', [\App\Http\Controllers\AssignmentSubmissionController::class, 'store'])->name('assignments.submissions.store');
+    Route::post('/courses/{course}/assignments/{assignment}/submissions/{submission}/submit', [\App\Http\Controllers\AssignmentSubmissionController::class, 'submit'])->name('assignments.submissions.submit');
+    Route::post('/courses/{course}/assignments/{assignment}/submissions/{submission}/grade', [\App\Http\Controllers\AssignmentSubmissionController::class, 'grade'])->name('assignments.submissions.grade');
+
+    // Gradebook routes
+    Route::get('/courses/{course}/gradebook', [\App\Http\Controllers\GradebookController::class, 'show'])->name('courses.gradebook.show');
+    Route::get('/courses/{course}/gradebook/student', [\App\Http\Controllers\GradebookController::class, 'studentGrades'])->name('courses.gradebook.student');
+
+    // Announcement routes
+    Route::get('/courses/{course}/announcements', [\App\Http\Controllers\AnnouncementController::class, 'index'])->name('courses.announcements.index');
+    Route::get('/courses/{course}/announcements/create', [\App\Http\Controllers\AnnouncementController::class, 'create'])->name('courses.announcements.create');
+    Route::post('/courses/{course}/announcements', [\App\Http\Controllers\AnnouncementController::class, 'store'])->name('courses.announcements.store');
+    Route::get('/courses/{course}/announcements/{announcement}', [\App\Http\Controllers\AnnouncementController::class, 'show'])->name('courses.announcements.show');
+    Route::get('/courses/{course}/announcements/{announcement}/edit', [\App\Http\Controllers\AnnouncementController::class, 'edit'])->name('courses.announcements.edit');
+    Route::put('/courses/{course}/announcements/{announcement}', [\App\Http\Controllers\AnnouncementController::class, 'update'])->name('courses.announcements.update');
+    Route::delete('/courses/{course}/announcements/{announcement}', [\App\Http\Controllers\AnnouncementController::class, 'delete'])->name('courses.announcements.delete');
+
+    // Discussion routes
+    Route::get('/courses/{course}/discussions', [\App\Http\Controllers\DiscussionController::class, 'index'])->name('courses.discussions.index');
+    Route::get('/courses/{course}/discussions/create', [\App\Http\Controllers\DiscussionController::class, 'create'])->name('courses.discussions.create');
+    Route::post('/courses/{course}/discussions', [\App\Http\Controllers\DiscussionController::class, 'store'])->name('courses.discussions.store');
+    Route::get('/courses/{course}/discussions/{discussion}', [\App\Http\Controllers\DiscussionController::class, 'show'])->name('courses.discussions.show');
+    Route::get('/courses/{course}/discussions/{discussion}/edit', [\App\Http\Controllers\DiscussionController::class, 'edit'])->name('courses.discussions.edit');
+    Route::put('/courses/{course}/discussions/{discussion}', [\App\Http\Controllers\DiscussionController::class, 'update'])->name('courses.discussions.update');
+    Route::delete('/courses/{course}/discussions/{discussion}', [\App\Http\Controllers\DiscussionController::class, 'delete'])->name('courses.discussions.delete');
+    Route::post('/courses/{course}/discussions/{discussion}/pin', [\App\Http\Controllers\DiscussionController::class, 'pin'])->name('courses.discussions.pin');
+    Route::post('/courses/{course}/discussions/{discussion}/close', [\App\Http\Controllers\DiscussionController::class, 'close'])->name('courses.discussions.close');
+
+    // Discussion replies
+    Route::post('/courses/{course}/discussions/{discussion}/replies', [\App\Http\Controllers\DiscussionReplyController::class, 'store'])->name('discussions.replies.store');
+    Route::put('/courses/{course}/discussions/{discussion}/replies/{reply}', [\App\Http\Controllers\DiscussionReplyController::class, 'update'])->name('discussions.replies.update');
+    Route::delete('/courses/{course}/discussions/{discussion}/replies/{reply}', [\App\Http\Controllers\DiscussionReplyController::class, 'delete'])->name('discussions.replies.delete');
+    Route::post('/courses/{course}/discussions/{discussion}/replies/{reply}/like', [\App\Http\Controllers\DiscussionReplyController::class, 'like'])->name('discussions.replies.like');
+    Route::post('/courses/{course}/discussions/{discussion}/replies/{reply}/unlike', [\App\Http\Controllers\DiscussionReplyController::class, 'unlike'])->name('discussions.replies.unlike');
+    Route::post('/courses/{course}/discussions/{discussion}/replies/{reply}/approve', [\App\Http\Controllers\DiscussionReplyController::class, 'approve'])->name('discussions.replies.approve');
+    Route::post('/courses/{course}/discussions/{discussion}/replies/{reply}/hide', [\App\Http\Controllers\DiscussionReplyController::class, 'hide'])->name('discussions.replies.hide');
+
+    // Review submission routes
+    Route::get('/courses/{course}/review', [\App\Http\Controllers\ReviewSubmissionController::class, 'create'])->name('reviews.create');
+    Route::post('/courses/{course}/review', [\App\Http\Controllers\ReviewSubmissionController::class, 'store'])->name('reviews.store');
+    Route::delete('/reviews/{review}', [\App\Http\Controllers\ReviewSubmissionController::class, 'delete'])->name('reviews.delete');
+
+    // Attendance routes
+    Route::get('/live-sessions/{liveSession}/attendance', [\App\Http\Controllers\AttendanceController::class, 'index'])->name('live-sessions.attendance.index');
+    Route::post('/live-sessions/{liveSession}/attendance', [\App\Http\Controllers\AttendanceController::class, 'record'])->name('live-sessions.attendance.record');
+    Route::post('/live-sessions/{liveSession}/attendance/bulk', [\App\Http\Controllers\AttendanceController::class, 'recordBulk'])->name('live-sessions.attendance.bulk');
+    Route::get('/live-sessions/{liveSession}/participation', [\App\Http\Controllers\AttendanceController::class, 'participation'])->name('live-sessions.participation.index');
+    Route::post('/live-sessions/{liveSession}/participation', [\App\Http\Controllers\AttendanceController::class, 'recordParticipation'])->name('live-sessions.participation.record');
 
     // Certificate routes
     Route::get('/certificates/{certificate}', [\App\Http\Controllers\CertificateController::class, 'show'])->name('certificates.show');
@@ -83,12 +212,22 @@ Route::middleware(['auth', 'verified'])
             Route::get('lessons/{lesson}/quiz', [\App\Http\Controllers\InstructorQuizController::class, 'edit'])->name('quizzes.edit');
             Route::post('lessons/{lesson}/quiz', [\App\Http\Controllers\InstructorQuizController::class, 'store'])->name('quizzes.store');
             Route::delete('lessons/{lesson}/quiz', [\App\Http\Controllers\InstructorQuizController::class, 'destroy'])->name('quizzes.destroy');
+
+            // Review management routes (instructor)
+            Route::get('reviews', [\App\Http\Controllers\ReviewSubmissionController::class, 'index'])->name('reviews.index');
+            Route::post('reviews/{review}/approve', [\App\Http\Controllers\ReviewSubmissionController::class, 'approve'])->name('reviews.approve');
+            Route::post('reviews/{review}/reject', [\App\Http\Controllers\ReviewSubmissionController::class, 'reject'])->name('reviews.reject');
         });
 
         // Live Sessions Management
         Route::resource('live-sessions', \App\Http\Controllers\LiveSessionController::class)->except(['index', 'show']);
         Route::post('live-sessions/{liveSession}/start', [\App\Http\Controllers\LiveSessionController::class, 'start'])->name('live-sessions.start');
         Route::post('live-sessions/{liveSession}/end', [\App\Http\Controllers\LiveSessionController::class, 'end'])->name('live-sessions.end');
+        Route::get('live-sessions/{liveSession}/attendance', [\App\Http\Controllers\AttendanceController::class, 'index'])->name('live-sessions.attendance.index');
+        Route::post('live-sessions/{liveSession}/attendance', [\App\Http\Controllers\AttendanceController::class, 'record'])->name('live-sessions.attendance.record');
+        Route::post('live-sessions/{liveSession}/attendance/bulk', [\App\Http\Controllers\AttendanceController::class, 'recordBulk'])->name('live-sessions.attendance.bulk');
+        Route::get('live-sessions/{liveSession}/participation', [\App\Http\Controllers\AttendanceController::class, 'participation'])->name('live-sessions.participation.index');
+        Route::post('live-sessions/{liveSession}/participation', [\App\Http\Controllers\AttendanceController::class, 'recordParticipation'])->name('live-sessions.participation.record');
     });
 
 require __DIR__.'/auth.php';

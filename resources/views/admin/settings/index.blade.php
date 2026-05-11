@@ -67,8 +67,43 @@
                 </div>
                 <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Create Coupon</button>
             </form>
-            <div class="mt-4">
-                <p class="text-sm text-gray-600">No active coupons.</p>
+            <div class="mt-6">
+                @if(isset($coupons) && count($coupons) > 0)
+                    <table class="min-w-full border-collapse border border-gray-200">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="border border-gray-300 px-4 py-2 text-left">Code</th>
+                                <th class="border border-gray-300 px-4 py-2 text-left">Discount</th>
+                                <th class="border border-gray-300 px-4 py-2 text-left">Expires</th>
+                                <th class="border border-gray-300 px-4 py-2 text-left">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($coupons as $coupon)
+                                <tr class="hover:bg-gray-50">
+                                    <td class="border border-gray-300 px-4 py-2 font-medium">{{ $coupon->code }}</td>
+                                    <td class="border border-gray-300 px-4 py-2">{{ $coupon->discount_percent }}%</td>
+                                    <td class="border border-gray-300 px-4 py-2">
+                                        @if($coupon->expires_at)
+                                            {{ $coupon->expires_at->format('M d, Y') }}
+                                        @else
+                                            No expiration
+                                        @endif
+                                    </td>
+                                    <td class="border border-gray-300 px-4 py-2">
+                                        <form method="POST" action="{{ route('admin.settings.expire-coupon', $coupon->id) }}" style="display: inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-600 hover:text-red-800 text-sm font-medium">Expire</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @else
+                    <p class="text-sm text-gray-600">No active coupons. <a href="#" class="text-blue-600 hover:underline">Create one above</a>.</p>
+                @endif
             </div>
         </div>
     </div>

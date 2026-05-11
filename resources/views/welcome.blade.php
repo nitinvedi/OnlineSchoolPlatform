@@ -11,31 +11,6 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
-        /* ── Custom cursor ─────────────────────────────── */
-        *, *::before, *::after { box-sizing: border-box; }
-        body { cursor: none; }
-        #cursor-dot {
-            position: fixed; top: 0; left: 0; z-index: 9999;
-            width: 8px; height: 8px;
-            background: #111827; border-radius: 50%;
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            transition: transform 0.08s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease, border-radius 0.2s ease;
-             
-        }
-        #cursor-ring {
-            position: fixed; top: 0; left: 0; z-index: 9998;
-            width: 40px; height: 40px;
-            border: 1.5px solid rgba(17,24,39,0.2);
-            border-radius: 50%;
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            transition: transform 0.18s ease, width 0.25s ease, height 0.25s ease, opacity 0.2s ease;
-             
-        }
-        body.cursor-hover #cursor-dot { width: 12px; height: 12px; }
-        body.cursor-hover #cursor-ring { width: 56px; height: 56px; opacity: 0.6; }
-
         /* ── Fonts fallback ────────────────────────────── */
         .font-display { font-family: 'Bebas Neue', 'Impact', sans-serif; letter-spacing: -0.03em; line-height: 0.9; }
         .font-mono    { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
@@ -91,8 +66,6 @@
 
         /* ── Mobile touch targets ──────────────────────── */
         @media (max-width: 768px) {
-            body { cursor: auto; }
-            #cursor-dot, #cursor-ring { display: none; }
         }
 
         /* ── Skeleton shimmer (for future use) ─────────── */
@@ -129,59 +102,14 @@
 </head>
 <body class="bg-[#FFFFFF] text-[#111827] antialiased selection:bg-[#2255FF]/20 selection:text-[#111827] overflow-x-hidden">
 
-    {{-- Custom cursor --}}
-    <div id="cursor-dot"></div>
-    <div id="cursor-ring"></div>
-
     @php
-        $topCourses = \App\Models\Course::where('status', 'published')
-            ->with('instructor', 'category')
-            ->orderByDesc('student_count')
-            ->take(6)
-            ->get();
-
-        $trustedLogos = ['Google', 'Meta', 'Amazon', 'Apple', 'Netflix', 'Stripe', 'Figma'];
-
-        $testimonials = [
-            [
-                'quote'   => 'LiveSchool helped me ship my first SaaS product while learning design, strategy, and mentorship in one program.',
-                'name'    => 'Maya Patel',
-                'role'    => 'Product Designer',
-                'company' => 'Spark Labs',
-                'rating'  => 5,
-                'initial' => 'M',
-            ],
-            [
-                'quote'   => 'The live sessions and project review loop made every lesson feel immediately useful and applicable.',
-                'name'    => 'Damien Li',
-                'role'    => 'Growth Lead',
-                'company' => 'Nova Growth',
-                'rating'  => 4.8,
-                'initial' => 'D',
-            ],
-            [
-                'quote'   => 'A premium learning experience with the right balance of direction and creative freedom for every level.',
-                'name'    => 'Arielle Moore',
-                'role'    => 'Creative Strategist',
-                'company' => 'Pulse Studio',
-                'rating'  => 4.9,
-                'initial' => 'A',
-            ],
-        ];
-
-        $instructors = [
-            ['name' => 'Nina Brooks',   'expertise' => 'Product Design',  'courses' => 8, 'followers' => '45k', 'rating' => 4.9, 'initial' => 'N'],
-            ['name' => 'Ethan Kim',     'expertise' => 'Growth Strategy', 'courses' => 6, 'followers' => '32k', 'rating' => 4.8, 'initial' => 'E'],
-            ['name' => 'Leila Santos',  'expertise' => 'AI Curriculum',   'courses' => 5, 'followers' => '28k', 'rating' => 4.9, 'initial' => 'L'],
-        ];
-
-        $faqItems = [
-            ['q' => 'Is there a free trial?',          'a' => 'Yes — every course has free preview lessons. No credit card required to explore.'],
-            ['q' => 'What if I want a refund?',        'a' => 'We offer a 30-day no-questions-asked money-back guarantee on all paid enrollments.'],
-            ['q' => 'Do I get a certificate?',         'a' => 'Yes. Every completed course earns a verifiable certificate you can share on LinkedIn.'],
-            ['q' => 'Can I learn at my own pace?',     'a' => 'Absolutely. All lessons are on-demand. Live sessions are recorded for async access.'],
-            ['q' => 'Are live sessions mandatory?',    'a' => 'No — live sessions are optional but highly recommended for feedback and community.'],
-        ];
+        $hour = date('H');
+        $greeting = 'Good morning';
+        if ($hour >= 12 && $hour < 17) {
+            $greeting = 'Good afternoon';
+        } elseif ($hour >= 17) {
+            $greeting = 'Good evening';
+        }
     @endphp
 
     {{-- ─────────────────────────────────────────────────────────────
@@ -217,8 +145,13 @@
 
                 {{-- Desktop CTA --}}
                 <div class="hidden lg:flex items-center gap-5">
-                    <a href="{{ route('login') }}" class="font-mono text-[11px] uppercase tracking-[0.25em] text-[#4B5563] hover:text-[#111827] transition-colors duration-150">Login</a>
-                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center border border-[#2255FF] bg-[#2255FF] px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.25em] text-white hover:bg-[#111827] hover:text-[#FAFAFA] hover:border-[#111827] transition-none">Join Free</a>
+                    @auth
+                        <a href="{{ route('dashboard') }}" class="font-mono text-[11px] uppercase tracking-[0.25em] text-[#4B5563] hover:text-[#111827] transition-colors duration-150">Dashboard</a>
+                        <a href="{{ route('dashboard') }}" class="inline-flex items-center justify-center border border-[#2255FF] bg-[#2255FF] px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.25em] text-white hover:bg-[#111827] hover:text-[#FAFAFA] hover:border-[#111827] transition-none">Go to Dashboard</a>
+                    @else
+                        <a href="{{ route('login') }}" class="font-mono text-[11px] uppercase tracking-[0.25em] text-[#4B5563] hover:text-[#111827] transition-colors duration-150">Login</a>
+                        <a href="{{ route('register') }}" class="inline-flex items-center justify-center border border-[#2255FF] bg-[#2255FF] px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.25em] text-white hover:bg-[#111827] hover:text-[#FAFAFA] hover:border-[#111827] transition-none">Join Free</a>
+                    @endauth
                 </div>
 
                 {{-- Mobile hamburger --}}
@@ -239,13 +172,18 @@
              x-transition:leave-end="opacity-0 -translate-y-2"
              @click.outside="open = false"
              class="lg:hidden border-t border-[#E5E7EB] bg-[#FFFFFF]">
-            <div class="px-6 pb-8 pt-5 space-y-5 font-mono text-[11px] uppercase tracking-[0.2em]">
+                <div class="px-6 pb-8 pt-5 space-y-5 font-mono text-[11px] uppercase tracking-[0.2em]">
                 <a href="#programs"   @click="open=false;active='catalog'"    class="block text-[#4B5563] hover:text-[#111827] py-2 transition-colors">Catalog</a>
                 <a href="#features"   @click="open=false;active='features'"   class="block text-[#4B5563] hover:text-[#111827] py-2 transition-colors">Features</a>
                 <a href="#enterprise" @click="open=false;active='enterprise'" class="block text-[#4B5563] hover:text-[#111827] py-2 transition-colors">Enterprise</a>
                 <div class="border-t border-[#E5E7EB] pt-5 flex flex-col gap-3">
-                    <a href="{{ route('login') }}"    class="block text-[#4B5563] hover:text-[#111827] py-2 transition-colors">Login</a>
-                    <a href="{{ route('register') }}" class="block bg-[#2255FF] px-5 py-3 text-center text-white hover:bg-[#111827] hover:text-[#FAFAFA] transition-none">Join Free</a>
+                    @auth
+                        <a href="{{ route('dashboard') }}" class="block text-[#4B5563] hover:text-[#111827] py-2 transition-colors">Dashboard</a>
+                        <a href="{{ route('dashboard') }}" class="block bg-[#2255FF] px-5 py-3 text-center text-white hover:bg-[#111827] hover:text-[#FAFAFA] transition-none">Go to Dashboard</a>
+                    @else
+                        <a href="{{ route('login') }}"    class="block text-[#4B5563] hover:text-[#111827] py-2 transition-colors">Login</a>
+                        <a href="{{ route('register') }}" class="block bg-[#2255FF] px-5 py-3 text-center text-white hover:bg-[#111827] hover:text-[#FAFAFA] transition-none">Join Free</a>
+                    @endauth
                 </div>
             </div>
         </div>
@@ -277,34 +215,42 @@
 
                 {{-- Top label --}}
                 <div class="flex items-center gap-4 mb-10" data-reveal>
-                    <div class="w-px h-5 bg-[#2255FF]"></div>
-                    <span class="font-mono text-[10px] uppercase tracking-[0.4em] text-[#4B5563]">Est. 2024 · Next-Gen Education Platform</span>
-                    <div class="w-2 h-2 bg-[#2255FF] pulse-dot"></div>
+                    <div class="w-px h-5 bg-primary-600"></div>
+                    <span class="font-mono text-xs uppercase tracking-wider text-slate-600">Est. 2024 · Next-Gen Education Platform</span>
+                    <div class="w-2 h-2 bg-accent-500 pulse-dot rounded-full"></div>
                 </div>
 
                 <div class="grid gap-16 lg:grid-cols-[1.25fr_0.75fr] items-center">
                     <div>
                         {{-- Main headline --}}
-                        <h1 class="font-display font-black leading-none text-[#111827]"
-                            style="font-size: clamp(3.5rem, 10vw, 9rem); tracking: -0.05em;" data-reveal>
+                        <h1 class="font-display font-black leading-none text-slate-900"
+                            style="font-size: clamp(3.5rem, 10vw, 9rem); letter-spacing: -0.05em;" data-reveal>
                             UNLEASH<br>
-                            YOUR <span class="text-[#2255FF]">TRUE</span><br>
+                            YOUR <span class="bg-gradient-to-r from-primary-600 to-accent-500 bg-clip-text text-transparent">TRUE</span><br>
                             POTENTIAL
                         </h1>
 
-                        <p class="mt-8 max-w-lg text-[15px] leading-8 text-[#4B5563]" data-reveal style="transition-delay:80ms">
+                        <p class="mt-8 max-w-lg text-base leading-relaxed text-slate-600" data-reveal style="transition-delay:80ms">
                             Premium curriculum designed for ambitious learners who want skills, credibility, and real work outcomes — not just another certificate.
                         </p>
 
                         {{-- CTAs --}}
                         <div class="mt-10 flex flex-col sm:flex-row sm:items-center gap-4" data-reveal style="transition-delay:160ms">
-                            <a href="{{ route('register') }}"
-                               class="inline-flex items-center justify-center gap-3 bg-[#2255FF] px-8 py-4 font-mono text-[11px] uppercase tracking-[0.25em] text-white hover:bg-[#111827] hover:text-[#FAFAFA] transition-none group">
-                                Start Learning Now
-                                <span class="inline-block translate-x-0 group-hover:translate-x-1 transition-transform duration-150">→</span>
-                            </a>
+                            @auth
+                                <a href="{{ route('dashboard') }}"
+                                   class="btn btn-primary btn-lg group">
+                                    Go to Dashboard
+                                    <span class="inline-block translate-x-0 group-hover:translate-x-1 transition-transform duration-150">→</span>
+                                </a>
+                            @else
+                                <a href="{{ route('register') }}"
+                                   class="btn btn-primary btn-lg group">
+                                    Start Learning Now
+                                    <span class="inline-block translate-x-0 group-hover:translate-x-1 transition-transform duration-150">→</span>
+                                </a>
+                            @endauth
                             <a href="#programs"
-                               class="inline-flex items-center justify-center gap-3 border border-[#E5E7EB] px-8 py-4 font-mono text-[11px] uppercase tracking-[0.25em] text-[#4B5563] hover:border-[#111827] hover:text-[#111827] transition-colors duration-150 group">
+                               class="btn btn-ghost btn-lg group">
                                 See Programs
                                 <span class="inline-block opacity-0 group-hover:opacity-100 transition-opacity duration-150">↓</span>
                             </a>
@@ -317,53 +263,53 @@
                                     @foreach([1,2,3,4] as $avatar)
                                         <img src="https://i.pravatar.cc/128?img={{ 10 + $avatar }}"
                                              alt="Learner"
-                                             class="w-10 h-10 border-2 border-[#FFFFFF] bg-[#FFFFFF] object-cover" />
+                                             class="w-10 h-10 border-2 border-white bg-white object-cover rounded-full" />
                                     @endforeach
                                 </div>
                                 <div>
-                                    <p class="font-mono text-[11px] uppercase tracking-[0.35em] text-[#111827]">12,500+</p>
-                                    <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#6B7280]">enrolled globally</p>
+                                    <p class="font-mono text-xs uppercase tracking-wider text-slate-900 font-semibold">12,500+</p>
+                                    <p class="font-mono text-xs uppercase tracking-wider text-slate-600">enrolled globally</p>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-3 border-l border-[#E5E7EB] pl-8">
-                                <div class="text-[#FFD166] text-sm">★★★★★</div>
-                                <span class="font-mono text-[11px] text-[#4B5563]">4.9 avg rating</span>
+                            <div class="flex items-center gap-3 border-l border-slate-200 pl-8">
+                                <div class="text-yellow-500 text-sm">★★★★★</div>
+                                <span class="font-mono text-xs text-slate-600">4.9 avg rating</span>
                             </div>
                         </div>
                     </div>
 
                     {{-- Right hero card --}}
                     <div class="relative hidden lg:block" data-reveal style="transition-delay:120ms">
-                        <div class="border border-[#E5E7EB] bg-[#FFFFFF] p-8 relative overflow-hidden">
+                        <div class="card hover-lift">
                             {{-- Accent corner --}}
-                            <div class="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-[#2255FF]"></div>
-                            <div class="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-[#2255FF]"></div>
+                            <div class="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-primary-600"></div>
+                            <div class="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-accent-500"></div>
 
-                            <p class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#2255FF] mb-6">Live cohort experience</p>
-                            <h2 class="font-display text-3xl text-[#111827] leading-tight mb-4">Weekly live studio sessions with top mentors.</h2>
-                            <p class="text-[13px] leading-7 text-[#4B5563] mb-8">Practice with peers, get live feedback, and keep every lesson instantly actionable.</p>
+                            <p class="font-mono text-xs uppercase tracking-wider text-primary-600 font-semibold mb-6">Live cohort experience</p>
+                            <h2 class="font-display text-3xl text-slate-900 leading-tight mb-4">Weekly live studio sessions with top mentors.</h2>
+                            <p class="text-sm leading-relaxed text-slate-600 mb-8">Practice with peers, get live feedback, and keep every lesson instantly actionable.</p>
 
-                            <div class="border-t border-[#E5E7EB] pt-6 space-y-3">
+                            <div class="border-t border-slate-200 pt-6 space-y-3">
                                 @foreach(['Build a high-impact portfolio', 'Earn elite recognition badges', 'Land roles with product teams'] as $outcome)
                                 <div class="flex items-center gap-3">
-                                    <span class="font-mono text-[#2255FF] text-sm">→</span>
-                                    <span class="font-mono text-[11px] uppercase tracking-[0.15em] text-[#4B5563]">{{ $outcome }}</span>
+                                    <span class="font-mono text-primary-600 text-sm">→</span>
+                                    <span class="font-mono text-xs uppercase tracking-wider text-slate-600">{{ $outcome }}</span>
                                 </div>
                                 @endforeach
                             </div>
 
                             {{-- Live indicator --}}
-                            <div class="mt-8 flex items-center gap-3 bg-[#FFFFFF] px-4 py-3 border border-[#E5E7EB]">
-                                <div class="w-2 h-2 bg-[#1DB954] pulse-dot"></div>
-                                <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-[#4B5563]">3 live sessions this week</span>
+                            <div class="mt-8 flex items-center gap-3 px-4 py-3 border border-slate-200 rounded-md bg-gradient-to-r from-success-50 to-transparent">
+                                <div class="w-2 h-2 bg-success-600 pulse-dot rounded-full"></div>
+                                <span class="font-mono text-xs uppercase tracking-wider text-slate-600">3 live sessions this week</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {{-- Trusted logos marquee --}}
-                <div class="mt-20 border-t border-b border-[#E5E7EB] py-5 marquee-wrapper" data-reveal style="transition-delay:300ms">
-                    <div class="marquee-track font-mono text-[10px] uppercase tracking-[0.4em] text-[#6B7280]"
+                <div class="mt-20 border-t border-b border-slate-200 py-6 marquee-wrapper" data-reveal style="transition-delay:300ms">
+                    <div class="marquee-track font-mono text-xs uppercase tracking-wider text-slate-500"
                          @mouseover="$el.classList.add('paused')"
                          @mouseleave="$el.classList.remove('paused')">
                         @foreach(array_merge($trustedLogos, $trustedLogos, $trustedLogos) as $logo)
@@ -371,13 +317,13 @@
                         @endforeach
                     </div>
                 </div>
-                <p class="mt-3 font-mono text-[10px] uppercase tracking-[0.35em] text-[#6B7280] text-center">Trusted by alumni from global leaders</p>
+                <p class="mt-3 font-mono text-xs uppercase tracking-wider text-slate-500 text-center">Trusted by alumni from global leaders</p>
 
                 {{-- Scroll indicator --}}
                 <div class="mt-16 flex justify-center">
                     <a href="#programs" class="inline-flex flex-col items-center gap-2 group">
-                        <span class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#6B7280] group-hover:text-[#4B5563] transition-colors">Scroll to programs</span>
-                        <span class="hero-arrow font-mono text-[#2255FF] text-lg">↓</span>
+                        <span class="font-mono text-xs uppercase tracking-wider text-slate-500 group-hover:text-slate-600 transition-colors">Scroll to programs</span>
+                        <span class="hero-arrow font-mono text-primary-600 text-lg">↓</span>
                     </a>
                 </div>
             </div>
@@ -392,17 +338,17 @@
                 <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between mb-14" data-reveal>
                     <div class="max-w-2xl">
                         <div class="flex items-center gap-3 mb-4">
-                            <span class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#2255FF]">▸ Elite Curriculum</span>
+                            <span class="font-mono text-xs uppercase tracking-wider text-primary-600 font-semibold">▸ Elite Curriculum</span>
                         </div>
-                        <h2 class="font-display text-[#111827] leading-none" style="font-size: clamp(2.5rem, 6vw, 5.5rem);">
+                        <h2 class="font-display text-slate-900 leading-none" style="font-size: clamp(2.5rem, 6vw, 5.5rem);">
                             SIGNATURE<br>PROGRAMS
                         </h2>
-                        <p class="mt-5 max-w-xl text-[14px] leading-8 text-[#4B5563]">
+                        <p class="mt-5 max-w-xl text-base leading-relaxed text-slate-600">
                             Rigorous learning paths engineered by experts to transform your professional trajectory.
                         </p>
                     </div>
                     <a href="{{ route('courses.index') }}"
-                       class="self-start inline-flex items-center gap-3 border border-[#E5E7EB] px-6 py-3 font-mono text-[11px] uppercase tracking-[0.25em] text-[#4B5563] hover:border-[#111827] hover:text-[#111827] transition-colors duration-150 group">
+                       class="self-start btn btn-ghost group">
                         [ View All Courses
                         <span class="group-hover:translate-x-1 transition-transform duration-150">→</span>
                         ]
@@ -422,31 +368,30 @@
                                 $rating      = number_format($course->rating ?: 4.8, 1);
                                 $students    = number_format($course->student_count ?: rand(500,2000));
                             @endphp
-                            <article class="snap-start flex-shrink-0 w-[300px] sm:w-[320px] border border-[#E5E7EB] bg-[#FFFFFF] p-6
-                                            transition-all duration-300 hover:border-[#2255FF] hover:-translate-y-1 group cursor-pointer"
+                            <article class="snap-start flex-shrink-0 w-[300px] sm:w-[320px] card hover-lift cursor-pointer"
                                      onclick="window.location='{{ route('courses.show', $course) }}'">
 
                                 {{-- Category + badges --}}
                                 <div class="flex items-center justify-between mb-5">
-                                    <span class="font-mono text-[9px] uppercase tracking-[0.35em] text-[#4B5563] border border-[#E5E7EB] px-3 py-1.5">
+                                    <span class="font-mono text-xs uppercase tracking-wider text-slate-600 border border-slate-200 px-3 py-1.5 rounded-sm">
                                         {{ $course->category->name ?? 'General' }}
                                     </span>
                                     @if($isFree)
-                                        <span class="font-mono text-[9px] uppercase tracking-[0.25em] text-[#1DB954]">Free</span>
+                                        <span class="font-mono text-xs uppercase tracking-wider text-success-600 font-semibold">Free</span>
                                     @elseif($index === 0)
-                                        <span class="font-mono text-[9px] uppercase tracking-[0.25em] bg-[#F5A623] text-[#FAFAFA] px-2 py-1">Bestseller</span>
+                                        <span class="badge badge-warning text-xs font-bold">Bestseller</span>
                                     @endif
                                 </div>
 
                                 {{-- Visual --}}
-                                <div class="flex h-40 items-center justify-center bg-[#FFFFFF] border border-[#E5E7EB] mb-5 overflow-hidden group-hover:border-[#2255FF] transition-colors duration-300">
-                                    <span class="font-display text-[6rem] leading-none text-[#2255FF] group-hover:scale-105 transition-transform duration-300">
+                                <div class="flex h-40 items-center justify-center bg-gradient-to-br from-primary-100 to-accent-100 border border-slate-200 mb-5 overflow-hidden group-hover:border-primary-300 transition-colors duration-300 rounded-md">
+                                    <span class="font-display text-6xl leading-none text-primary-600 group-hover:scale-105 transition-transform duration-300">
                                         {{ strtoupper(substr($course->title, 0, 1)) }}
                                     </span>
                                 </div>
 
                                 {{-- Title --}}
-                                <h3 class="font-display text-[#111827] leading-tight mb-4 line-clamp-2"
+                                <h3 class="font-display text-slate-900 leading-tight mb-4 line-clamp-2"
                                     style="font-size: clamp(1.4rem, 2.5vw, 1.75rem);">
                                     {{ $course->title }}
                                 </h3>
@@ -455,29 +400,29 @@
                                 <div class="flex items-center gap-3 mb-5">
                                     <img src="{{ $instructorAvatar }}"
                                          alt="{{ $course->instructor->name ?? 'Instructor' }}"
-                                         class="w-9 h-9 object-cover border border-[#E5E7EB]" />
+                                         class="w-9 h-9 object-cover border border-slate-200 rounded-full" />
                                     <div>
-                                        <p class="font-mono text-[11px] text-[#111827]">{{ $course->instructor->name ?? 'Instructor' }}</p>
-                                        <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#6B7280]">Instructor</p>
+                                        <p class="font-mono text-xs text-slate-900 font-semibold">{{ $course->instructor->name ?? 'Instructor' }}</p>
+                                        <p class="font-mono text-xs uppercase tracking-wider text-slate-500">Instructor</p>
                                     </div>
                                 </div>
 
                                 {{-- Meta --}}
-                                <div class="border-t border-[#E5E7EB] pt-4 flex items-center justify-between">
+                                <div class="border-t border-slate-200 pt-4 flex items-center justify-between">
                                     <div class="flex items-center gap-1.5">
-                                        <span class="text-[#FFD166] text-xs">★</span>
-                                        <span class="font-mono text-[11px] text-[#111827]">{{ $rating }}</span>
-                                        <span class="font-mono text-[10px] text-[#6B7280]">({{ $students }})</span>
+                                        <span class="text-yellow-500 text-xs">★</span>
+                                        <span class="font-mono text-xs font-semibold text-slate-900">{{ $rating }}</span>
+                                        <span class="font-mono text-xs text-slate-500">({{ $students }})</span>
                                     </div>
-                                    <span class="font-mono text-[11px] uppercase tracking-[0.2em] text-[#111827] tabular-nums">{{ $priceLabel }}</span>
+                                    <span class="font-mono text-xs uppercase tracking-wider text-slate-900 font-semibold tabular-nums">{{ $priceLabel }}</span>
                                 </div>
                             </article>
                         @empty
                             {{-- Empty state --}}
                             <div class="flex flex-col items-center justify-center w-full py-24 text-center">
-                                <span class="font-display text-6xl text-[#E5E7EB]">∅</span>
-                                <p class="font-display text-2xl text-[#6B7280] mt-4">NO COURSES YET</p>
-                                <p class="font-mono text-[11px] text-[#6B7280] mt-2">Check back soon — curriculum is being crafted.</p>
+                                <span class="font-display text-6xl text-slate-200">∅</span>
+                                <p class="font-display text-2xl text-slate-500 mt-4">NO COURSES YET</p>
+                                <p class="font-mono text-xs text-slate-500 mt-2">Check back soon — curriculum is being crafted.</p>
                             </div>
                         @endforelse
                     </div>
@@ -488,7 +433,7 @@
         {{-- ─────────────────────────────────────────────────────────────
              STATS BAR
         ───────────────────────────────────────────────────────────────── --}}
-        <section id="stats" class="border-t border-[#E5E7EB] bg-[#FFFFFF]">
+        <section id="stats" class="border-t border-slate-200 bg-white">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
                 <div class="grid grid-cols-1 md:grid-cols-3">
                     @foreach([
@@ -497,16 +442,16 @@
                         ['count'=>'49',    'suffix'=>'/5','label'=>'Average Rating',     'sublabel'=>'across all courses'],
                     ] as $i => $stat)
                     <div class="flex flex-col items-center justify-center py-16 px-8
-                                {{ $i < 2 ? 'border-b md:border-b-0 md:border-r border-[#E5E7EB]' : '' }}"
+                                {{ $i < 2 ? 'border-b md:border-b-0 md:border-r border-slate-200' : '' }}"
                          data-reveal>
                         <div class="flex items-end gap-1">
-                                <span class="font-mono text-[#2255FF] leading-none tabular-nums"
+                                <span class="font-mono text-primary-600 leading-none tabular-nums"
                                   style="font-size: clamp(3rem, 7vw, 5.5rem);"
                                   data-count="{{ $stat['count'] }}">0</span>
-                                <span class="font-mono text-[#2255FF] text-3xl mb-2 tabular-nums">{{ $stat['suffix'] }}</span>
+                                <span class="font-mono text-primary-600 text-3xl mb-2 tabular-nums">{{ $stat['suffix'] }}</span>
                         </div>
-                        <p class="font-mono text-[11px] uppercase tracking-[0.35em] text-[#111827] mt-3">{{ $stat['label'] }}</p>
-                        <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#6B7280] mt-1">{{ $stat['sublabel'] }}</p>
+                        <p class="font-mono text-xs uppercase tracking-wider text-slate-900 font-semibold mt-3">{{ $stat['label'] }}</p>
+                        <p class="font-mono text-xs uppercase tracking-wider text-slate-500 mt-1">{{ $stat['sublabel'] }}</p>
                     </div>
                     @endforeach
                 </div>
@@ -516,12 +461,12 @@
         {{-- ─────────────────────────────────────────────────────────────
              FEATURES / BENTO
         ───────────────────────────────────────────────────────────────── --}}
-        <section id="features" class="py-28 border-t border-[#E5E7EB]">
+        <section id="features" class="py-28 border-t border-slate-200">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
 
                 <div class="mb-14" data-reveal>
-                    <span class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#2255FF]">▸ Experience</span>
-                    <h2 class="font-display text-[#111827] mt-3 leading-none" style="font-size: clamp(2.5rem, 6vw, 5rem);">
+                    <span class="font-mono text-xs uppercase tracking-wider text-primary-600 font-semibold">▸ Experience</span>
+                    <h2 class="font-display text-slate-900 mt-3 leading-none" style="font-size: clamp(2.5rem, 6vw, 5rem);">
                         WHY<br>LIVESCHOOL
                     </h2>
                 </div>
@@ -529,55 +474,55 @@
                 {{-- Bento grid --}}
                 <div class="grid gap-4 lg:grid-cols-[1.4fr_0.9fr] lg:grid-rows-[280px_280px] bento-grid">
 
-                    {{-- Cell 1: Masterclasses (large, cobalt) --}}
-                    <div class="relative overflow-hidden bg-[#2255FF] p-10 flex flex-col justify-between min-h-[280px]" data-reveal>
+                    {{-- Cell 1: Masterclasses (large, primary gradient) --}}
+                    <div class="relative overflow-hidden bg-gradient-to-br from-primary-600 to-primary-700 p-10 flex flex-col justify-between min-h-[280px]" data-reveal>
                         <div class="absolute inset-0 opacity-5"
                              style="background-image: url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")"></div>
                         <div>
-                            <span class="font-mono text-[10px] uppercase tracking-[0.35em] text-white/70">Masterclasses</span>
+                            <span class="font-mono text-xs uppercase tracking-wider text-white/70 font-semibold">Masterclasses</span>
                             <h3 class="font-display text-white leading-none mt-5" style="font-size:clamp(2rem,4vw,3rem);">
                                 IMMERSIVE<br>MASTERCLASSES
                             </h3>
                         </div>
-                        <p class="text-[14px] leading-7 text-white/85 max-w-sm">
+                        <p class="text-base leading-relaxed text-white/85 max-w-sm">
                             Step into high-fidelity live environments with real-time project collaboration and direct line to industry architects.
                         </p>
                     </div>
 
-                    {{-- Cell 2: Elite Recognition (dark) --}}
-                    <div class="border border-[#E5E7EB] bg-[#FFFFFF] p-10 flex flex-col justify-between min-h-[280px] hover:border-[#2255FF] transition-colors duration-300 group" data-reveal style="transition-delay:80ms">
-                        <div class="w-14 h-14 border border-[#E5E7EB] bg-[#FFFFFF] flex items-center justify-center group-hover:border-[#2255FF] transition-colors duration-300">
-                            <svg class="w-6 h-6 text-[#2255FF]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    {{-- Cell 2: Elite Recognition (card) --}}
+                    <div class="card hover-lift" data-reveal style="transition-delay:80ms">
+                        <div class="w-14 h-14 border border-slate-200 bg-white flex items-center justify-center group-hover:border-primary-300 transition-colors duration-300">
+                            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.745 3.745 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.745 3.745 0 013.296-1.043A3.745 3.745 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.745 3.745 0 013.296 1.043 3.745 3.745 0 011.043 3.296A3.745 3.745 0 0121 12z" />
                             </svg>
                         </div>
                         <div>
-                            <h4 class="font-display text-[#111827] text-2xl mb-3">ELITE RECOGNITION</h4>
-                            <p class="text-[13px] leading-7 text-[#4B5563]">Earn blockchain-verifiable credentials that open doors at the world's most innovative companies.</p>
+                            <h4 class="font-display text-slate-900 text-2xl mb-3">ELITE RECOGNITION</h4>
+                            <p class="text-sm leading-relaxed text-slate-600">Earn blockchain-verifiable credentials that open doors at the world's most innovative companies.</p>
                         </div>
                     </div>
 
                     {{-- Cell 3: Portfolio Architecture --}}
-                    <div class="border border-[#E5E7EB] bg-[#FFFFFF] p-10 flex flex-col justify-between min-h-[280px] hover:border-[#2255FF] transition-colors duration-300 group" data-reveal style="transition-delay:160ms">
-                        <div class="w-14 h-14 border border-[#E5E7EB] bg-[#FFFFFF] flex items-center justify-center group-hover:border-[#2255FF] transition-colors duration-300">
-                            <svg class="w-6 h-6 text-[#2255FF]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <div class="card hover-lift" data-reveal style="transition-delay:160ms">
+                        <div class="w-14 h-14 border border-slate-200 bg-white flex items-center justify-center group-hover:border-primary-300 transition-colors duration-300">
+                            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
                             </svg>
                         </div>
                         <div>
-                            <h4 class="font-display text-[#111827] text-2xl mb-3">PORTFOLIO ARCHITECTURE</h4>
-                            <p class="text-[13px] leading-7 text-[#4B5563]">Build production-grade projects that demonstrate mastery and solve real-world complexities.</p>
+                            <h4 class="font-display text-slate-900 text-2xl mb-3">PORTFOLIO ARCHITECTURE</h4>
+                            <p class="text-sm leading-relaxed text-slate-600">Build production-grade projects that demonstrate mastery and solve real-world complexities.</p>
                         </div>
                     </div>
 
-                    {{-- Cell 4: Community (Light themed) --}}
-                    <div class="border border-[#E5E7EB] bg-[#FFFFFF] p-10 flex flex-col justify-between min-h-[280px] hover:border-[#2255FF] transition-colors duration-300 group" data-reveal style="transition-delay:240ms">
-                        <span class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#6B7280]">Ecosystem</span>
-                        <div>
-                            <h4 class="font-display text-[#111827] leading-none mb-4" style="font-size:clamp(2rem,4vw,3rem);">
+                    {{-- Cell 4: Community (Card themed) --}}
+                    <div class="card hover-lift" data-reveal style="transition-delay:240ms">
+                        <span class="font-mono text-xs uppercase tracking-wider text-slate-500">Ecosystem</span>
+                        <div class="mt-4">
+                            <h4 class="font-display text-slate-900 leading-none mb-4" style="font-size:clamp(2rem,4vw,3rem);">
                                 VIBRANT<br>COMMUNITY
                             </h4>
-                            <p class="text-[13px] leading-7 text-[#4B5563]">
+                            <p class="text-sm leading-relaxed text-slate-600">
                                 Join 15k+ elite builders in a collaborative space designed for high-performance networking and growth.
                             </p>
                         </div>
@@ -589,13 +534,13 @@
         {{-- ─────────────────────────────────────────────────────────────
              TESTIMONIALS
         ───────────────────────────────────────────────────────────────── --}}
-        <section id="testimonials" class="py-28 border-t border-[#E5E7EB]">
+        <section id="testimonials" class="py-28 border-t border-slate-200">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
 
                 <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between mb-12" data-reveal>
                     <div>
-                        <span class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#2255FF]">▸ What Learners Say</span>
-                        <h2 class="font-display text-[#111827] mt-4 leading-none" style="font-size: clamp(2rem, 5vw, 4.5rem);">
+                        <span class="font-mono text-xs uppercase tracking-wider text-primary-600 font-semibold">▸ What Learners Say</span>
+                        <h2 class="font-display text-slate-900 mt-4 leading-none" style="font-size: clamp(2rem, 5vw, 4.5rem);">
                             REAL FEEDBACK<br>FROM ALUMNI
                         </h2>
                     </div>
@@ -604,30 +549,30 @@
                         @foreach($testimonials as $index => $testimonial)
                             <button type="button"
                                     data-testimonial-dot="{{ $index }}"
-                                    class="w-8 h-1 bg-[#E5E7EB] transition-all duration-200 hover:bg-[#4B5563]"></button>
+                                    class="w-8 h-1 bg-slate-200 transition-all duration-200 hover:bg-slate-600"></button>
                         @endforeach
                     </div>
                 </div>
 
-                <div data-testimonials class="border border-[#E5E7EB] bg-[#FFFFFF] p-8 md:p-10" @mouseenter="clearInterval(window._testimonialTimer)" @mouseleave="startTestimonialTimer()">
+                <div data-testimonials class="card" @mouseenter="clearInterval(window._testimonialTimer)" @mouseleave="startTestimonialTimer()">
                     @foreach($testimonials as $index => $testimonial)
                         <article class="testimonial-card {{ $index !== 0 ? 'hidden' : '' }}">
                             <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
                                 <div class="flex items-center gap-4">
-                                    <div class="w-14 h-14 bg-[#FFFFFF] border border-[#E5E7EB] flex items-center justify-center font-display text-2xl text-[#2255FF]">
+                                    <div class="w-14 h-14 bg-gradient-to-br from-primary-100 to-accent-100 border border-slate-200 flex items-center justify-center font-display text-2xl text-primary-600 rounded-md">
                                         {{ $testimonial['initial'] }}
                                     </div>
                                     <div>
-                                        <p class="font-mono text-[13px] text-[#111827]">{{ $testimonial['name'] }}</p>
-                                        <p class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#6B7280]">{{ $testimonial['role'] }} · {{ $testimonial['company'] }}</p>
+                                        <p class="font-mono text-sm text-slate-900 font-semibold">{{ $testimonial['name'] }}</p>
+                                        <p class="font-mono text-xs uppercase tracking-wider text-slate-500">{{ $testimonial['role'] }} · {{ $testimonial['company'] }}</p>
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-2">
-                                    <div class="text-[#FFD166] text-sm">★★★★★</div>
-                                    <span class="font-mono text-[11px] text-[#4B5563]">{{ $testimonial['rating'] }}</span>
+                                    <div class="text-yellow-500 text-sm">★★★★★</div>
+                                    <span class="font-mono text-xs text-slate-600 font-semibold">{{ $testimonial['rating'] }}</span>
                                 </div>
                             </div>
-                            <p class="mt-8 text-lg leading-8 text-[#4B5563] max-w-3xl border-l-2 border-[#2255FF] pl-6">
+                            <p class="mt-8 text-lg leading-8 text-slate-600 max-w-3xl border-l-4 border-primary-600 pl-6">
                                 "{{ $testimonial['quote'] }}"
                             </p>
                         </article>
@@ -639,49 +584,50 @@
         {{-- ─────────────────────────────────────────────────────────────
              INSTRUCTOR SPOTLIGHT
         ───────────────────────────────────────────────────────────────── --}}
-        <section id="instructors" class="py-28 border-t border-[#E5E7EB]">
+        <section id="instructors" class="py-28 border-t border-slate-200">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
 
                 <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between mb-12" data-reveal>
                     <div>
-                        <span class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#2255FF]">▸ Instructor Spotlight</span>
-                        <h2 class="font-display text-[#111827] mt-4 leading-none" style="font-size: clamp(2rem, 5vw, 4.5rem);">
+                        <span class="font-mono text-xs uppercase tracking-wider text-primary-600 font-semibold">▸ Instructor Spotlight</span>
+                        <h2 class="font-display text-slate-900 mt-4 leading-none" style="font-size: clamp(2rem, 5vw, 4.5rem);">
                             MEET THE<br>INSTRUCTORS
                         </h2>
                     </div>
-                    <a href="#" class="self-start inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-[#4B5563] hover:text-[#111827] underline-draw transition-colors duration-150">
-                        Meet All Instructors →
+                    <a href="#" class="self-start btn btn-ghost group">
+                        Meet All Instructors
+                        <span class="group-hover:translate-x-1 transition-transform duration-150">→</span>
                     </a>
                 </div>
 
                 <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     @foreach($instructors as $instructor)
-                        <article class="border border-[#E5E7EB] bg-[#FFFFFF] p-8 hover:border-[#2255FF] transition-all duration-300 hover:-translate-y-1 group" data-reveal>
+                        <article class="card hover-lift" data-reveal>
                             <div class="flex items-center gap-4 mb-8">
-                                <div class="w-14 h-14 bg-[#FFFFFF] border border-[#E5E7EB] flex items-center justify-center font-display text-2xl text-[#2255FF] group-hover:border-[#2255FF] transition-colors duration-300">
+                                <div class="w-14 h-14 bg-gradient-to-br from-primary-100 to-accent-100 border border-slate-200 flex items-center justify-center font-display text-2xl text-primary-600 rounded-md">
                                     {{ $instructor['initial'] }}
                                 </div>
                                 <div>
-                                    <p class="font-mono text-[13px] text-[#111827]">{{ $instructor['name'] }}</p>
-                                    <p class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#4B5563]">{{ $instructor['expertise'] }}</p>
+                                    <p class="font-mono text-sm text-slate-900 font-semibold">{{ $instructor['name'] }}</p>
+                                    <p class="font-mono text-xs uppercase tracking-wider text-slate-600">{{ $instructor['expertise'] }}</p>
                                 </div>
                             </div>
 
                             {{-- Rating bar --}}
                             <div class="mb-6">
                                 <div class="flex items-center justify-between mb-2">
-                                    <span class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#6B7280]">Rating</span>
-                                    <span class="font-mono text-[11px] text-[#111827]">{{ $instructor['rating'] }}/5</span>
+                                    <span class="font-mono text-xs uppercase tracking-wider text-slate-500">Rating</span>
+                                    <span class="font-mono text-xs text-slate-900 font-semibold">{{ $instructor['rating'] }}/5</span>
                                 </div>
-                                <div class="h-px bg-[#E5E7EB] relative overflow-hidden">
-                                    <div class="absolute inset-y-0 left-0 bg-[#2255FF] stat-bar-fill"
+                                <div class="h-px bg-slate-200 relative overflow-hidden">
+                                    <div class="absolute inset-y-0 left-0 bg-primary-600 stat-bar-fill"
                                          style="width: {{ ($instructor['rating']/5)*100 }}%"></div>
                                 </div>
                             </div>
 
-                            <div class="flex items-center gap-3 border-t border-[#E5E7EB] pt-5">
-                                <span class="font-mono text-[11px] text-[#4B5563] border border-[#E5E7EB] px-3 py-1.5">{{ $instructor['courses'] }} courses</span>
-                                <span class="font-mono text-[11px] text-[#4B5563] border border-[#E5E7EB] px-3 py-1.5">{{ $instructor['followers'] }} followers</span>
+                            <div class="flex items-center gap-3 border-t border-slate-200 pt-5">
+                                <span class="badge badge-primary text-xs">{{ $instructor['courses'] }} courses</span>
+                                <span class="badge badge-secondary text-xs">{{ $instructor['followers'] }} followers</span>
                             </div>
                         </article>
                     @endforeach
@@ -692,27 +638,27 @@
         {{-- ─────────────────────────────────────────────────────────────
              FAQ
         ───────────────────────────────────────────────────────────────── --}}
-        <section id="faq" class="py-28 border-t border-[#E5E7EB]">
+        <section id="faq" class="py-28 border-t border-slate-200">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
                 <div class="grid gap-16 lg:grid-cols-2">
                     <div data-reveal>
-                        <span class="font-mono text-[10px] uppercase tracking-[0.35em] text-[#2255FF]">▸ FAQ</span>
-                        <h2 class="font-display text-[#111827] mt-4 leading-none" style="font-size: clamp(2rem, 5vw, 4.5rem);">
+                        <span class="font-mono text-xs uppercase tracking-wider text-primary-600 font-semibold">▸ FAQ</span>
+                        <h2 class="font-display text-slate-900 mt-4 leading-none" style="font-size: clamp(2rem, 5vw, 4.5rem);">
                             COMMON<br>QUESTIONS
                         </h2>
-                        <p class="mt-6 text-[14px] leading-8 text-[#4B5563] max-w-sm">
+                        <p class="mt-6 text-base leading-relaxed text-slate-600 max-w-sm">
                             Everything you need to know about LiveSchool before you commit.
                         </p>
                     </div>
 
                     <div class="space-y-0" x-data="{ open: null }">
                         @foreach($faqItems as $faqIndex => $faq)
-                            <div class="border-t border-[#E5E7EB] {{ $loop->last ? 'border-b' : '' }}" data-reveal style="transition-delay: {{ $faqIndex * 60 }}ms">
+                            <div class="border-t border-slate-200 {{ $loop->last ? 'border-b' : '' }}" data-reveal style="transition-delay: {{ $faqIndex * 60 }}ms">
                                 <button type="button"
                                         @click="open = open === {{ $faqIndex }} ? null : {{ $faqIndex }}"
                                         class="w-full flex items-center justify-between py-6 text-left group">
-                                    <span class="font-mono text-[12px] uppercase tracking-[0.15em] text-[#111827] group-hover:text-[#2255FF] transition-colors duration-150">{{ $faq['q'] }}</span>
-                                    <span class="font-mono text-[#4B5563] ml-4 flex-shrink-0 transition-transform duration-200"
+                                    <span class="font-mono text-xs uppercase tracking-wider text-slate-900 group-hover:text-primary-600 transition-colors duration-150 font-semibold">{{ $faq['q'] }}</span>
+                                    <span class="font-mono text-slate-600 ml-4 flex-shrink-0 transition-transform duration-200 text-lg font-bold"
                                           :class="open === {{ $faqIndex }} ? 'rotate-45' : 'rotate-0'">+</span>
                                 </button>
                                 <div x-show="open === {{ $faqIndex }}"
@@ -723,7 +669,7 @@
                                      x-transition:leave-start="opacity-100 translate-y-0"
                                      x-transition:leave-end="opacity-0 -translate-y-2"
                                      class="pb-6">
-                                    <p class="text-[14px] leading-7 text-[#4B5563] border-l-2 border-[#2255FF] pl-4">{{ $faq['a'] }}</p>
+                                    <p class="text-base leading-relaxed text-slate-600 border-l-4 border-primary-600 pl-4">{{ $faq['a'] }}</p>
                                 </div>
                             </div>
                         @endforeach
@@ -735,34 +681,42 @@
         {{-- ─────────────────────────────────────────────────────────────
              FINAL CTA
         ───────────────────────────────────────────────────────────────── --}}
-        <section id="enterprise" class="py-28 border-t border-[#E5E7EB]">
+        <section id="enterprise" class="py-28 border-t border-slate-200">
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
-                <div class="relative overflow-hidden border border-[#E5E7EB] bg-[#FFFFFF] p-16 text-center">
+                <div class="relative overflow-hidden card text-center p-16">
 
                     {{-- Corner accents --}}
-                    <div class="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-[#2255FF]"></div>
-                    <div class="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-[#2255FF]"></div>
-                    <div class="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 border-[#2255FF]"></div>
-                    <div class="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-[#2255FF]"></div>
+                    <div class="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-primary-600"></div>
+                    <div class="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-primary-600"></div>
+                    <div class="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 border-accent-500"></div>
+                    <div class="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-accent-500"></div>
 
                     <div data-reveal>
-                        <span class="font-mono text-[10px] uppercase tracking-[0.4em] text-[#6B7280]">Ready when you are</span>
-                        <h2 class="font-display text-[#111827] mt-6 leading-none" style="font-size: clamp(2.5rem, 8vw, 7rem);">
-                            READY TO BUILD<br>THE <span class="text-[#2255FF]">FUTURE?</span>
+                        <span class="font-mono text-xs uppercase tracking-wider text-slate-500">Ready when you are</span>
+                        <h2 class="font-display text-slate-900 mt-6 leading-none" style="font-size: clamp(2.5rem, 8vw, 7rem);">
+                            READY TO BUILD<br>THE <span class="bg-gradient-to-r from-primary-600 to-accent-500 bg-clip-text text-transparent">FUTURE?</span>
                         </h2>
-                        <p class="mt-8 max-w-xl mx-auto text-[15px] leading-8 text-[#4B5563]">
+                        <p class="mt-8 max-w-xl mx-auto text-base leading-relaxed text-slate-600">
                             Join LiveSchool and get the curriculum, community, and coaching that turns ambition into market-ready skills.
                         </p>
 
                         <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-5">
-                            <a href="{{ route('register') }}"
-                               class="inline-flex items-center justify-center gap-3 bg-[#2255FF] px-10 py-4 font-mono text-[11px] uppercase tracking-[0.25em] text-white hover:bg-[#111827] hover:text-[#FAFAFA] transition-none group">
-                                Create Elite Account
-                                <span class="group-hover:translate-x-1 transition-transform duration-150">→</span>
-                            </a>
+                            @auth
+                                <a href="{{ route('dashboard') }}"
+                                   class="btn btn-primary btn-lg group">
+                                    Open Dashboard
+                                    <span class="group-hover:translate-x-1 transition-transform duration-150">→</span>
+                                </a>
+                            @else
+                                <a href="{{ route('register') }}"
+                                   class="btn btn-primary btn-lg group">
+                                    Create Elite Account
+                                    <span class="group-hover:translate-x-1 transition-transform duration-150">→</span>
+                                </a>
+                            @endauth
                             <div class="flex flex-col items-center gap-1">
-                                <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-[#6B7280]">No credit card required</span>
-                                <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-[#6B7280]">Instant workspace access</span>
+                                <span class="font-mono text-xs uppercase tracking-wider text-slate-500">No credit card required</span>
+                                <span class="font-mono text-xs uppercase tracking-wider text-slate-500">Instant workspace access</span>
                             </div>
                         </div>
                     </div>
@@ -839,22 +793,6 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', function () {
-
-        // ── Custom cursor ──────────────────────────────────
-        const dot  = document.getElementById('cursor-dot');
-        const ring = document.getElementById('cursor-ring');
-        if (dot && ring) {
-            document.addEventListener('mousemove', (e) => {
-                dot.style.left  = e.clientX + 'px';
-                dot.style.top   = e.clientY + 'px';
-                ring.style.left = e.clientX + 'px';
-                ring.style.top  = e.clientY + 'px';
-            });
-            document.querySelectorAll('a, button, [role="button"], input, textarea, select').forEach(el => {
-                el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-                el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
-            });
-        }
 
         // ── Scroll reveal ──────────────────────────────────
         const revealEls = document.querySelectorAll('[data-reveal]');

@@ -218,7 +218,11 @@ class DashboardController extends Controller
         $userId = auth()->id();
         $courses = Course::where('instructor_id', $userId)->with('category')->paginate(6);
         $totalStudents = Course::where('instructor_id', $userId)->sum('student_count');
-        $totalRevenue = $totalStudents * 49; // Mock calculation
+        
+        // Calculate real revenue from enrollments by this instructor
+        $totalRevenue = \App\Models\Enrollment::whereHas('course', function($q) use ($userId) {
+            $q->where('instructor_id', $userId);
+        })->sum('amount_paid') ?? 0;
 
         $stats = [
             'courses' => Course::where('instructor_id', $userId)->count(),
@@ -246,29 +250,83 @@ class DashboardController extends Controller
             ->take(4)
             ->get();
 
-        // Chart Data Mock
-        $chartLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-        $chartData = [120, 190, 300, 250, 420, 500];
+        // Calculate pending work (draft courses + unapproved reviews)
+        $draftCount = Course::where('instructor_id', $userId)
+            ->where('status', 'draft')
+            ->count();
+        $unapprovedReviews = \App\Models\CourseReview::whereHas('course', function($q) use ($userId) {
+            $q->where('instructor_id', $userId);
+        })
+        ->where('is_approved', false)
+        ->count();
+        $pendingWork = $draftCount + $unapprovedReviews;
 
-        return view('dashboard.instructor', compact('courses', 'stats', 'topCourse', 'drafts', 'reviews', 'chartLabels', 'chartData'));
+        // Build real revenue chart data from last 6 months
+        $chartLabels = [];
+        $chartData = [];
+        $now = now();
+        
+        for ($i = 5; $i >= 0; $i--) {
+            $month = $now->copy()->subMonths($i);
+            $chartLabels[] = $month->format('M');
+            
+            $monthRevenue = \App\Models\Enrollment::whereHas('course', function($q) use ($userId) {
+                $q->where('instructor_id', $userId);
+            })
+            ->whereYear('created_at', $month->year)
+            ->whereMonth('created_at', $month->month)
+            ->sum('amount_paid') ?? 0;
+            
+            $chartData[] = $monthRevenue;
+        }
+
+        return view('dashboard.instructor', compact('courses', 'stats', 'topCourse', 'drafts', 'reviews', 'chartLabels', 'chartData', 'pendingWork'));
     }
 
     private function adminDashboard()
     {
+        $now = now();
+        $lastMonth = $now->copy()->subMonth();
+        
+        // Current stats
+        $totalUsers = \App\Models\User::count();
+        $totalCourses = Course::count();
+        $totalEnrollments = Enrollment::count();
+        $publishedCourses = Course::where('status', 'published')->count();
+        $totalRevenue = \App\Models\Payment::where('status', 'completed')->sum('amount') ?? 0;
+        
+        // Last month stats for MoM calculations
+        $lastMonthUsers = \App\Models\User::whereYear('created_at', $lastMonth->year)
+            ->whereMonth('created_at', $lastMonth->month)->count();
+        $lastMonthCourses = Course::whereYear('created_at', $lastMonth->year)
+            ->whereMonth('created_at', $lastMonth->month)->count();
+        $lastMonthEnrollments = Enrollment::whereYear('created_at', $lastMonth->year)
+            ->whereMonth('created_at', $lastMonth->month)->count();
+        $lastMonthRevenue = \App\Models\Payment::where('status', 'completed')
+            ->whereYear('created_at', $lastMonth->year)
+            ->whereMonth('created_at', $lastMonth->month)
+            ->sum('amount') ?? 0;
+        
+        // Calculate MoM percentages
+        $userMoM = $lastMonthUsers > 0 ? (($totalUsers - $lastMonthUsers) / $lastMonthUsers) * 100 : 0;
+        $courseMoM = $lastMonthCourses > 0 ? (($totalCourses - $lastMonthCourses) / $lastMonthCourses) * 100 : 0;
+        $enrollmentMoM = $lastMonthEnrollments > 0 ? (($totalEnrollments - $lastMonthEnrollments) / $lastMonthEnrollments) * 100 : 0;
+        $revenueMoM = $lastMonthRevenue > 0 ? (($totalRevenue - $lastMonthRevenue) / $lastMonthRevenue) * 100 : 0;
+        
         $stats = [
-            'totalUsers' => \App\Models\User::count(),
-            'totalCourses' => Course::count(),
-            'totalEnrollments' => Enrollment::count(),
-            'publishedCourses' => Course::where('status', 'published')->count(),
-            'totalRevenue' => Enrollment::count() * 49, // Mock platform revenue
+            'totalUsers' => $totalUsers,
+            'totalCourses' => $totalCourses,
+            'totalEnrollments' => $totalEnrollments,
+            'publishedCourses' => $publishedCourses,
+            'totalRevenue' => $totalRevenue,
         ];
 
-        // MoM changes (mock)
+        // MoM changes (real data)
         $mom = [
-            'users' => '+12.5%',
-            'revenue' => '+8.2%',
-            'courses' => '+4.1%',
-            'enrollments' => '+15.3%'
+            'users' => ($userMoM >= 0 ? '+' : '') . number_format($userMoM, 1) . '%',
+            'revenue' => ($revenueMoM >= 0 ? '+' : '') . number_format($revenueMoM, 1) . '%',
+            'courses' => ($courseMoM >= 0 ? '+' : '') . number_format($courseMoM, 1) . '%',
+            'enrollments' => ($enrollmentMoM >= 0 ? '+' : '') . number_format($enrollmentMoM, 1) . '%'
         ];
 
         $recentCourses = Course::latest()->take(5)->with('instructor')->get();
@@ -284,12 +342,27 @@ class DashboardController extends Controller
             'admins' => \App\Models\User::where('role', 'admin')->count()
         ];
 
-        // Chart Data Mock
-        $chartLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-        $chartData = [5000, 7200, 8500, 8100, 9600, 12000];
+        // Build real revenue chart data from last 6 months
+        $chartLabels = [];
+        $chartData = [];
+        $monthNow = now();
         
-        // Mock pending approvals
-        $pendingApprovals = \App\Models\User::where('role', 'instructor')->latest()->take(3)->get();
+        for ($i = 5; $i >= 0; $i--) {
+            $month = $monthNow->copy()->subMonths($i);
+            $chartLabels[] = $month->format('M');
+            
+            $monthRevenue = \App\Models\Payment::where('status', 'completed')
+                ->whereYear('created_at', $month->year)
+                ->whereMonth('created_at', $month->month)
+                ->sum('amount') ?? 0;
+            
+            $chartData[] = $monthRevenue;
+        }
+        
+        // Real pending approvals (instructors awaiting verification)
+        $pendingApprovals = \App\Models\User::where('role', 'instructor')
+            ->whereNull('verified_at')
+            ->latest()->take(3)->get();
 
         return view('dashboard.admin', compact('stats', 'mom', 'recentCourses', 'categories', 'demographics', 'chartLabels', 'chartData', 'pendingApprovals'));
     }
