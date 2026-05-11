@@ -10,6 +10,8 @@ use App\Models\Course;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Http;
+use App\Models\Lesson;
 
 class CourseManagementController extends Controller
 {
@@ -26,6 +28,84 @@ class CourseManagementController extends Controller
             ->paginate(10);
 
         return view('instructor.courses.index', compact('courses'));
+    }
+
+    /**
+     * Extract playlist id from a YouTube playlist URL.
+     */
+    private function extractYouTubePlaylistId(string $url): ?string
+    {
+        $parts = parse_url($url);
+        if (! $parts) return null;
+
+        if (isset($parts['query'])) {
+            parse_str($parts['query'], $qs);
+            if (! empty($qs['list'])) return $qs['list'];
+        }
+
+        // Fallback for urls like youtube.com/playlist?list=...
+        if (isset($parts['path']) && str_contains($parts['path'], 'playlist')) {
+            // maybe list in query already handled; otherwise return null
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Import YouTube playlist items into the given course as lessons.
+     * Requires YOUTUBE_API_KEY in env.
+     */
+    private function importYouTubePlaylistToCourse(string $playlistId, Course $course): void
+    {
+        $apiKey = env('YOUTUBE_API_KEY');
+        if (! $apiKey) {
+            Log::warning('YOUTUBE_API_KEY not set; skipping playlist import.');
+            return;
+        }
+
+        $base = 'https://www.googleapis.com/youtube/v3/playlistItems';
+        $pageToken = null;
+        $order = $course->lessons()->count() + 1;
+
+        do {
+            $params = [
+                'part' => 'snippet',
+                'maxResults' => 50,
+                'playlistId' => $playlistId,
+                'key' => $apiKey,
+            ];
+            if ($pageToken) $params['pageToken'] = $pageToken;
+
+            $response = Http::get($base, $params);
+            if (! $response->ok()) {
+                Log::error('YouTube API error: ' . $response->body());
+                return;
+            }
+
+            $data = $response->json();
+            foreach ($data['items'] ?? [] as $item) {
+                $snippet = $item['snippet'] ?? null;
+                if (! $snippet) continue;
+
+                $videoId = $snippet['resourceId']['videoId'] ?? null;
+                $title = $snippet['title'] ?? 'Untitled Lesson';
+                $description = $snippet['description'] ?? null;
+
+                Lesson::create([
+                    'title' => $title,
+                    'course_id' => $course->id,
+                    'order' => $order++,
+                    'description' => $description,
+                    'type' => 'video',
+                    'video_url' => $videoId ? 'https://youtu.be/' . $videoId : null,
+                    'duration_minutes' => null,
+                    'is_free' => false,
+                ]);
+            }
+
+            $pageToken = $data['nextPageToken'] ?? null;
+        } while ($pageToken);
     }
 
     /**
@@ -63,6 +143,21 @@ class CourseManagementController extends Controller
             'thumbnail_url' => $this->handleThumbnailUpload($request, null),
             'published_at'  => $request->status === 'published' ? now() : null,
         ]);
+
+        // If a YouTube playlist URL was provided, attempt to import its videos as lessons
+        if ($request->filled('youtube_playlist')) {
+            try {
+                $playlistUrl = $request->input('youtube_playlist');
+                $playlistId = $this->extractYouTubePlaylistId($playlistUrl);
+                if ($playlistId) {
+                    $this->importYouTubePlaylistToCourse($playlistId, $course);
+                } else {
+                    Log::warning('Invalid YouTube playlist URL provided: ' . $playlistUrl);
+                }
+            } catch (\Throwable $e) {
+                Log::error('YouTube playlist import failed: ' . $e->getMessage());
+            }
+        }
 
         return redirect()
             ->route('instructor.courses.edit', $course)

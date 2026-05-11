@@ -101,6 +101,18 @@
                         </div>
                     </div>
 
+                    {{-- YouTube Playlist (optional) --}}
+                    <div>
+                        <label for="youtube_playlist" class="block text-sm font-semibold text-gray-700 mb-1.5">
+                            YouTube Playlist URL (optional)
+                        </label>
+                        <input type="url" id="youtube_playlist" name="youtube_playlist" value="{{ old('youtube_playlist') }}"
+                               placeholder="https://www.youtube.com/playlist?list=PL..."
+                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-400">
+                        <p class="text-xs text-gray-400 mt-1">If provided, videos from the playlist will be imported as lessons.</p>
+                        @error('youtube_playlist') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                    </div>
+
                     {{-- Thumbnail Upload --}}
                     <div>
                         <label for="thumbnail" class="block text-sm font-semibold text-gray-700 mb-1.5">
