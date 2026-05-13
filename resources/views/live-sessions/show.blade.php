@@ -1,62 +1,79 @@
 <x-app-layout>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
-        .control-room { background-color: #F8FAFC; min-height: calc(100vh - 65px); color: #0F172A; }
-        .jitsi-container { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); }
-        .mesh-lobby { background-color: #F1F5F9; background-image: radial-gradient(at 0% 0%, hsla(215,100%,95%,1) 0px, transparent 50%), radial-gradient(at 100% 0%, hsla(200,100%,90%,1) 0px, transparent 50%); }
+        .session-page { min-height: calc(100vh - 65px); background: #F8FAFC; }
+        @keyframes float-up {
+            0%   { transform: translateY(0) scale(1);   opacity: 1; }
+            100% { transform: translateY(-180px) scale(1.4); opacity: 0; }
+        }
+        .reaction-float { animation: float-up 3s ease-out forwards; }
+        @keyframes pulse-ring {
+            0%   { transform: scale(1);   opacity: 0.6; }
+            100% { transform: scale(1.6); opacity: 0; }
+        }
+        .live-ring { animation: pulse-ring 1.4s ease-out infinite; }
     </style>
 
-    <div class="control-room -mt-8 pt-8 flex flex-col" x-data="{
+    <div class="session-page flex flex-col" x-data="{
         reactions: [],
         addReaction(emoji) {
             const id = Date.now();
-            const left = 10 + Math.random() * 80; // random position 10% to 90%
+            const left = 10 + Math.random() * 80;
             this.reactions.push({ id, emoji, left });
-            setTimeout(() => {
-                this.reactions = this.reactions.filter(r => r.id !== id);
-            }, 3000); // Remove after animation
+            setTimeout(() => this.reactions = this.reactions.filter(r => r.id !== id), 3200);
         }
     }">
-        
-        {{-- Header Bar --}}
-        <div class="px-6 py-4 bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center justify-between z-10">
-            <div class="flex items-center gap-4">
-                <a href="{{ route('courses.show', $course) }}" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-slate-500 hover:bg-white/10 hover:text-[#0F172A] transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+
+        {{-- ── Top Bar ── --}}
+        <div class="sticky top-0 z-30 px-5 py-3 bg-white border-b border-slate-200 flex items-center justify-between shadow-sm">
+            <div class="flex items-center gap-3">
+                <a href="{{ route('courses.show', $course) }}"
+                   class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
+                    </svg>
                 </a>
-                <div>
-                    <h1 class="text-lg font-bold text-[#0F172A]">{{ $liveSession->title }}</h1>
-                    <p class="text-sm font-medium text-slate-500">{{ $course->title }}</p>
+                <div class="min-w-0">
+                    <h1 class="text-base font-bold text-slate-900 truncate leading-tight">{{ $liveSession->title }}</h1>
+                    <p class="text-xs text-slate-500 font-medium truncate">{{ $course->title }}</p>
                 </div>
             </div>
 
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3">
                 @if($liveSession->isLive())
-                    <div class="flex items-center gap-2 px-3 py-1.5 bg-rose-500/10 border border-rose-500/20 rounded-lg">
-                        <span class="relative flex h-3 w-3">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-3 w-3 bg-rose-500"></span>
+                    {{-- Live badge --}}
+                    <div class="flex items-center gap-2 px-3 py-1.5 bg-red-50 border border-red-200 rounded-lg">
+                        <span class="relative flex h-2.5 w-2.5">
+                            <span class="live-ring absolute inline-flex h-full w-full rounded-full bg-red-400"></span>
+                            <span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500"></span>
                         </span>
-                        <span class="text-sm font-bold text-rose-500 uppercase tracking-widest">Live</span>
+                        <span class="text-xs font-black text-red-600 uppercase tracking-widest">Live</span>
                     </div>
-                    
-                    {{-- Mock Participant Counter --}}
-                    <div class="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-sm font-bold text-slate-300">
-                        <svg class="w-4 h-4 text-sky-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path></svg>
-                        <span>24</span>
+                    {{-- Enrolled count (real — total students in course) --}}
+                    <div class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-lg">
+                        <svg class="w-3.5 h-3.5 text-slate-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                        </svg>
+                        <span class="text-xs font-bold text-slate-600">{{ $course->enrollments()->count() }} enrolled</span>
                     </div>
+                @elseif($liveSession->isEnded())
+                    <span class="px-3 py-1.5 text-xs font-black uppercase tracking-widest rounded-lg bg-slate-100 text-slate-500 border border-slate-200">
+                        Ended
+                    </span>
                 @else
-                    <span class="px-3 py-1.5 text-sm font-bold uppercase tracking-widest rounded-lg bg-white/5 text-slate-500 border border-white/10">
-                        {{ ucfirst($liveSession->status) }}
+                    <span class="px-3 py-1.5 text-xs font-black uppercase tracking-widest rounded-lg bg-blue-50 text-blue-600 border border-blue-100">
+                        Scheduled
                     </span>
                 @endif
-                
+
                 @if(auth()->id() === $liveSession->instructor_id || auth()->user()->isAdmin())
                     @if($liveSession->isLive())
                         <form action="{{ route('instructor.live-sessions.end', $liveSession) }}" method="POST">
                             @csrf
-                            <button type="submit" class="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-[#0F172A] text-sm font-bold rounded-lg transition shadow-lg shadow-rose-600/20">
-                                End Broadcast
+                            <button type="submit"
+                                    onclick="return confirm('End this live session for everyone?')"
+                                    class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition">
+                                End Session
                             </button>
                         </form>
                     @endif
@@ -64,168 +81,232 @@
             </div>
         </div>
 
+        {{-- ── Content ── --}}
         <div class="flex-1 relative flex">
-            
+
             @if(!$liveSession->isLive() && !$liveSession->isEnded())
-                {{-- LOBBY VIEW (Scheduled) --}}
-                <div class="absolute inset-0 mesh-lobby flex flex-col items-center justify-center p-6 text-center z-20">
-                    
-                    <div class="relative w-32 h-32 mb-8" x-data="{ seconds: 0 }" x-init="setInterval(() => seconds++, 1000)">
-                        <div class="absolute inset-0 bg-sky-500 rounded-full blur-3xl opacity-20"></div>
-                        <div class="relative w-full h-full bg-white/50 backdrop-blur-xl border border-slate-200 rounded-full flex items-center justify-center shadow-2xl">
-                            <svg class="w-12 h-12 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        </div>
-                        <svg class="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                            <circle cx="50" cy="50" r="48" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="4"></circle>
-                            <circle cx="50" cy="50" r="48" fill="none" stroke="#38bdf8" stroke-width="4" stroke-dasharray="301" :stroke-dashoffset="301 - ((seconds % 60) / 60) * 301" class="transition-all duration-1000 linear"></circle>
+            {{-- ════ LOBBY STATE ════ --}}
+            <div class="flex-1 flex items-center justify-center p-6">
+                <div class="w-full max-w-lg text-center">
+
+                    {{-- Clock icon --}}
+                    <div class="w-20 h-20 mx-auto mb-6 bg-white border border-slate-200 rounded-2xl shadow-sm flex items-center justify-center">
+                        <svg class="w-10 h-10 text-[#2255FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                     </div>
 
-                    <h2 class="text-4xl sm:text-5xl font-black text-[#0F172A] mb-4 tracking-tight">The broadcast will begin shortly</h2>
-                    <p class="text-xl text-slate-500 font-medium mb-12 max-w-2xl">
-                        Scheduled for <span class="text-sky-400">{{ $liveSession->scheduled_at->format('l, F j \a\t g:i A') }}</span>
+                    <h2 class="text-3xl font-black text-slate-900 tracking-tight mb-2">Session Not Started Yet</h2>
+                    <p class="text-slate-500 font-medium mb-1">
+                        Scheduled for <span class="text-[#2255FF] font-bold">{{ $liveSession->scheduled_at->format('l, F j \a\t g:i A') }}</span>
                     </p>
+                    <p class="text-sm text-slate-400 mb-8">Stay on this page — it will update when the session goes live.</p>
 
                     @if(auth()->id() === $liveSession->instructor_id || auth()->user()->isAdmin())
-                        <div class="bg-white/50 backdrop-blur-md border border-slate-200 p-8 rounded-2xl max-w-md w-full">
-                            <h3 class="font-bold text-[#0F172A] mb-2">Host Controls</h3>
-                            <p class="text-sm text-slate-500 mb-6">You are the instructor. You can start the broadcast whenever you're ready.</p>
+                        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm text-left mb-4">
+                            <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Host Controls</p>
+                            <p class="text-sm text-slate-600 mb-5">Ready to go? Start the session early — students will be notified.</p>
                             <form action="{{ route('instructor.live-sessions.start', $liveSession) }}" method="POST">
                                 @csrf
-                                <button type="submit" class="w-full px-8 py-4 bg-sky-500 text-[#0F172A] font-black rounded-xl hover:bg-sky-400 transition shadow-lg shadow-sky-500/30 flex items-center justify-center gap-2 group">
-                                    <svg class="w-6 h-6 transform group-hover:scale-110 transition" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4l12 6-12 6z"></path></svg>
-                                    Go Live Now
+                                <button type="submit"
+                                        class="w-full py-3.5 bg-[#2255FF] hover:bg-[#1a44dd] text-white font-bold rounded-xl transition shadow shadow-blue-200 flex items-center justify-center gap-2">
+                                    <span class="relative flex h-2.5 w-2.5">
+                                        <span class="live-ring absolute inline-flex h-full w-full rounded-full bg-white opacity-60"></span>
+                                        <span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-white"></span>
+                                    </span>
+                                    Start Live Now
                                 </button>
                             </form>
                         </div>
                     @else
-                        <div class="px-6 py-4 bg-white/5 border border-white/10 backdrop-blur text-slate-300 rounded-xl font-medium flex items-center gap-3">
-                            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-sky-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                            Waiting for the host to start...
+                        <div class="inline-flex items-center gap-3 px-6 py-4 bg-white border border-slate-200 rounded-2xl shadow-sm text-slate-600 font-medium text-sm">
+                            <svg class="animate-spin w-5 h-5 text-[#2255FF]" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                            </svg>
+                            Waiting for the instructor to start...
+                        </div>
+                    @endif
+
+                    {{-- Enrolled students chips --}}
+                    @php $enrolledStudents = $course->enrollments()->with('user:id,name')->get(); @endphp
+                    @if($enrolledStudents->count() > 0)
+                        <div class="mt-8 p-5 bg-white border border-slate-200 rounded-2xl shadow-sm text-left">
+                            <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">
+                                {{ $enrolledStudents->count() }} students will see this session
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                @foreach($enrolledStudents->take(12) as $enrollment)
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-50 border border-slate-200 rounded-full text-xs font-semibold text-slate-700">
+                                        <span class="w-4 h-4 rounded-full bg-[#2255FF] text-white flex items-center justify-center text-[9px] font-black">
+                                            {{ strtoupper(substr($enrollment->user->name, 0, 1)) }}
+                                        </span>
+                                        {{ $enrollment->user->name }}
+                                    </span>
+                                @endforeach
+                                @if($enrolledStudents->count() > 12)
+                                    <span class="px-3 py-1 bg-slate-100 border border-slate-200 rounded-full text-xs font-bold text-slate-500">
+                                        +{{ $enrolledStudents->count() - 12 }} more
+                                    </span>
+                                @endif
+                            </div>
                         </div>
                     @endif
                 </div>
+            </div>
 
             @elseif($liveSession->isEnded())
-                {{-- ENDED VIEW --}}
-                <div class="absolute inset-0 bg-slate-100 flex flex-col items-center justify-center p-6 text-center z-20">
-                    <div class="w-24 h-24 bg-slate-800 rounded-full flex items-center justify-center mb-6">
-                        <svg class="w-10 h-10 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            {{-- ════ ENDED STATE ════ --}}
+            <div class="flex-1 flex items-center justify-center p-6">
+                <div class="w-full max-w-md text-center">
+                    <div class="w-20 h-20 mx-auto mb-6 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center justify-center">
+                        <svg class="w-10 h-10 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                        </svg>
                     </div>
-                    <h2 class="text-3xl font-black text-[#0F172A] mb-2">Broadcast Ended</h2>
-                    <p class="text-slate-500 font-medium mb-8">This live session has concluded. Thank you for joining.</p>
-                    <a href="{{ route('courses.show', $course) }}" class="px-8 py-3 bg-white text-slate-900 font-bold rounded-xl hover:bg-slate-200 transition">
-                        Return to Course
-                    </a>
+                    <h2 class="text-3xl font-black text-slate-900 mb-2">Session Ended</h2>
+                    <p class="text-slate-500 font-medium mb-2">
+                        This session ran for
+                        @if($liveSession->started_at && $liveSession->ended_at)
+                            <strong class="text-slate-700">{{ $liveSession->started_at->diffInMinutes($liveSession->ended_at) }} minutes</strong>
+                        @else
+                            a while
+                        @endif
+                    </p>
+                    <p class="text-sm text-slate-400 mb-8">Thank you for joining {{ $course->title }}.</p>
+                    <div class="flex items-center justify-center gap-3">
+                        <a href="{{ route('courses.show', $course) }}"
+                           class="px-6 py-3 bg-[#2255FF] text-white font-bold rounded-xl hover:bg-[#1a44dd] transition text-sm">
+                            Back to Course
+                        </a>
+                        <a href="{{ route('dashboard') }}"
+                           class="px-6 py-3 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition text-sm">
+                            Dashboard
+                        </a>
+                    </div>
                 </div>
+            </div>
 
             @else
-                {{-- LIVE ROOM VIEW (Jitsi Embed) --}}
-                <div class="flex-1 p-4 lg:p-6 pb-24 lg:pb-6 relative z-0 flex gap-6">
-                    
-                    {{-- Main Video Area --}}
-                    <div class="flex-1 bg-black rounded-2xl overflow-hidden jitsi-container relative border border-white/5">
-                        <div id="meet" class="w-full h-full"></div>
-                        
-                        {{-- Floating Reactions Container --}}
-                        <div class="absolute bottom-20 left-0 right-0 h-64 pointer-events-none overflow-hidden z-50">
-                            <template x-for="reaction in reactions" :key="reaction.id">
-                                <div class="absolute bottom-0 text-4xl animate-[float_3s_ease-out_forwards]"
-                                     :style="`left: ${reaction.left}%`"
-                                     x-text="reaction.emoji"></div>
-                            </template>
-                        </div>
+            {{-- ════ LIVE ROOM STATE ════ --}}
+            <div class="flex-1 flex gap-4 p-4 relative">
+
+                {{-- Video Area --}}
+                <div class="flex-1 bg-black rounded-2xl overflow-hidden relative border border-slate-800 shadow-xl" style="min-height: calc(100vh - 140px);">
+                    <div id="meet" class="w-full h-full absolute inset-0"></div>
+
+                    {{-- Floating reactions --}}
+                    <div class="absolute bottom-20 left-0 right-0 h-64 pointer-events-none overflow-hidden z-50">
+                        <template x-for="reaction in reactions" :key="reaction.id">
+                            <div class="reaction-float absolute bottom-0 text-4xl select-none"
+                                 :style="`left: ${reaction.left}%`"
+                                 x-text="reaction.emoji"></div>
+                        </template>
                     </div>
 
-                    {{-- Host Spotlight / Info Sidebar (Hidden on mobile) --}}
-                    <div class="hidden lg:flex w-80 flex-col gap-4">
-                        <div class="bg-white/80 backdrop-blur-md border border-slate-200 rounded-2xl p-6">
-                            <h3 class="font-bold text-[#0F172A] mb-4 text-sm uppercase tracking-widest text-slate-500">About Host</h3>
-                            <div class="flex items-center gap-4 mb-4">
-                                <div class="w-12 h-12 rounded-full overflow-hidden border border-white/10">
-                                    <img src="{{ $course->instructor->avatar_url ? Storage::url($course->instructor->avatar_url) : 'https://ui-avatars.com/api/?name='.urlencode($course->instructor->name).'&background=0ea5e9&color=fff' }}" class="w-full h-full object-cover">
-                                </div>
-                                <div>
-                                    <p class="font-bold text-[#0F172A]">{{ $course->instructor->name }}</p>
-                                    <p class="text-xs text-sky-400">Instructor</p>
-                                </div>
-                            </div>
-                            <p class="text-sm text-slate-500 leading-relaxed line-clamp-3 mb-4">
-                                {{ $course->instructor->bio ?? 'Lead instructor for this course. Bringing years of industry experience directly to you.' }}
-                            </p>
-                            <button class="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-[#0F172A] text-sm font-bold rounded-lg transition">
-                                View Profile
+                    {{-- Reaction bar --}}
+                    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur-md border border-white/10 px-3 py-2 rounded-2xl flex items-center gap-1.5 shadow-xl z-40">
+                        @foreach(['👍','❤️','👏','🔥','🎉','😮'] as $emoji)
+                            <button @click="addReaction('{{ $emoji }}')"
+                                    class="w-11 h-11 flex items-center justify-center text-2xl hover:bg-white/10 rounded-xl transition hover:scale-125 active:scale-95">
+                                {{ $emoji }}
                             </button>
-                        </div>
-
-                        <div class="bg-white/80 backdrop-blur-md border border-slate-200 rounded-2xl p-6 flex-1 flex flex-col">
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="font-bold text-[#0F172A] text-sm uppercase tracking-widest text-slate-500">Resources</h3>
-                            </div>
-                            <div class="flex-1 flex flex-col items-center justify-center text-center">
-                                <svg class="w-10 h-10 text-slate-700 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                <p class="text-sm font-medium text-slate-500">No resources shared yet.</p>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
 
-                {{-- Reaction Bar (Bottom floating) --}}
-                <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-900/90 backdrop-blur-xl border border-white/10 p-2 rounded-2xl flex items-center gap-2 shadow-2xl z-40">
-                    @foreach(['👍', '❤️', '👏', '🔥', '🎉'] as $emoji)
-                        <button @click="addReaction('{{ $emoji }}')" class="w-12 h-12 flex items-center justify-center text-2xl hover:bg-white/10 rounded-xl transition hover:scale-110 active:scale-95">
-                            {{ $emoji }}
-                        </button>
-                    @endforeach
+                {{-- Sidebar --}}
+                <div class="hidden lg:flex w-72 flex-col gap-4 flex-shrink-0">
+
+                    {{-- Session Info --}}
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Session Info</p>
+                        <h3 class="font-bold text-slate-900 text-sm mb-1 leading-snug">{{ $liveSession->title }}</h3>
+                        <p class="text-xs text-slate-500 mb-4">{{ $course->title }}</p>
+                        @if($liveSession->description)
+                            <p class="text-xs text-slate-500 leading-relaxed border-t border-slate-100 pt-3">{{ $liveSession->description }}</p>
+                        @endif
+                        <div class="mt-4 flex items-center gap-2 text-xs text-slate-500 font-medium">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Max {{ $liveSession->max_duration_minutes }} min
+                        </div>
+                    </div>
+
+                    {{-- Instructor --}}
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Instructor</p>
+                        <div class="flex items-center gap-3">
+                            <img src="{{ $course->instructor->avatar_url ? Storage::url($course->instructor->avatar_url) : 'https://ui-avatars.com/api/?name='.urlencode($course->instructor->name).'&background=2255FF&color=fff' }}"
+                                 class="w-11 h-11 rounded-xl object-cover border border-slate-100"
+                                 alt="{{ $course->instructor->name }}">
+                            <div>
+                                <p class="font-bold text-slate-900 text-sm">{{ $course->instructor->name }}</p>
+                                <p class="text-xs text-[#2255FF] font-semibold">Instructor</p>
+                            </div>
+                        </div>
+                        @if($course->instructor->bio)
+                            <p class="text-xs text-slate-500 leading-relaxed mt-3 line-clamp-3">{{ $course->instructor->bio }}</p>
+                        @endif
+                    </div>
+
+                    {{-- Enrolled (real count) --}}
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Audience</p>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-center">
+                                <svg class="w-5 h-5 text-[#2255FF]" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-black text-slate-900">{{ $course->enrollments()->count() }}</p>
+                                <p class="text-xs text-slate-500 font-medium">enrolled students</p>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
+            </div>
 
-                <style>
-                    @keyframes float {
-                        0% { transform: translateY(0) scale(1); opacity: 1; }
-                        100% { transform: translateY(-200px) scale(1.5); opacity: 0; }
-                    }
-                </style>
-
-                {{-- Jitsi Meet API SDK --}}
-                <script src="https://meet.jit.si/external_api.js"></script>
-                <script>
-                    document.addEventListener('DOMContentLoaded', () => {
-                        const domain = 'meet.jit.si';
-                        const options = {
-                            roomName: "{{ $liveSession->jitsi_room }}",
-                            width: '100%',
-                            height: '100%',
-                            parentNode: document.querySelector('#meet'),
-                            userInfo: {
-                                email: "{{ auth()->user()->email }}",
-                                displayName: "{{ auth()->user()->name }}"
-                            },
-                            configOverwrite: { 
-                                startWithAudioMuted: true,
-                                startWithVideoMuted: true,
-                                prejoinPageEnabled: false,
-                                disableDeepLinking: true,
-                                defaultLanguage: 'en',
-                            },
-                            interfaceConfigOverwrite: {
-                                TOOLBAR_BUTTONS: [
-                                    'microphone', 'camera', 'desktop', 'fullscreen',
-                                    'fodeviceselection', 'chat', 'raisehand',
-                                    'videoquality', 'tileview', 'mute-everyone', 'security'
-                                ],
-                                SHOW_CHROME_EXTENSION_BANNER: false,
-                                ENFORCE_NOTIFICATION_AUTO_DISMISS_TIMEOUT: 5000,
-                                DEFAULT_BACKGROUND: '#000000',
-                            }
-                        };
-                        const api = new JitsiMeetExternalAPI(domain, options);
-
-                        api.addEventListener('videoConferenceLeft', () => {
-                            window.location.href = "{{ route('dashboard') }}";
-                        });
+            {{-- Jitsi SDK --}}
+            <script src="https://meet.jit.si/external_api.js"></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const api = new JitsiMeetExternalAPI('meet.jit.si', {
+                        roomName: "{{ $liveSession->jitsi_room }}",
+                        width: '100%',
+                        height: '100%',
+                        parentNode: document.querySelector('#meet'),
+                        userInfo: {
+                            email: "{{ auth()->user()->email }}",
+                            displayName: "{{ auth()->user()->name }}"
+                        },
+                        configOverwrite: {
+                            startWithAudioMuted: true,
+                            startWithVideoMuted: true,
+                            prejoinPageEnabled: false,
+                            disableDeepLinking: true,
+                            defaultLanguage: 'en',
+                        },
+                        interfaceConfigOverwrite: {
+                            TOOLBAR_BUTTONS: [
+                                'microphone', 'camera', 'desktop', 'fullscreen',
+                                'fodeviceselection', 'chat', 'raisehand',
+                                'videoquality', 'tileview', 'mute-everyone', 'security'
+                            ],
+                            SHOW_CHROME_EXTENSION_BANNER: false,
+                            DEFAULT_BACKGROUND: '#000000',
+                        }
                     });
-                </script>
+                    api.addEventListener('videoConferenceLeft', () => {
+                        window.location.href = "{{ route('dashboard') }}";
+                    });
+                });
+            </script>
             @endif
+
         </div>
     </div>
 </x-app-layout>
