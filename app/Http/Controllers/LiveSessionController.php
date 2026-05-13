@@ -73,28 +73,35 @@ class LiveSessionController extends Controller
      */
     public function store(Request $request)
     {
+        $startNow = $request->boolean('start_now');
+
         $request->validate([
-            'course_id' => 'required|exists:courses,id',
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'scheduled_at' => 'required|date|after:now',
+            'course_id'            => 'required|exists:courses,id',
+            'title'                => 'required|string|max:255',
+            'description'          => 'nullable|string',
+            'scheduled_at'         => $startNow ? 'nullable|date' : 'required|date|after:now',
             'max_duration_minutes' => 'required|integer|min:15|max:300',
         ]);
 
         $course = Course::findOrFail($request->course_id);
-        
-        // Ensure the user owns the course
         Gate::authorize('update', $course);
 
-        LiveSession::create([
-            'course_id' => $course->id,
-            'instructor_id' => auth()->id(),
-            'title' => $request->title,
-            'description' => $request->description,
-            'scheduled_at' => $request->scheduled_at,
+        $session = LiveSession::create([
+            'course_id'            => $course->id,
+            'instructor_id'        => auth()->id(),
+            'title'                => $request->title,
+            'description'          => $request->description,
+            'scheduled_at'         => $startNow ? now() : $request->scheduled_at,
             'max_duration_minutes' => $request->max_duration_minutes,
-            'status' => 'scheduled',
+            'status'               => $startNow ? 'live' : 'scheduled',
+            'started_at'           => $startNow ? now() : null,
         ]);
+
+        if ($startNow) {
+            return redirect()
+                ->route('live-sessions.show', $session)
+                ->with('success', 'Your live class has started!');
+        }
 
         return redirect()->route('dashboard')->with('success', 'Live session scheduled successfully.');
     }

@@ -149,9 +149,29 @@ class CourseController extends Controller
 
         $course->load(['instructor', 'category', 'lessons' => function ($q) {
             $q->orderBy('order');
-        }]);
+        }, 'liveSessions']);
 
-        return view('courses.show', compact('course', 'enrolled', 'isWishlisted'));
+        $course->loadCount('liveSessions');
+
+        if ($course->instructor) {
+            $course->instructor->loadCount('courses');
+        }
+
+        $reviews = $course->reviews()->with('user')->latest()->get();
+        $reviewAverage = $reviews->avg('rating') ?? 0;
+
+        $totalReviews = $reviews->count();
+        $reviewDistribution = [];
+        for ($star = 5; $star >= 1; $star--) {
+            $count = $reviews->where('rating', $star)->count();
+            $percentage = $totalReviews > 0 ? round(($count / $totalReviews) * 100) : 0;
+            $reviewDistribution[$star] = [
+                'count' => $count,
+                'percentage' => $percentage,
+            ];
+        }
+
+        return view('courses.show', compact('course', 'enrolled', 'isWishlisted', 'reviews', 'reviewAverage', 'reviewDistribution'));
     }
 
     public function enroll(Course $course)

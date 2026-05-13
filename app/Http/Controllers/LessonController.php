@@ -60,6 +60,13 @@ class LessonController extends Controller
             $enrolled->touch(); // Update last activity timestamp
         }
 
+        // Eager-load discussions for the Q&A tab
+        $discussions = $course->discussions()
+            ->with('user')
+            ->orderBy('is_pinned', 'desc')
+            ->orderBy('last_reply_at', 'desc')
+            ->get();
+
         return view('lessons.show', [
             'course' => $course->load('instructor', 'category'),
             'lesson' => $lesson,
@@ -69,6 +76,7 @@ class LessonController extends Controller
             'currentIndex' => $currentLessonIndex + 1,
             'totalLessons' => $lessons->count(),
             'enrolled' => $enrolled,
+            'discussions' => $discussions,
         ]);
     }
 

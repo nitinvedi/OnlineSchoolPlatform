@@ -59,7 +59,7 @@
                     @endif
                 @elseif($lesson->type === 'quiz')
                         <div class="text-center p-8">
-                        <div class="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-100 transform -rotate-6">
+                        <div class="w-20 h-20 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-indigo-100 transform -rotate-6">
                             <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h18v2H3V3zm2 6h14v2H5V9zm0 6h14v2H5v-2z"></path></svg>
                         </div>
                         <h2 class="text-3xl font-black text-gray-900 mb-4">Knowledge Check</h2>
@@ -170,12 +170,54 @@
                             </div>
                         @endif
 
-                        {{-- Q&A Mock --}}
-                        <div x-show="activeTab === 'qa'" style="display: none;" class="text-center py-12">
-                            <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                            <h3 class="text-xl font-bold text-gray-900 mb-2">No Questions Yet</h3>
-                            <p class="text-gray-600 mb-6">Be the first to ask a question about this lesson.</p>
-                            <button class="px-6 py-3 bg-white border border-gray-200 text-gray-800 font-semibold rounded-lg transition">Ask a Question</button>
+                        {{-- Q&A --}}
+                        <div x-show="activeTab === 'qa'" style="display: none;" class="space-y-4">
+                            <div class="flex items-center justify-between gap-4 flex-wrap">
+                                <div>
+                                    <h3 class="text-xl font-bold text-gray-900">Lesson Q&A</h3>
+                                    <p class="text-gray-600 text-sm mt-1">Questions from students in this course.</p>
+                                </div>
+                                <a href="{{ route('courses.discussions.create', $course) }}" class="px-5 py-3 bg-white border border-gray-200 text-gray-800 font-semibold rounded-lg transition hover:border-sky-500 hover:text-sky-600">
+                                    Ask a Question
+                                </a>
+                            </div>
+
+                            <div class="space-y-4">
+                                @forelse($discussions as $discussion)
+                                    <a href="{{ route('courses.discussions.show', [$course, $discussion]) }}" class="block bg-white border border-gray-200 rounded-2xl p-5 hover:border-sky-400 transition-colors">
+                                        <div class="flex items-start justify-between gap-4 mb-3">
+                                            <div class="min-w-0">
+                                                <div class="flex items-center gap-2 flex-wrap mb-2">
+                                                    @if($discussion->is_pinned)
+                                                        <span class="px-2 py-1 text-[10px] uppercase tracking-widest font-bold bg-amber-100 text-amber-700 rounded-full">Pinned</span>
+                                                    @endif
+                                                    <span class="text-[10px] uppercase tracking-widest font-bold text-slate-500">{{ $discussion->reply_count ?? 0 }} replies</span>
+                                                </div>
+                                                <h4 class="font-black text-gray-900 leading-tight">{{ $discussion->title }}</h4>
+                                            </div>
+                                            <span class="text-[10px] uppercase tracking-widest font-semibold text-slate-500 flex-shrink-0">
+                                                {{ $discussion->last_reply_at?->diffForHumans() ?? $discussion->created_at?->diffForHumans() ?? 'Recently' }}
+                                            </span>
+                                        </div>
+
+                                        <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                                            {{ \Illuminate\Support\Str::limit(strip_tags($discussion->content), 180) }}
+                                        </p>
+
+                                        <div class="flex items-center gap-3 text-sm text-slate-500">
+                                            <img src="https://ui-avatars.com/api/?name={{ urlencode($discussion->user->name ?? 'Student') }}&background=2255FF&color=fff&size=32" alt="{{ $discussion->user->name ?? 'Student' }}" class="w-6 h-6 rounded-full">
+                                            <span class="font-medium text-slate-700">{{ $discussion->user->name ?? 'Student' }}</span>
+                                        </div>
+                                    </a>
+                                @empty
+                                    <div class="text-center py-12 bg-white border border-dashed border-gray-200 rounded-2xl">
+                                        <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                                        <h3 class="text-xl font-bold text-gray-900 mb-2">No Questions Yet</h3>
+                                        <p class="text-gray-600 mb-6">Be the first to ask a question about this lesson.</p>
+                                        <a href="{{ route('courses.discussions.create', $course) }}" class="px-6 py-3 bg-white border border-gray-200 text-gray-800 font-semibold rounded-lg transition hover:border-sky-500 hover:text-sky-600">Ask a Question</a>
+                                    </div>
+                                @endforelse
+                            </div>
                         </div>
                     </div>
                 </div>

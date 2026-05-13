@@ -8,7 +8,7 @@
             <div class="px-6 py-4 border-b border-gray-200">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                     <div class="flex-1 min-w-0">
-                        <form method="GET" class="flex space-x-4">
+                        <form method="GET" action="{{ route('admin.reviews.index') }}" class="flex space-x-4">
                             <label class="flex items-center">
                                 <input type="checkbox" name="flagged" value="1" {{ request('flagged') ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50">
                                 <span class="ml-2 text-sm text-gray-700">Show only flagged reviews</span>
@@ -35,7 +35,7 @@
                         @foreach($reviews as $review)
                             <tr>
                                 <td class="px-6 py-4">
-                                    <div class="text-sm text-gray-900 max-w-xs truncate">{{ $review->comment }}</div>
+                                    <div class="text-sm text-gray-900 max-w-xs truncate">{{ $review->review }}</div>
                                     <div class="text-sm text-gray-500">{{ $review->created_at->diffForHumans() }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">

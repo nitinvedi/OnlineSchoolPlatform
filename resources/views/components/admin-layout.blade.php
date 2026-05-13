@@ -14,7 +14,7 @@
         <!-- Sidebar -->
         <div class="w-64 bg-white shadow-lg">
             <div class="flex items-center justify-center h-16 px-4 bg-gray-900">
-                <span class="text-white font-bold text-xl">Admin Panel</span>
+                <span class="text-white font-bold text-xl tracking-tight">Beacon <span class="font-normal opacity-60 text-sm">Admin</span></span>
             </div>
             <nav class="mt-8">
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('admin.dashboard') ? 'bg-gray-100 border-r-4 border-blue-500' : '' }}">

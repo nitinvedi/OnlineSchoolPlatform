@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'LiveSchool') }} — Premium learning for builders</title>
+    <title>{{ config('app.name', 'Beacon') }} — Premium learning for builders</title>
     <meta name="description" content="Premium curriculum designed for ambitious learners who want skills, credibility, and real work outcomes.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -71,9 +71,8 @@
         /* ── Skeleton shimmer (for future use) ─────────── */
         @keyframes shimmer { from { background-position: -200% 0; } to { background-position: 200% 0; } }
         .shimmer {
-            background: linear-gradient(90deg, #FFFFFF 25%, #1a1a1a 50%, #FFFFFF 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.6s infinite;
+            background: #e5e7eb;
+            animation: pulse 1.6s infinite;
         }
 
         /* ── Hover underline draw-in ─────────────────────── */
@@ -126,7 +125,7 @@
                 {{-- Logo --}}
                 <a href="#hero" class="flex items-center gap-3 group">
                     <div class="w-9 h-9 bg-[#2255FF] flex items-center justify-center text-white font-display text-lg font-black transition-transform duration-200 group-hover:scale-105">L</div>
-                    <span class="font-mono text-xs uppercase tracking-[0.35em] text-[#111827]">LiveSchool</span>
+                    <span class="font-mono text-xs uppercase tracking-[0.35em] text-[#111827]">Beacon</span>
                 </a>
 
                 {{-- Desktop nav --}}
@@ -226,7 +225,7 @@
                         <h1 class="font-display font-black leading-none text-slate-900"
                             style="font-size: clamp(3.5rem, 10vw, 9rem); letter-spacing: -0.05em;" data-reveal>
                             UNLEASH<br>
-                            YOUR <span class="bg-gradient-to-r from-primary-600 to-accent-500 bg-clip-text text-transparent">TRUE</span><br>
+                            YOUR <span class="text-brand-600">TRUE</span><br>
                             POTENTIAL
                         </h1>
 
@@ -299,7 +298,7 @@
                             </div>
 
                             {{-- Live indicator --}}
-                            <div class="mt-8 flex items-center gap-3 px-4 py-3 border border-slate-200 rounded-md bg-gradient-to-r from-success-50 to-transparent">
+                            <div class="mt-8 flex items-center gap-3 px-4 py-3 border border-slate-200 rounded-md bg-success-50">
                                 <div class="w-2 h-2 bg-success-600 pulse-dot rounded-full"></div>
                                 <span class="font-mono text-xs uppercase tracking-wider text-slate-600">3 live sessions this week</span>
                             </div>
@@ -384,7 +383,7 @@
                                 </div>
 
                                 {{-- Visual --}}
-                                <div class="flex h-40 items-center justify-center bg-gradient-to-br from-primary-100 to-accent-100 border border-slate-200 mb-5 overflow-hidden group-hover:border-primary-300 transition-colors duration-300 rounded-md">
+                                <div class="flex h-40 items-center justify-center bg-slate-100 border border-slate-200 mb-5 overflow-hidden group-hover:border-primary-300 transition-colors duration-300 rounded-md">
                                     <span class="font-display text-6xl leading-none text-primary-600 group-hover:scale-105 transition-transform duration-300">
                                         {{ strtoupper(substr($course->title, 0, 1)) }}
                                     </span>
@@ -467,15 +466,15 @@
                 <div class="mb-14" data-reveal>
                     <span class="font-mono text-xs uppercase tracking-wider text-primary-600 font-semibold">▸ Experience</span>
                     <h2 class="font-display text-slate-900 mt-3 leading-none" style="font-size: clamp(2.5rem, 6vw, 5rem);">
-                        WHY<br>LIVESCHOOL
+                        WHY<br>Beacon
                     </h2>
                 </div>
 
                 {{-- Bento grid --}}
                 <div class="grid gap-4 lg:grid-cols-[1.4fr_0.9fr] lg:grid-rows-[280px_280px] bento-grid">
 
-                    {{-- Cell 1: Masterclasses (large, primary gradient) --}}
-                    <div class="relative overflow-hidden bg-gradient-to-br from-primary-600 to-primary-700 p-10 flex flex-col justify-between min-h-[280px]" data-reveal>
+                    {{-- Cell 1: Masterclasses (large highlight panel) --}}
+                    <div class="relative overflow-hidden bg-brand-600 p-10 flex flex-col justify-between min-h-[280px] border border-brand-700/20" data-reveal>
                         <div class="absolute inset-0 opacity-5"
                              style="background-image: url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")"></div>
                         <div>
@@ -559,7 +558,7 @@
                         <article class="testimonial-card {{ $index !== 0 ? 'hidden' : '' }}">
                             <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
                                 <div class="flex items-center gap-4">
-                                    <div class="w-14 h-14 bg-gradient-to-br from-primary-100 to-accent-100 border border-slate-200 flex items-center justify-center font-display text-2xl text-primary-600 rounded-md">
+                                    <div class="w-14 h-14 bg-slate-100 border border-slate-200 flex items-center justify-center font-display text-2xl text-primary-600 rounded-md">
                                         {{ $testimonial['initial'] }}
                                     </div>
                                     <div>
@@ -604,7 +603,7 @@
                     @foreach($instructors as $instructor)
                         <article class="card hover-lift" data-reveal>
                             <div class="flex items-center gap-4 mb-8">
-                                <div class="w-14 h-14 bg-gradient-to-br from-primary-100 to-accent-100 border border-slate-200 flex items-center justify-center font-display text-2xl text-primary-600 rounded-md">
+                                <div class="w-14 h-14 bg-slate-100 border border-slate-200 flex items-center justify-center font-display text-2xl text-primary-600 rounded-md">
                                     {{ $instructor['initial'] }}
                                 </div>
                                 <div>
@@ -647,7 +646,7 @@
                             COMMON<br>QUESTIONS
                         </h2>
                         <p class="mt-6 text-base leading-relaxed text-slate-600 max-w-sm">
-                            Everything you need to know about LiveSchool before you commit.
+                            Everything you need to know about Beacon before you commit.
                         </p>
                     </div>
 
@@ -694,10 +693,10 @@
                     <div data-reveal>
                         <span class="font-mono text-xs uppercase tracking-wider text-slate-500">Ready when you are</span>
                         <h2 class="font-display text-slate-900 mt-6 leading-none" style="font-size: clamp(2.5rem, 8vw, 7rem);">
-                            READY TO BUILD<br>THE <span class="bg-gradient-to-r from-primary-600 to-accent-500 bg-clip-text text-transparent">FUTURE?</span>
+                            READY TO BUILD<br>THE <span class="text-brand-600">FUTURE?</span>
                         </h2>
                         <p class="mt-8 max-w-xl mx-auto text-base leading-relaxed text-slate-600">
-                            Join LiveSchool and get the curriculum, community, and coaching that turns ambition into market-ready skills.
+                            Join Beacon and get the curriculum, community, and coaching that turns ambition into market-ready skills.
                         </p>
 
                         <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-5">
@@ -735,7 +734,7 @@
                     <div>
                         <div class="flex items-center gap-3 mb-6">
                             <div class="w-8 h-8 bg-[#2255FF] flex items-center justify-center font-display text-white text-base">L</div>
-                            <span class="font-mono text-[11px] uppercase tracking-[0.35em] text-[#111827]">LiveSchool</span>
+                            <span class="font-mono text-[11px] uppercase tracking-[0.35em] text-[#111827]">Beacon</span>
                         </div>
                         <p class="text-[13px] leading-7 text-[#6B7280] max-w-xs">
                             Defining the new standard for professional education through immersion and elite mentorship.
@@ -779,7 +778,7 @@
 
                 {{-- Footer bottom --}}
                 <div class="mt-16 border-t border-[#E5E7EB] pt-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                    <span class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#6B7280]">© {{ date('Y') }} LiveSchool Platform. Knowledge for excellence.</span>
+                    <span class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#6B7280]">© {{ date('Y') }} Beacon Platform. Knowledge for excellence.</span>
                     <div class="flex flex-wrap items-center gap-6">
                         @foreach(['Privacy', 'Terms', 'Contact'] as $link)
                             <a href="#" class="font-mono text-[10px] uppercase tracking-[0.25em] text-[#6B7280] hover:text-[#4B5563] transition-colors duration-150">{{ $link }}</a>

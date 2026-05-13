@@ -364,6 +364,9 @@ class DashboardController extends Controller
             ->whereNull('verified_at')
             ->latest()->take(3)->get();
 
-        return view('dashboard.admin', compact('stats', 'mom', 'recentCourses', 'categories', 'demographics', 'chartLabels', 'chartData', 'pendingApprovals'));
+        // Real recent enrollments
+        $recentActivity = Enrollment::with(['user', 'course'])->latest()->take(8)->get();
+
+        return view('dashboard.admin', compact('stats', 'mom', 'recentCourses', 'categories', 'demographics', 'chartLabels', 'chartData', 'pendingApprovals', 'recentActivity'));
     }
 }

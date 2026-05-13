@@ -46,7 +46,7 @@ class DiscussionController extends Controller
         $this->authorize('create', Discussion::class);
 
         // Verify user is enrolled in course
-        if (!$course->enrollments()->where('user_id', auth()->id())->exists() && !auth()->user()->isInstructor()) {
+        if (!$course->enrollments()->where('user_id', auth()->id())->exists() && !auth()->user()->isInstructor() && !auth()->user()->isAdmin()) {
             abort(403);
         }
 

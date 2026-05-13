@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Enrollment;
+use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,7 @@ class RevenueController extends Controller
     public function index()
     {
         // Revenue stats
-        $totalRevenue = Enrollment::sum('price');
+        $totalRevenue = Payment::where('status', 'completed')->sum('amount');
         $totalInstructorPayouts = 0; // Mock, need payout model
         $platformCut = $totalRevenue * 0.2; // 20% platform cut
 

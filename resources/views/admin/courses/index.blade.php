@@ -11,7 +11,7 @@
             <div class="px-6 py-4 border-b border-gray-200">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                     <div class="flex-1 min-w-0">
-                        <form method="GET" class="flex space-x-4">
+                        <form method="GET" action="{{ route('admin.courses.index') }}" class="flex space-x-4">
                             <input type="text" name="search" value="{{ request('search') }}" placeholder="Search courses..." class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                             <select name="status" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                 <option value="">All Status</option>
@@ -79,8 +79,9 @@
                                                 @csrf
                                                 <button type="submit" class="text-green-600 hover:text-green-900">Approve</button>
                                             </form>
-                                            <form method="POST" action="{{ route('admin.courses.reject', $course) }}" class="inline">
+                                            <form method="POST" action="{{ route('admin.courses.reject', $course) }}" class="inline" onsubmit="return confirm('Are you sure you want to reject this course?');">
                                                 @csrf
+                                                <input type="hidden" name="reason" value="Does not meet platform quality standards.">
                                                 <button type="submit" class="text-red-600 hover:text-red-900">Reject</button>
                                             </form>
                                         @elseif($course->status === 'published')

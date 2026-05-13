@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'LiveSchool') }} — {{ $pageTitle ?? 'Welcome' }}</title>
+    <title>{{ config('app.name', 'Beacon') }} — {{ $pageTitle ?? 'Welcome' }}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -568,7 +568,7 @@
             <div class="relative z-10 flex items-center justify-between px-14 pt-12">
                 <a href="/" class="flex items-center gap-3 group">
                     <div class="w-9 h-9 bg-violet-600 flex items-center justify-center font-display text-white text-lg transition-transform duration-200 group-hover:scale-105">L</div>
-                    <span class="font-mono text-[11px] uppercase tracking-[0.35em] text-gray-900">LiveSchool</span>
+                    <span class="font-mono text-[11px] uppercase tracking-[0.35em] text-gray-900">Beacon</span>
                 </a>
                 {{-- Live status --}}
                 <div class="flex items-center gap-2.5">
@@ -627,7 +627,7 @@
                     </div>
                     <div>
                         <p class="font-mono text-[11px] text-gray-900">+12k learners</p>
-                        <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#94A3B8]">trusting LiveSchool today</p>
+                        <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#94A3B8]">trusting Beacon today</p>
                     </div>
                 </div>
 
@@ -645,7 +645,7 @@
                     <div class="w-10 h-10 bg-white border border-gray-200 flex items-center justify-center font-display text-violet-600 text-xl flex-shrink-0">M</div>
                     <div>
                         <p class="text-[13px] leading-6 text-gray-600 border-l-2 border-violet-600 pl-3">
-                            "LiveSchool helped me ship my first SaaS product while learning design, strategy, and mentorship."
+                            "Beacon helped me ship my first SaaS product while learning design, strategy, and mentorship."
                         </p>
                         <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#94A3B8] mt-3">Maya Patel · Product Designer · Spark Labs</p>
                     </div>
@@ -662,7 +662,7 @@
             <div class="lg:hidden flex items-center justify-between px-6 pt-8 pb-0">
                 <a href="/" class="flex items-center gap-3">
                     <div class="w-9 h-9 bg-violet-600 flex items-center justify-center font-display text-white text-lg">L</div>
-                    <span class="font-mono text-[11px] uppercase tracking-[0.35em] text-gray-900">LiveSchool</span>
+                    <span class="font-mono text-[11px] uppercase tracking-[0.35em] text-gray-900">Beacon</span>
                 </a>
                 <a href="/" class="font-mono text-[10px] uppercase tracking-[0.25em] text-gray-600 hover:text-gray-900 transition-colors duration-150">← Back</a>
             </div>
@@ -677,7 +677,7 @@
                     {{-- Back to home (desktop) --}}
                     <a href="/"
                        class="hidden lg:inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.25em] text-[#94A3B8] hover:text-[#64748B] transition-colors duration-150 mb-10 fade-up">
-                        ← liveschool.com
+                        ← Beacon.com
                     </a>
 
                     {{-- Slot: the actual auth form (login, register, etc.) --}}
@@ -692,7 +692,7 @@
                                 <a href="#" class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#94A3B8] hover:text-[#64748B] transition-colors">Privacy</a>
                                 <a href="#" class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#94A3B8] hover:text-[#64748B] transition-colors">Terms</a>
                             </div>
-                            <span class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#1E1E1E]">© {{ date('Y') }} LiveSchool</span>
+                            <span class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#1E1E1E]">© {{ date('Y') }} Beacon</span>
                         </div>
                     </div>
                 </div>

@@ -18,7 +18,7 @@
         {{-- ── Page title ─────────────────────────────── --}}
         <div class="mb-12">
             <h2 class="font-display text-[#0F172A] leading-none" style="font-size: clamp(2.8rem, 4vw, 4rem);">
-                JOIN<br>LIVESCHOOL.
+                JOIN<br>BEACON.
             </h2>
             <p class="font-mono text-[13px] text-slate-500 mt-4">
                 Start your journey with world-class education.
@@ -206,3 +206,4 @@
         </div>
     </div>
 </x-guest-layout>
+

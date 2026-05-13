@@ -8,7 +8,7 @@
             <div class="px-6 py-4 border-b border-gray-200">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                     <div class="flex-1 min-w-0">
-                        <form method="GET" class="flex space-x-4">
+                        <form method="GET" action="{{ route('admin.reports.index') }}" class="flex space-x-4">
                             <select name="type" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                 <option value="">All Types</option>
                                 <option value="review" {{ request('type') === 'review' ? 'selected' : '' }}>Review</option>

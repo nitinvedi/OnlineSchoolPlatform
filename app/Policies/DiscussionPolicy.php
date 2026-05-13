@@ -34,7 +34,7 @@ class DiscussionPolicy
 
     public function create(User $user): bool
     {
-        return $user->isStudent() || $user->isInstructor();
+        return $user->isStudent() || $user->isInstructor() || $user->isAdmin();
     }
 
     public function update(User $user, Discussion $discussion): bool
@@ -79,6 +79,10 @@ class DiscussionPolicy
 
     public function addReply(User $user, Discussion $discussion): bool
     {
-        return $discussion->isOpen() && $discussion->course->enrollments()->where('user_id', $user->id)->exists();
+        return $discussion->isOpen() && (
+            $discussion->course->enrollments()->where('user_id', $user->id)->exists() ||
+            $user->isInstructor() ||
+            $user->isAdmin()
+        );
     }
 }

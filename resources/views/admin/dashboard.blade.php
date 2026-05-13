@@ -1,138 +1,108 @@
-@extends('admin.layouts.app')
-
-@section('content')
+<x-admin-layout>
 <div class="space-y-6">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="bg-white p-6 rounded-lg shadow">
-            <div class="flex items-center">
-                <div class="p-2 bg-blue-500 rounded-lg">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path></svg>
-                </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Total Users</p>
-                    <p class="text-2xl font-semibold text-gray-900">{{ number_format($totalUsers) }}</p>
-                </div>
-            </div>
-        </div>
 
-        <div class="bg-white p-6 rounded-lg shadow">
-            <div class="flex items-center">
-                <div class="p-2 bg-green-500 rounded-lg">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Active This Month</p>
-                    <p class="text-2xl font-semibold text-gray-900">{{ number_format($activeThisMonth) }}</p>
-                </div>
-            </div>
+    {{-- KPI Cards --}}
+    <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
+        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">Total Users</p>
+            <p class="text-3xl font-black text-gray-900">{{ number_format($totalUsers) }}</p>
+            <p class="text-xs text-gray-400 mt-1">+{{ $newUsersThisMonth }} this month</p>
         </div>
-
-        <div class="bg-white p-6 rounded-lg shadow">
-            <div class="flex items-center">
-                <div class="p-2 bg-purple-500 rounded-lg">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Total Courses</p>
-                    <p class="text-2xl font-semibold text-gray-900">{{ number_format($totalCourses) }}</p>
-                </div>
-            </div>
+        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">Total Courses</p>
+            <p class="text-3xl font-black text-gray-900">{{ number_format($totalCourses) }}</p>
+            <p class="text-xs text-gray-400 mt-1">{{ $publishedCourses }} published</p>
         </div>
-
-        <div class="bg-white p-6 rounded-lg shadow">
-            <div class="flex items-center">
-                <div class="p-2 bg-yellow-500 rounded-lg">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path></svg>
-                </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Total Revenue</p>
-                    <p class="text-2xl font-semibold text-gray-900">${{ number_format($totalRevenue) }}</p>
-                </div>
-            </div>
+        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">Enrollments</p>
+            <p class="text-3xl font-black text-gray-900">{{ number_format($totalEnrollments) }}</p>
+            <p class="text-xs text-gray-400 mt-1">All time</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+            <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">Revenue</p>
+            <p class="text-3xl font-black text-gray-900">${{ number_format($totalRevenue, 0) }}</p>
+            <p class="text-xs text-gray-400 mt-1">Completed payments</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5 {{ $pendingApprovals > 0 ? 'border-amber-200 bg-amber-50' : '' }}">
+            <p class="text-xs font-semibold uppercase tracking-widest {{ $pendingApprovals > 0 ? 'text-amber-500' : 'text-gray-400' }} mb-1">Pending Review</p>
+            <p class="text-3xl font-black {{ $pendingApprovals > 0 ? 'text-amber-700' : 'text-gray-900' }}">{{ $pendingApprovals }}</p>
+            <p class="text-xs {{ $pendingApprovals > 0 ? 'text-amber-500' : 'text-gray-400' }} mt-1">Courses awaiting approval</p>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="bg-white p-6 rounded-lg shadow">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">Revenue (Last 12 Months)</h3>
-            <canvas id="revenueChart" width="400" height="200"></canvas>
-        </div>
+    {{-- Main Content Grid --}}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        <div class="bg-white p-6 rounded-lg shadow">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">New Signups (Last 30 Days)</h3>
-            <canvas id="signupsChart" width="400" height="200"></canvas>
-        </div>
-    </div>
-
-    <div class="bg-white p-6 rounded-lg shadow">
-        <h3 class="text-lg font-medium text-gray-900 mb-4">Recent Activity</h3>
-        <div class="space-y-3">
-            @foreach($recentActivity as $activity)
-                <div class="flex items-center space-x-3">
-                    <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <p class="text-sm text-gray-600">{{ $activity['message'] }}</p>
-                    <span class="text-xs text-gray-400">{{ $activity['time'] }}</span>
+        {{-- Recent Enrollments Table (Real Data) --}}
+        <div class="lg:col-span-2 bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-50 flex items-center justify-between">
+                <h3 class="text-sm font-bold text-gray-900">Recent Enrollments</h3>
+                <a href="{{ route('admin.users.index') }}" class="text-xs font-semibold text-blue-600 hover:text-blue-700">View all users &rarr;</a>
+            </div>
+            @if($recentEnrollments->count() > 0)
+                <div class="divide-y divide-gray-50">
+                    @foreach($recentEnrollments as $enrollment)
+                        <div class="px-6 py-3 flex items-center justify-between hover:bg-gray-50/50 transition">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-black flex-shrink-0">
+                                    {{ strtoupper(substr($enrollment->user->name ?? '?', 0, 1)) }}
+                                </div>
+                                <div class="min-w-0">
+                                    <p class="text-sm font-semibold text-gray-900 truncate">{{ $enrollment->user->name ?? 'Deleted User' }}</p>
+                                    <p class="text-xs text-gray-400 truncate">{{ $enrollment->course->title ?? 'Deleted Course' }}</p>
+                                </div>
+                            </div>
+                            <span class="text-xs text-gray-400 whitespace-nowrap ml-4">{{ $enrollment->created_at->diffForHumans() }}</span>
+                        </div>
+                    @endforeach
                 </div>
-            @endforeach
+            @else
+                <div class="py-16 text-center text-sm text-gray-400 font-medium">No enrollments yet.</div>
+            @endif
+        </div>
+
+        {{-- Action Panel --}}
+        <div class="flex flex-col gap-4">
+
+            {{-- Pending Approvals --}}
+            <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+                <h3 class="text-sm font-bold text-gray-900 mb-3">Action Required</h3>
+                @if($pendingApprovals > 0)
+                    <div class="rounded-lg bg-amber-50 border border-amber-200 p-4">
+                        <p class="text-sm font-bold text-amber-900">{{ $pendingApprovals }} course{{ $pendingApprovals > 1 ? 's' : '' }} pending review</p>
+                        <p class="text-xs text-amber-700 mt-1">Courses submitted by instructors waiting for approval.</p>
+                        <a href="{{ route('admin.courses.index', ['status' => 'pending']) }}" class="mt-3 inline-flex items-center justify-center w-full py-2 px-3 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold rounded-lg transition">
+                            Review Now &rarr;
+                        </a>
+                    </div>
+                @else
+                    <div class="rounded-lg bg-green-50 border border-green-100 p-4">
+                        <p class="text-sm font-semibold text-green-800">All clear — no pending approvals.</p>
+                    </div>
+                @endif
+            </div>
+
+            {{-- Quick Links --}}
+            <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+                <h3 class="text-sm font-bold text-gray-900 mb-3">Quick Actions</h3>
+                <div class="space-y-2">
+                    <a href="{{ route('admin.users.index') }}" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 border border-gray-100 transition group">
+                        <span class="text-sm font-semibold text-gray-700 group-hover:text-gray-900">Manage Users</span>
+                        <span class="text-xs font-bold text-gray-400">{{ number_format($totalUsers) }} total</span>
+                    </a>
+                    <a href="{{ route('admin.courses.index') }}" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 border border-gray-100 transition group">
+                        <span class="text-sm font-semibold text-gray-700 group-hover:text-gray-900">Manage Courses</span>
+                        <span class="text-xs font-bold text-gray-400">{{ number_format($totalCourses) }} total</span>
+                    </a>
+                    <a href="{{ route('admin.revenue.index') }}" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 border border-gray-100 transition group">
+                        <span class="text-sm font-semibold text-gray-700 group-hover:text-gray-900">Revenue Report</span>
+                        <span class="text-xs font-bold text-green-600">${{ number_format($totalRevenue, 0) }}</span>
+                    </a>
+                </div>
+            </div>
+
         </div>
     </div>
+
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    // Revenue Chart
-    const revenueCtx = document.getElementById('revenueChart').getContext('2d');
-    new Chart(revenueCtx, {
-        type: 'line',
-        data: {
-            labels: @json(collect($revenueChart)->pluck('month')),
-            datasets: [{
-                label: 'Revenue',
-                data: @json(collect($revenueChart)->pluck('revenue')),
-                borderColor: 'rgb(59, 130, 246)',
-                backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                tension: 0.4
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { display: false }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: function(value) {
-                            return '$' + value.toLocaleString();
-                        }
-                    }
-                }
-            }
-        }
-    });
-
-    // Signups Chart
-    const signupsCtx = document.getElementById('signupsChart').getContext('2d');
-    new Chart(signupsCtx, {
-        type: 'bar',
-        data: {
-            labels: @json(collect($signupsChart)->pluck('date')),
-            datasets: [{
-                label: 'Signups',
-                data: @json(collect($signupsChart)->pluck('signups')),
-                backgroundColor: 'rgb(34, 197, 94)',
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { display: false }
-            },
-            scales: {
-                y: { beginAtZero: true }
-            }
-        }
-    });
-</script>
-@endsection
+</x-admin-layout>
